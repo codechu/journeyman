@@ -1,5 +1,11 @@
 # Anatomy of a run
 
+**See a complete, real report first:** the archived
+[first standard run's report.md](../runs-archive/reference-run-1-standard-2026-08-12/report.md)
+renders right in the browser — reports ARE markdown. The
+[report.json](../runs-archive/reference-run-1-standard-2026-08-12/report.json)
+next to it is the same thing machine-readable.
+
 What actually happens when you type `journeyman run`, and what every
 file in the run directory means.
 

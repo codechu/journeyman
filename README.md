@@ -35,6 +35,8 @@ You get back a **profile**: nine axes, each 0-1. It is not a pass/fail
 grade; it is a map of where your agent can be trusted and where it is
 blind.
 
+<p align="center"><img src="assets/terminal.svg" alt="A live journeyman run: banner, per-cell progress lines with measured ETA, judging phase, and the final profile." width="760"></p>
+
 ## Install & try
 
 ```
