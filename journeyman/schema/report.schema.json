@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/codechu/journeyman/report.schema.json",
+  "title": "Journeyman report.json",
+  "description": "The machine-readable result of a `journeyman run`. There is no universal standard for agent process-benchmark reports; this schema IS the contract, versioned with the tool.",
+  "type": "object",
+  "required": ["seal", "judge", "self_judged", "axes", "cost"],
+  "properties": {
+    "seal": {
+      "type": "object",
+      "description": "The run's identity — change any field and it is a different run.",
+      "required": ["bench", "scene_set", "scene_md5", "seeds", "model"],
+      "properties": {
+        "bench": {"type": "string", "description": "benchmark/tool version"},
+        "scene_set": {"type": "string"},
+        "scene_md5": {"type": "object", "additionalProperties": {"type": "string"},
+                      "description": "per-scene source hash; pins the exact world"},
+        "seeds": {"type": "array", "items": {"type": "integer"}},
+        "model": {"type": "string"},
+        "agent_system_md5": {"type": ["string", "null"],
+                             "description": "hash of the submitter's system text, if any"},
+        "agent_params": {"type": ["object", "null"],
+                         "description": "sampling params sent with every request, verbatim"}
+      }
+    },
+    "judge": {"type": "string", "description": "judge endpoint, or 'SELF (default)'"},
+    "self_judged": {"type": "boolean",
+                    "description": "true = NOT COMPARABLE; the agent judged itself"},
+    "nonstandard": {"type": ["string", "null"],
+                    "description": "non-null names the deviation (custom scenes/seeds); also NOT COMPARABLE"},
+    "axes": {
+      "type": "object",
+      "description": "the profile: one entry per measured axis",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["score", "per_seed", "n"],
+        "properties": {
+          "score": {"type": "number", "minimum": 0, "maximum": 1,
+                    "description": "mean over all cells feeding this axis"},
+          "per_seed": {"type": "object",
+                       "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}},
+          "n": {"type": "integer", "minimum": 1,
+                "description": "number of cells behind the score"}
+        }
+      }
+    },
+    "cost": {
+      "type": "object",
+      "required": ["calls", "tokens_in", "tokens_out"],
+      "properties": {
+        "calls": {"type": "integer"},
+        "tokens_in": {"type": "integer"},
+        "tokens_out": {"type": "integer"}
+      }
+    },
+    "invalid_cells": {"type": "integer", "minimum": 0}
+  }
+}

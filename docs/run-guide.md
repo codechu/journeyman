@@ -101,7 +101,9 @@ as `none`. Events say what happened; verdicts say what it was worth.)
 
 **report.json** — the profile, machine-readable: `seal`, `judge`,
 `self_judged`, `nonstandard`, per-axis `{score, per_seed, n}`, `cost`,
-`invalid_cells`.
+`invalid_cells`. The shape is a published contract:
+[`journeyman/schema/report.schema.json`](../journeyman/schema/report.schema.json)
+(JSON Schema, shipped in the package, validated in CI).
 
 ## Reading a cell record
 

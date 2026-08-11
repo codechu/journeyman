@@ -22,4 +22,4 @@ journeyman = "journeyman.__main__:main"
 include = ["journeyman*"]
 
 [tool.setuptools.package-data]
-journeyman = ["calibration/*.json"]
+journeyman = ["calibration/*.json", "schema/*.json"]

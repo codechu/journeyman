@@ -97,3 +97,26 @@ teach-leak ablations, replay determinism, judge calibration — was first
 used in anger on our own agents. The scenes were ported; the
 calibration history was not: a port changes the scene text, and
 calibration does not transfer across worlds.
+
+## Report format & interoperability
+
+There is no universal standard for *process-quality* agent reports. The
+closest de-facto format, `lm-evaluation-harness`'s `results.json`, is
+built for static task accuracy, not per-axis process profiles; OpenAI
+Evals, SARIF, and experiment trackers (MLflow, W&B) all model something
+else. So Journeyman's `report.json` is its own format — but a
+**specified, versioned one**, not an ad-hoc dump:
+
+- The contract is published as JSON Schema at
+  `journeyman/schema/report.schema.json` (shipped in the package) and
+  validated against real runs in CI.
+- Every field carries provenance: the `seal` alone reproduces the run;
+  `self_judged` / `nonstandard` make an un-comparable score
+  self-declaring; `cost` is always present (or explicitly UNREPORTED).
+- Because the shape is stable and flat, converting a report into an
+  MLflow/W&B run or a leaderboard row is a few lines — the axes are
+  already `{score, per_seed, n}` per metric.
+
+If a community standard for agent process-reports emerges, mapping onto
+it is a converter, not a rewrite: the measurements are the asset, the
+serialization is replaceable.
