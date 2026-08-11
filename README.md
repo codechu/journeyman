@@ -29,11 +29,23 @@ a stranger — and grades **how it worked**, not just whether it finished:
 did it keep hitting the same wall? did it stop when the job was done, or
 keep polishing? could it say "I don't know" with a price tag? did it buy
 a planted false story? Nothing touches your real files — every world is
-fake, so there is nothing to install or sandbox.
+fake, so there is nothing to set up or sandbox.
 
 You get back a **profile**: nine axes, each 0-1. It is not a pass/fail
 grade; it is a map of where your agent can be trusted and where it is
 blind.
+
+## Install & try
+
+```
+pip install journeyman-bench            # zero dependencies, stdlib only
+journeyman selftest                     # offline proof, no model needed
+journeyman run --endpoint http://localhost:8080 --model my-agent
+```
+
+> PyPI package name is **`journeyman-bench`** (the bare name was taken);
+> the import name stays `journeyman` — avoid co-installing the unrelated
+> `journeyman` package.
 
 ## The four commands
 
@@ -48,6 +60,21 @@ In short: in `run` the student sits the exam; in `qualify` the teacher
 does.
 
 ## Reading the report
+
+What a finished run prints (from the archived first standard run of a
+bare local model — real output, abridged):
+
+```
+PROFILE                     score   per-seed           n
+  empty-measure             0.0     0.00 0.00 0.00     3
+  grounding                 1.0     1.00 1.00 1.00     3
+  object-hold               1.0     1.00 1.00 1.00     3
+  wall-pricing              0.67    1.00 0.00 1.00     3
+  walk-coverage             0.32    0.37 0.42 0.17     6
+  ...
+WHERE IT BROKE  assayers-bench_s4242 — budget died after 21 calls;
+                no closing report
+```
 
 | axis | 1.0 means |
 |---|---|
@@ -84,26 +111,6 @@ what does it do in a scene that cannot be won?
   judge — and any judge can qualify through the published exam.
 - **Reproducible:** bit-exact reruns on local llama.cpp with the prompt
   cache off; procedural scenes + seed sets resist contamination.
-
-> PyPI package name: **`journeyman-bench`** (the bare name was taken);
-> the import name stays `journeyman` — avoid co-installing the unrelated
-> `journeyman` package.
-
-## Install & try
-
-```
-pip install journeyman-bench            # zero dependencies, stdlib only
-journeyman selftest                     # offline, no model needed
-```
-
-or straight from a checkout:
-
-```
-python3 -m journeyman selftest          # offline, no model needed
-python3 -m journeyman run --endpoint http://localhost:8080 --model my-agent
-python3 -m journeyman qualify --judge http://localhost:8080 --judge-model my-judge
-python3 -m journeyman report runs/<stamp>   # re-render after re-judging
-```
 
 ## Layout
 
