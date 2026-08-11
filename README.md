@@ -35,6 +35,18 @@ You get back a **profile**: nine axes, each 0-1. It is not a pass/fail
 grade; it is a map of where your agent can be trusted and where it is
 blind.
 
+## The four commands
+
+| command | what it does |
+|---|---|
+| `journeyman run` | **the exam itself** — drops your agent into the scenes, counts events, has the judge score the rubrics, writes the report |
+| `journeyman qualify` | **the examiner's exam** — before you trust a model as `--judge`, this runs it over labelled cases with known answers and grants (or refuses) a badge |
+| `journeyman selftest` | plumbing check: no model, no network — proves driver → records → judge → report end to end |
+| `journeyman report runs/<dir>` | re-render the report of a finished run (e.g. after re-judging) |
+
+In short: in `run` the student sits the exam; in `qualify` the teacher
+does.
+
 ## Reading the report
 
 | axis | 1.0 means |
