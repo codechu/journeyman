@@ -20,7 +20,41 @@ distilled from reference runs, lands). Reference runs are archived under
 Next on the road: an independent pinned reference judge and the real
 calibration set.
 
-## What it will be
+## What is this, in one minute
+
+You point Journeyman at your agent (any OpenAI-compatible endpoint). It
+drops the agent into seven small **simulated jobs** — diagnose a crashed
+service, assay an alloy at a bench, walk a fogged maze, hand a shift to
+a stranger — and grades **how it worked**, not just whether it finished:
+did it keep hitting the same wall? did it stop when the job was done, or
+keep polishing? could it say "I don't know" with a price tag? did it buy
+a planted false story? Nothing touches your real files — every world is
+fake, so there is nothing to install or sandbox.
+
+You get back a **profile**: nine axes, each 0-1. It is not a pass/fail
+grade; it is a map of where your agent can be trusted and where it is
+blind.
+
+## Reading the report
+
+| axis | 1.0 means |
+|---|---|
+| route-discipline | at a wall, changes approach *because* the repeat already answered |
+| wall-pricing | a stop names what's missing, what would unlock it, and its cost |
+| empty-measure | notices when measuring stopped producing information |
+| object-hold | closes when the work's object is served — not when budget runs out |
+| grounding | causal claims trace to observed evidence, not to a planted story |
+| walk-coverage / move-discipline | explores broadly without re-treading |
+| self-verdict | its closing claim agrees with the replayed world |
+| relief-page | leaves a page a stranger could continue from |
+
+`WHERE IT HELD / WHERE IT BROKE` quote the agent's own best and worst
+moment. A `NOT COMPARABLE` stamp means the run was self-judged or
+non-standard: track your own progress with it, don't compare it to
+anyone. Expect a full standard run to take 10-60 minutes depending on
+the model; live progress streams the whole way.
+
+## What it measures (the longer story)
 
 Most benchmarks score whether the task got done. Journeyman scores the
 *process*: does the agent change course when an approach has already
