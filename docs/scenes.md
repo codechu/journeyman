@@ -32,8 +32,4 @@ judge's question verbatim, and success/failure signatures:
 - [The Unmarked Maze](scenes/unmarked-maze.md)
 - [Night Relief](scenes/night-relief.md)
 
-<p align="center">
-<img src="../assets/closed-roads.png" width="32%">
-<img src="../assets/assayers-bench.png" width="32%">
-<img src="../assets/unmarked-maze.png" width="32%">
-</p>
+Each page opens with its own illustration.
