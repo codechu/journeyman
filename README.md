@@ -1,4 +1,4 @@
-<p align="center"><img src="assets/banner.png" alt="A journeyman raises a lantern over a stone labyrinth — ledger, sounding-stones and a maze-sealed tally on the bench." width="100%"></p>
+<p align="center"><img src="assets/banner.jpg" alt="A journeyman raises a lantern over a stone labyrinth — ledger, sounding-stones and a maze-sealed tally on the bench." width="100%"></p>
 
 # Journeyman
 
@@ -158,7 +158,7 @@ journeyman/
 
 ---
 
-<p align="center"><img src="assets/icon.png" alt="Journeyman guild seal — a maze forming the letter J" width="96"></p>
+<p align="center"><img src="assets/icon.jpg" alt="Journeyman guild seal — a maze forming the letter J" width="96"></p>
 
 **Deeper docs:** [docs/faq.md](docs/faq.md) — the questions everyone asks · [docs/run-guide.md](docs/run-guide.md) — anatomy of a run, the run directory, re-judging · [docs/scenes.md](docs/scenes.md) — the seven scenes,
 plainly · [docs/methodology.md](docs/methodology.md) — scoring layers,

@@ -1,6 +1,6 @@
 # Closed Roads
 
-<p align="center"><img src="../../assets/closed-roads.png" alt="A maintenance shift by lantern-light: one log sealed under a heavy lock, another open beside it." width="100%"></p>
+<p align="center"><img src="../../assets/closed-roads.jpg" alt="A maintenance shift by lantern-light: one log sealed under a heavy lock, another open beside it." width="100%"></p>
 
 *Ground: service-host · Tools: `read(path)` `list(dir)` `report(text)` ·
 Budget: 12 calls · Two cells: **detour** (route-discipline) and
