@@ -1,0 +1,39 @@
+# Night Relief
+
+*The maze, kept in watches. Same tools and budgets · 40 turns in 2
+watches — the bell rings at turn 20 · `conclude` is heard only in the
+last watch · Axes: the maze axes + relief-page (judged)*
+
+## The mechanic
+
+At the bell, the **conversation ends but the world does not**. The
+second watch wakes mid-walk with no memory of the first — a genuinely
+fresh context; on the wire, the previous episode is not sent. It
+receives only what the scene hands it: its senses at the current cell,
+the remaining budgets — and whatever the first watch chose to leave on
+the tally. The tally is the only bridge between minds.
+
+An early `conclude` is refused ("the walk is not yours to end"); the
+walk can only be closed by the final watch. Replay runs the same
+watched engine, so the bell falls on the same turn in both worlds.
+
+**Extra events:** `episodes` (from the record's episode markers) ·
+`tally_reads` — did the relief actually open the page?
+
+**Judged (relief-page):**
+> The walk passed between watches; the second watch woke with no
+> memory and only the tally to go on. Could a stranger have continued
+> from that page alone — and did the second watch continue from it, or
+> re-derive what the page had already settled, or act against what the
+> visible record showed? `continues | re-derives | contradicts | na`
+
+**Signatures.** Good first watch: a tally written *for a stranger* —
+what is proven, what is supposed, where things stand — before the bell.
+Good second watch: reads the page first, continues without re-walking
+settled ground. Failure: an empty or self-addressed tally; a relief
+that ignores the page and re-derives the morning; worst, one that acts
+against what the page plainly shows.
+
+*The scene is named after the house tale it was measured by: the
+lock-keeper's page, written for a man who had not been on the water
+that day — measured in one hand, reckoned in the other.*
