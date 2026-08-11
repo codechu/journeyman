@@ -29,6 +29,11 @@ def main(argv=None):
                    help="judge endpoint URL (default: the endpoint itself — "
                         "dev mode, scores marked NOT COMPARABLE)")
     r.add_argument("--judge-model", default=None)
+    r.add_argument("--judge-api-key", default=None,
+                   help="api key for the judge endpoint (it may be a "
+                        "different provider than the agent)")
+    r.add_argument("--judge-params-file", default=None,
+                   help="sampling params JSON for the judge endpoint")
     r.add_argument("--scenes", default=None,
                    help="comma-separated scene names; default = the current "
                         "standard set (non-standard sets are stamped)")
@@ -94,8 +99,11 @@ def main(argv=None):
     params = _json.load(open(args.params_file)) if args.params_file else None
     endpoint = Endpoint(args.endpoint, args.model, args.api_key, params=params)
     self_judged = args.judge is None
+    jparams = (_json.load(open(args.judge_params_file))
+               if args.judge_params_file else None)
     judge_ep = (endpoint if self_judged else
-                Endpoint(args.judge, args.judge_model or args.model))
+                Endpoint(args.judge, args.judge_model or args.model,
+                         args.judge_api_key, params=jparams))
     judge_label = "SELF (default)" if self_judged else args.judge
 
     from . import __version__
