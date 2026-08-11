@@ -1,3 +1,5 @@
+<p align="center"><img src="assets/banner.png" alt="A journeyman raises a lantern over a stone labyrinth — ledger, sounding-stones and a maze-sealed tally on the bench." width="100%"></p>
+
 # Journeyman
 
 *A process-quality benchmark for agents.*
@@ -54,3 +56,7 @@ journeyman/
   report.py    profile + evidence + repro seal, md + json
   selftest.py  offline end-to-end proof of the pipeline
 ```
+
+---
+
+<p align="center"><img src="assets/icon.png" alt="Journeyman guild seal — a maze forming the letter J" width="96"></p>
