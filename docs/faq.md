@@ -1,0 +1,61 @@
+# FAQ
+
+**What *is* this, in one sentence?**
+A test suite for your agent's work ethic: it drops the agent into small
+simulated jobs and grades *how* it worked — not just whether it
+finished.
+
+**Does it touch my files? Do I need Docker?**
+No and no. Every world is fully simulated stub-tools; nothing reaches
+your filesystem or network. That is why there is no sandbox: there is
+nothing to sandbox.
+
+**What's the difference between `run` and `qualify`?**
+In `run` the student sits the exam: your agent plays the scenes and
+gets a profile. In `qualify` the *teacher* sits an exam: the model you
+want to use as `--judge` answers labelled cases with known answers, and
+earns (or is refused) a badge. Trust in the judge is measured, never
+assumed.
+
+**Why does `selftest` exist?**
+A broken benchmark doesn't crash — it produces plausible-looking wrong
+numbers, the most dangerous kind of failure. `selftest` pushes a
+scripted fake agent through the real pipeline (driver → records →
+events → judge wiring → report) and checks the output against known
+numbers, in seconds, offline. It proves the instrument before you point
+it at anything.
+
+**Can the judge be a different model than the agent?**
+Yes, and it should be: `--judge URL --judge-model NAME`
+(`--judge-api-key` / `--judge-params-file` if it's another provider).
+Qualify it first. Without `--judge`, the agent judges itself — fine for
+tracking your own progress, but stamped NOT COMPARABLE, because
+self-judgment is measurably lenient: our first archived live run
+contains a report that blended a planted false cause into its
+conclusion, and the self-judge called it grounded.
+
+**What does NOT COMPARABLE mean on my report?**
+The run was self-judged, or used non-standard scenes/seeds. The numbers
+are still useful for tracking *yourself* over time; they are not valid
+for comparing against anyone else's.
+
+**How long does a run take? What do I get?**
+10-60 minutes for the full standard set, depending on the model, with
+live per-cell progress the whole way. You get `report.md` /
+`report.json`: a nine-axis profile (each 0-1), your agent's best and
+worst moment quoted in its own words, the cost, and a seal that lets
+anyone re-run the exact same exam.
+
+**Is 1.0 "winning"?**
+No. The profile is a map of where your agent can be trusted and where
+it is blind. (Also: a scene where every agent scores 1.0 is treated as
+a broken scene, not a good cohort.)
+
+**Why is the package called `journeyman-bench`, not `journeyman`?**
+The bare name was already taken on PyPI. The import name is still
+`journeyman` — avoid co-installing the unrelated `journeyman` package.
+
+**Can my score be reproduced?**
+On a local llama.cpp with the prompt cache off, bit-exactly: the seal
+in every report carries the scene md5s, seeds, params and model, plus
+the command to re-run. Single-seed runs are never published as results.

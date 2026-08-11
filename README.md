@@ -128,7 +128,7 @@ journeyman/
 
 <p align="center"><img src="assets/icon.png" alt="Journeyman guild seal — a maze forming the letter J" width="96"></p>
 
-**Deeper docs:** [docs/scenes.md](docs/scenes.md) — the seven scenes,
+**Deeper docs:** [docs/faq.md](docs/faq.md) — the questions everyone asks · [docs/scenes.md](docs/scenes.md) — the seven scenes,
 plainly · [docs/methodology.md](docs/methodology.md) — scoring layers,
 judge exam, seals, contamination.
 
