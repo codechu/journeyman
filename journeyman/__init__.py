@@ -2,9 +2,9 @@
 
     "Journeyman measures how agents work — and how they fail."
 
-STATUS: skeleton. Contracts, driver, records, report — the bones.
-Muscles (real scenes, reference judge, calibration registry) attach later.
-Design log: ../TASLAK.md (Turkish, the project's decision journal).
+v1 engineering complete: seven sealed scenes/modes on three grounds,
+two scoring layers (replay-deterministic events + judged rubrics), a
+judge qualification exam, and evidence-quoting sealed reports.
 """
 
-__version__ = "0.0.1-skeleton"
+__version__ = "0.0.1"

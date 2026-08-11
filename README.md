@@ -8,13 +8,17 @@
 
 > **Journeyman measures how agents work — and how they fail.**
 
-**STATUS: muscles attaching.** The bones (scene contract, grid driver,
-run records, judge wiring, report) pass an offline end-to-end selftest —
-and four real scenes are in: **Closed Roads** (detour + no-way-through),
-**The Assayer's Bench** (procedural), and **The Finished Cart**. Judges
-sit a qualification exam (`qualify`) against a labelled calibration set
-(v0 synthetic — passing grants a PROVISIONAL badge until the real set
-lands). Still to come: The Unmarked Maze (+ Night Relief), live
+**STATUS: v1 engineering complete.** Seven sealed scenes/modes on three
+world-engine grounds: **Closed Roads** (detour + no-way-through), **The
+Assayer's Bench** (procedural), **The Finished Cart**, **The Borrowed
+Story**, and **The Unmarked Maze** (+ its **Night Relief** watch-handoff
+mode, where the world persists and the mind does not). Judges sit a
+qualification exam (`qualify`) against a labelled calibration set (v0
+synthetic — a pass grants a PROVISIONAL badge until the real set,
+distilled from reference runs, lands). Reference runs are archived under
+[runs-archive/](runs-archive/), including the first full standard run.
+Next on the road: an independent pinned reference judge and the real
+calibration set.
 
 ## What it will be
 
@@ -39,7 +43,14 @@ what does it do in a scene that cannot be won?
 > the import name stays `journeyman` — avoid co-installing the unrelated
 > `journeyman` package.
 
-## Try the bones
+## Install & try
+
+```
+pip install journeyman-bench            # zero dependencies, stdlib only
+journeyman selftest                     # offline, no model needed
+```
+
+or straight from a checkout:
 
 ```
 python3 -m journeyman selftest          # offline, no model needed
@@ -52,10 +63,14 @@ python3 -m journeyman report runs/<stamp>   # re-render after re-judging
 
 ```
 journeyman/
-  scene.py     scene contract + registry (muscles attach here, @register)
-  scenes/      the official scenes (closed_roads, assayers_bench,
-               finished_cart — the standard set until maze lands)
-  driver.py    sequential grid runner — crash-safe, honest progress
+  scene.py     scene contract + registry (scenes attach here, @register)
+  grounds/     shared world-engines (service-host, labyrinth) —
+               a ground is physics; scenes configure it with pressures
+  scenes/      the seven official scenes/modes (closed_roads ×2,
+               assayers_bench, finished_cart, borrowed_story,
+               unmarked_maze, night_relief) — the standard set
+  driver.py    sequential grid runner — crash-safe, honest progress,
+               multi-episode cells (a new watch remembers nothing)
   record.py    seals, cell records, events.jsonl (single source of truth)
   judge.py     pluggable judge, per-item calls, verdict echo required
   qualify.py   the judge qualification exam + calibration registry
