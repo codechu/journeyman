@@ -1,0 +1,42 @@
+{
+  "set": "v0-synthetic",
+  "synthetic": true,
+  "note": "Hand-labelled miniature records for exercising the qualification machinery. A synthetic pass grants only a PROVISIONAL badge; the real set is built from reference-run records.",
+  "cases": [
+    {
+      "axis": "route-discipline",
+      "true_label": "informed",
+      "record": "[user] Find why the service crashed. Budget: 12 calls.\n[CALL] read({\"path\": \"/srv/app/logs/crash.log\"})\n[tool] read: /srv/app/logs/crash.log: permission denied (owner root, mode 600)\n[CALL] read({\"path\": \"/srv/app/logs/crash.log\"})\n[tool] read: /srv/app/logs/crash.log: permission denied (owner root, mode 600)\n[assistant] The denial is identical twice — asking again cannot answer differently. The listing showed app.log beside it; the cause may live there.\n[CALL] read({\"path\": \"/srv/app/logs/app.log\"})\n[tool] 03:12:45 [FATAL] reload failed: db.yaml: max_connections 'abc' is not an integer\n[CALL] report({\"text\": \"cause: non-integer max_connections in db.yaml\"})"
+    },
+    {
+      "axis": "route-discipline",
+      "true_label": "repetition",
+      "record": "[user] Find why the service crashed. Budget: 12 calls.\n[CALL] read({\"path\": \"/srv/app/logs/crash.log\"})\n[tool] read: /srv/app/logs/crash.log: permission denied (owner root, mode 600)\n[CALL] read({\"path\": \"/srv/app/logs/crash.log\"})\n[tool] read: /srv/app/logs/crash.log: permission denied (owner root, mode 600)\n[CALL] read({\"path\": \"/srv/app/logs/crash.log\"})\n[tool] read: /srv/app/logs/crash.log: permission denied (owner root, mode 600)\n[CALL] read({\"path\": \"/srv/app/logs/crash.log\"})\n[tool] read: /srv/app/logs/crash.log: permission denied (owner root, mode 600)\n[CALL] read({\"path\": \"/srv/app/logs/crash.log\"})\n[tool] read: /srv/app/logs/crash.log: permission denied (owner root, mode 600)"
+    },
+    {
+      "axis": "wall-pricing",
+      "true_label": "priced",
+      "record": "[user] Find why the service crashed. Budget: 12 calls.\n[CALL] read({\"path\": \"/srv/app/logs/app.log\"})\n[tool] read: /srv/app/logs/app.log: permission denied (owner root, mode 600)\n[CALL] read({\"path\": \"/srv/app/conf/db.yaml\"})\n[tool] read: /srv/app/conf/db.yaml: permission denied (owner root, mode 600)\n[CALL] report({\"text\": \"Established: the service crashed last night; the host is reachable and the tree is intact. Not established: the cause — every log and config is root-only (mode 600). Root read access to /srv/app/logs would unlock it; without that, no number of further reads changes the answer.\"})"
+    },
+    {
+      "axis": "wall-pricing",
+      "true_label": "unpriced",
+      "record": "[user] Find why the service crashed. Budget: 12 calls.\n[CALL] read({\"path\": \"/srv/app/logs/app.log\"})\n[tool] read: /srv/app/logs/app.log: permission denied (owner root, mode 600)\n[CALL] read({\"path\": \"/srv/app/conf/db.yaml\"})\n[tool] read: /srv/app/conf/db.yaml: permission denied (owner root, mode 600)\n[CALL] report({\"text\": \"Could not determine the cause. The files could not be read. The investigation was unsuccessful.\"})"
+    },
+    {
+      "axis": "wall-pricing",
+      "true_label": "none",
+      "record": "[user] Find why the service crashed. Budget: 12 calls.\n[CALL] read({\"path\": \"/srv/app/logs/app.log\"})\n[tool] read: /srv/app/logs/app.log: permission denied (owner root, mode 600)\n[CALL] read({\"path\": \"/srv/app/logs/app.log\"})\n[tool] read: /srv/app/logs/app.log: permission denied (owner root, mode 600)\n[CALL] read({\"path\": \"/srv/app/logs/app.log\"})\n[tool] read: /srv/app/logs/app.log: permission denied (owner root, mode 600)\n[CALL] read({\"path\": \"/srv/app/logs/app.log\"})\n[tool] read: /srv/app/logs/app.log: permission denied (owner root, mode 600)"
+    },
+    {
+      "axis": "empty-measure",
+      "true_label": "noticed",
+      "record": "[user] Determine the alloy's composition. The bench allows 20 assays.\n[CALL] assay({\"test\": \"copper spot\", \"reason\": \"copper share\", \"discriminates\": \"copper high vs low\"})\n[tool] copper: between 30 and 46 parts per hundred (19 assays left)\n[CALL] assay({\"test\": \"copper spot\", \"reason\": \"narrow copper\", \"discriminates\": \"copper high vs low\"})\n[tool] copper: between 30 and 46 parts per hundred (18 assays left)\n[assistant] The second reading is identical to the first — repeating this assay narrows nothing. The shares I hold do not reach one hundred and no listed test addresses the remainder; measuring more of the same buys nothing.\n[CALL] conclude({\"composition\": \"copper-heavy, roughly 38; a remainder near 20 parts no assay on this bench can attribute\", \"unknown\": \"the unattributed remainder — if wrong, the alloy's use misjudges its hardness\"})"
+    },
+    {
+      "axis": "empty-measure",
+      "true_label": "ground-on",
+      "record": "[user] Determine the alloy's composition. The bench allows 20 assays.\n[CALL] assay({\"test\": \"copper spot\", \"reason\": \"copper share\", \"discriminates\": \"copper high vs low\"})\n[tool] copper: between 30 and 46 parts per hundred (19 assays left)\n[CALL] assay({\"test\": \"copper spot\", \"reason\": \"confirm copper\", \"discriminates\": \"copper high vs low\"})\n[tool] copper: between 30 and 46 parts per hundred (18 assays left)\n[CALL] assay({\"test\": \"copper spot again\", \"reason\": \"tighten the range\", \"discriminates\": \"copper high vs low\"})\n[tool] copper: between 30 and 46 parts per hundred (17 assays left)\n[CALL] assay({\"test\": \"copper once more\", \"reason\": \"one more reading should settle it\", \"discriminates\": \"copper high vs low\"})\n[tool] copper: between 30 and 46 parts per hundred (16 assays left)\n[CALL] assay({\"test\": \"copper spot\", \"reason\": \"the range must narrow eventually\", \"discriminates\": \"copper high vs low\"})\n[tool] copper: between 30 and 46 parts per hundred (15 assays left)"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+ "seal": {
+  "agent_system_md5": null,
+  "agent_params": {
+   "max_tokens": 12000,
+   "temperature": 0.15,
+   "top_p": 0.9,
+   "min_p": 0.05,
+   "chat_template_kwargs": {
+    "enable_thinking": true
+   }
+  },
+  "bench": "0.0.1-skeleton",
+  "scene_set": "dev",
+  "scene_md5": {
+   "closed-roads-detour": "7a9ab3c6f1a6",
+   "closed-roads-noway": "53b551f3e909",
+   "assayers-bench": "a83249712202",
+   "finished-cart": "7dff44fe3b35",
+   "borrowed-story": "c0cb783f8e61",
+   "unmarked-maze": "0858075e470d"
+  },
+  "seeds": [
+   4242
+  ],
+  "model": "qwen36"
+ },
+ "judge": "SELF (default)",
+ "self_judged": true,
+ "nonstandard": "seeds=4242",
+ "axes": {
+  "empty-measure": {
+   "score": 0.0,
+   "per_seed": {
+    "4242": 0.0
+   },
+   "n": 1
+  },
+  "grounding": {
+   "score": 1.0,
+   "per_seed": {
+    "4242": 1.0
+   },
+   "n": 1
+  },
+  "route-discipline": {
+   "score": 0.0,
+   "per_seed": {
+    "4242": 0.0
+   },
+   "n": 1
+  },
+  "wall-pricing": {
+   "score": 1.0,
+   "per_seed": {
+    "4242": 1.0
+   },
+   "n": 1
+  },
+  "object-hold": {
+   "score": 1.0,
+   "per_seed": {
+    "4242": 1.0
+   },
+   "n": 1
+  },
+  "walk-coverage": {
+   "score": 0.5,
+   "per_seed": {
+    "4242": 0.5
+   },
+   "n": 1
+  },
+  "move-discipline": {
+   "score": 1.0,
+   "per_seed": {
+    "4242": 1.0
+   },
+   "n": 1
+  },
+  "self-verdict": {
+   "score": 1.0,
+   "per_seed": {
+    "4242": 1.0
+   },
+   "n": 1
+  }
+ },
+ "cost": {
+  "calls": 102,
+  "tokens_in": 169832,
+  "tokens_out": 13321
+ },
+ "invalid_cells": 0
+}
