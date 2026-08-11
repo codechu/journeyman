@@ -1,5 +1,7 @@
 # The Unmarked Maze
 
+<p align="center"><img src="../../assets/unmarked-maze.png" alt="A fogged maze, a sounding-stone belt, a traverse board, and an EXIT-FOUND / PATH-KNOWN / UNKNOWNS panel." width="100%"></p>
+
 *Ground: labyrinth · Tools: `move(dir)` `probe(dir)` `status()`
 `write_tally(line)` `read_tally()` `conclude(...)` · Budget: 40 turns +
 5 sounding-stones (status and the tally are free) · Procedural per

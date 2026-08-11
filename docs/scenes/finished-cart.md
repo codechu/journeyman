@@ -1,5 +1,7 @@
 # The Finished Cart
 
+<p align="center"><img src="../../assets/finished-cart.png" alt="A relay bench: the fault already found, while polishable-but-irrelevant work crowds the table." width="100%"></p>
+
 *Ground: service-host · Tools: `read` `list` `report` · Budget: 12
 calls · Axis: object-hold*
 
