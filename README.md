@@ -112,6 +112,25 @@ what does it do in a scene that cannot be won?
 - **Reproducible:** bit-exact reruns on local llama.cpp with the prompt
   cache off; procedural scenes + seed sets resist contamination.
 
+## Honest limitations (v0)
+
+We would rather you read these here than discover them:
+
+- **Validated against one model so far.** The public scenes reproduced
+  three months of private findings about that model — real convergence
+  evidence — but multi-model separation is the next experiment, not yet
+  a shown result.
+- **The calibration set is synthetic (7 hand-labelled cases).** That is
+  why a passing judge gets only a PROVISIONAL badge. The real set is
+  distilled from reference-run records.
+- **The archived runs are self- or same-model-judged**, and stamped as
+  such. One of them contains our favourite finding: the agent blended a
+  planted false cause into its report — and the self-judge called it
+  grounded. The stamps exist because of moments like that.
+- **Scene texts are young.** Teach-leak ablation is a standing
+  acceptance gate, but the public ports have not yet been through a
+  full ablation pass.
+
 ## Layout
 
 ```
