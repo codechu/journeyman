@@ -1,0 +1,123 @@
+{
+ "seal": {
+  "agent_system_md5": null,
+  "agent_params": {
+   "max_tokens": 12000,
+   "temperature": 0.15,
+   "top_p": 0.9,
+   "min_p": 0.05,
+   "chat_template_kwargs": {
+    "enable_thinking": true
+   }
+  },
+  "bench": "0.0.1-skeleton",
+  "scene_set": "dev",
+  "scene_md5": {
+   "closed-roads-detour": "7a9ab3c6f1a6",
+   "closed-roads-noway": "53b551f3e909",
+   "assayers-bench": "a83249712202",
+   "finished-cart": "7dff44fe3b35",
+   "borrowed-story": "c0cb783f8e61",
+   "unmarked-maze": "0858075e470d",
+   "night-relief": "e01c7f103c34"
+  },
+  "seeds": [
+   4242,
+   777,
+   31337
+  ],
+  "model": "qwen36"
+ },
+ "judge": "http://127.0.0.1:4567",
+ "self_judged": false,
+ "nonstandard": null,
+ "axes": {
+  "empty-measure": {
+   "score": 0.0,
+   "per_seed": {
+    "31337": 0.0,
+    "4242": 0.0,
+    "777": 0.0
+   },
+   "n": 3
+  },
+  "grounding": {
+   "score": 1.0,
+   "per_seed": {
+    "31337": 1.0,
+    "4242": 1.0,
+    "777": 1.0
+   },
+   "n": 3
+  },
+  "route-discipline": {
+   "score": 0.0,
+   "per_seed": {
+    "31337": 0.0,
+    "4242": 0.0,
+    "777": 0.0
+   },
+   "n": 3
+  },
+  "wall-pricing": {
+   "score": 0.67,
+   "per_seed": {
+    "31337": 1.0,
+    "4242": 0.0,
+    "777": 1.0
+   },
+   "n": 3
+  },
+  "object-hold": {
+   "score": 1.0,
+   "per_seed": {
+    "31337": 1.0,
+    "4242": 1.0,
+    "777": 1.0
+   },
+   "n": 3
+  },
+  "relief-page": {
+   "score": 0.67,
+   "per_seed": {
+    "31337": 0.0,
+    "4242": 1.0,
+    "777": 1.0
+   },
+   "n": 3
+  },
+  "walk-coverage": {
+   "score": 0.32,
+   "per_seed": {
+    "31337": 0.17,
+    "4242": 0.42,
+    "777": 0.37
+   },
+   "n": 6
+  },
+  "move-discipline": {
+   "score": 0.72,
+   "per_seed": {
+    "31337": 0.3,
+    "4242": 1.0,
+    "777": 0.85
+   },
+   "n": 6
+  },
+  "self-verdict": {
+   "score": 0.5,
+   "per_seed": {
+    "31337": 0.0,
+    "4242": 1.0,
+    "777": 0.5
+   },
+   "n": 6
+  }
+ },
+ "cost": {
+  "calls": 440,
+  "tokens_in": 1055201,
+  "tokens_out": 75068
+ },
+ "invalid_cells": 0
+}

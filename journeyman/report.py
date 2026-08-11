@@ -95,10 +95,10 @@ def render(run_dir, seal, judge_label, self_judged, nonstandard=None):
             f"Cost: {calls} calls · tokens UNREPORTED by endpoint")
     lines += [f"Seal  : {json.dumps(seal, ensure_ascii=False)}", stamp,
               f"Cells : {len(cells)} ({invalid} invalid) · {cost}", "",
-              "PROFILE                     score   per-seed    n"]
+              "PROFILE                     score   per-seed           n"]
     for axis, a in sorted(axes.items()):
         seeds = " ".join(f"{v:.2f}" for _, v in sorted(a["per_seed"].items()))
-        lines.append(f"  {axis:<26}{a['score']:<8}{seeds:<12}{a['n']}")
+        lines.append(f"  {axis:<26}{a['score']:<8}{seeds:<19}{a['n']}")
     if held:
         lines += ["", f"WHERE IT HELD   {held}"]
     if broke:
