@@ -2,6 +2,8 @@
 
 # Journeyman
 
+[![ci](https://github.com/codechu/journeyman/actions/workflows/ci.yml/badge.svg)](https://github.com/codechu/journeyman/actions/workflows/ci.yml)
+
 *A process-quality benchmark for agents.*
 
 > **Journeyman measures how agents work — and how they fail.**
