@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "journeyman-bench"
+version = "0.0.1"
+description = "Journeyman - a process-quality benchmark for agents. Measures how agents work, and how they fail."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "LicenseRef-Proprietary-Until-Release"}
+authors = [{name = "Codechu"}]
+keywords = ["benchmark", "llm", "agents", "evaluation", "process-quality"]
+
+[project.urls]
+Repository = "https://github.com/codechu/journeyman"
+
+[project.scripts]
+journeyman = "journeyman.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["journeyman*"]
+
+[tool.setuptools.package-data]
+journeyman = ["calibration/*.json"]

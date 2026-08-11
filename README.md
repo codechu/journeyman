@@ -33,6 +33,10 @@ what does it do in a scene that cannot be won?
 - **Reproducible:** bit-exact reruns on local llama.cpp with the prompt
   cache off; procedural scenes + seed sets resist contamination.
 
+> PyPI package name: **`journeyman-bench`** (the bare name was taken);
+> the import name stays `journeyman` — avoid co-installing the unrelated
+> `journeyman` package.
+
 ## Try the bones
 
 ```
