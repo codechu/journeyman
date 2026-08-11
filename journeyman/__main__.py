@@ -18,6 +18,14 @@ from . import scene as scene_mod
 
 
 def main(argv=None):
+    # never crash on console encoding (legacy Windows consoles cannot
+    # print ✓/✗/box-drawing): degrade characters, keep running
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(errors="replace")
+        except (AttributeError, ValueError):
+            pass
+
     ap = argparse.ArgumentParser(prog="journeyman")
     sub = ap.add_subparsers(dest="cmd", required=True)
 

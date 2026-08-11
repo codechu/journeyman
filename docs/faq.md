@@ -59,3 +59,11 @@ The bare name was already taken on PyPI. The import name is still
 On a local llama.cpp with the prompt cache off, bit-exactly: the seal
 in every report carries the scene md5s, seeds, params and model, plus
 the command to re-run. Single-seed runs are never published as results.
+
+**Which servers is it tested against?**
+Developed and verified against llama.cpp (`--jinja`, OpenAI-compatible
+tool calling). Anything speaking the standard OpenAI tools dialect
+should work (vLLM, LM Studio, Ollama's OpenAI endpoint, the OpenAI API
+itself) — and when a server speaks a different dialect, cells fail
+LOUDLY as INVALID with the reason, never as silently wrong numbers.
+If your server misbehaves, please open an issue with the events.jsonl.
