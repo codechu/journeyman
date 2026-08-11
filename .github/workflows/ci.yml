@@ -11,6 +11,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: "${{ matrix.python }}"}
-      # stdlib-only: no installs — the whole suite is seconds
+      # stdlib-only INCLUDING the test runner: no installs at all
       - run: python -m journeyman selftest
-      - run: python -m pytest tests/ -q
+      - run: python -m unittest discover -s tests -v
