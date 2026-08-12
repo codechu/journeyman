@@ -38,6 +38,9 @@ journeyman selftest                     # offline proof, no model needed
 journeyman run --endpoint http://localhost:8080 --model my-agent
 ```
 
+`--model` is optional: leave it off and Journeyman asks the endpoint for
+its models — using the only one, or listing them for you to pick.
+
 Plain `pip` works too, inside a virtualenv:
 
 ```

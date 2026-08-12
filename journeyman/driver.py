@@ -54,6 +54,22 @@ class Endpoint:
         return msg, usage
 
 
+def list_models(url, api_key=None, timeout=15):
+    """GET {base}/v1/models — the OpenAI-compatible model list. Returns
+    the ids, or [] if the endpoint doesn't expose one."""
+    base = url.rstrip("/")
+    if base.endswith("/v1/chat/completions"):
+        base = base[: -len("/chat/completions")]
+    elif not base.endswith("/v1"):
+        base = base + "/v1"
+    req = urllib.request.Request(base + "/models")
+    if api_key:
+        req.add_header("Authorization", f"Bearer {api_key}")
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        data = json.load(r)
+    return [m.get("id") for m in data.get("data", []) if m.get("id")]
+
+
 def run_cell(endpoint, scene, seed, log, agent_system=None):
     """One cell: drive the tool loop until report, budget death, or error.
 

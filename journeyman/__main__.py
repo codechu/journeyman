@@ -17,6 +17,44 @@ from .report import render
 from . import scene as scene_mod
 
 
+def resolve_model(endpoint, api_key):
+    """Resolve --model when omitted: use the only model, else show the
+    list (and pick interactively if we're on a TTY). Returns a model id,
+    or None if it cannot be resolved (caller exits)."""
+    from .driver import list_models
+    try:
+        models = list_models(endpoint, api_key)
+    except Exception as e:
+        print(f"could not list models from {endpoint} ({e}); "
+              f"pass --model explicitly", file=sys.stderr)
+        return None
+    if not models:
+        print(f"{endpoint} exposes no models via /v1/models; "
+              f"pass --model explicitly", file=sys.stderr)
+        return None
+    if len(models) == 1:
+        print(f"using the endpoint's only model: {models[0]}")
+        return models[0]
+    print(f"the endpoint offers {len(models)} models:")
+    for i, m in enumerate(models, 1):
+        print(f"  {i}. {m}")
+    if sys.stdin.isatty() and sys.stdout.isatty():
+        try:
+            pick = input("pick one (number or name, blank to cancel): ").strip()
+        except (EOFError, KeyboardInterrupt):
+            pick = ""
+        if not pick:
+            return None
+        if pick.isdigit() and 1 <= int(pick) <= len(models):
+            return models[int(pick) - 1]
+        if pick in models:
+            return pick
+        print(f"'{pick}' is not one of the listed models", file=sys.stderr)
+        return None
+    print("pass --model with one of the above", file=sys.stderr)
+    return None
+
+
 def main(argv=None):
     # never crash on console encoding (legacy Windows consoles cannot
     # print ✓/✗/box-drawing): degrade characters, keep running
@@ -31,7 +69,9 @@ def main(argv=None):
 
     r = sub.add_parser("run", help="run the benchmark against an endpoint")
     r.add_argument("--endpoint", required=True)
-    r.add_argument("--model", required=True)
+    r.add_argument("--model", default=None,
+                   help="model id; if omitted, the endpoint is asked for its "
+                        "models — the only one is used, or you pick from a list")
     r.add_argument("--api-key", default=None)
     r.add_argument("--judge", default=None,
                    help="judge endpoint URL (default: the endpoint itself — "
@@ -104,6 +144,10 @@ def main(argv=None):
         args.scenes = STANDARD["scenes"]
     scenes = args.scenes.split(",")
     import json as _json
+    if args.model is None:
+        args.model = resolve_model(args.endpoint, args.api_key)
+        if args.model is None:
+            sys.exit(1)
     params = _json.load(open(args.params_file)) if args.params_file else None
     endpoint = Endpoint(args.endpoint, args.model, args.api_key, params=params)
     self_judged = args.judge is None

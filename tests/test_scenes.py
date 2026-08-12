@@ -410,6 +410,30 @@ class TestNightRelief(unittest.TestCase):
         self.assertIn("concluded", out2)
 
 
+class TestModelResolution(unittest.TestCase):
+    def test_url_normalize_and_parse(self):
+        import journeyman.driver as drv
+        from unittest import mock
+
+        class R:
+            def __enter__(self): return self
+            def __exit__(self, *a): return False
+            def read(self): return json.dumps(
+                {"data": [{"id": "m-a"}, {"id": "m-b"}, {"nope": 1}]}).encode()
+        seen = {}
+
+        def fake_urlopen(req, timeout=15):
+            seen["url"] = req.full_url
+            return R()
+        with mock.patch.object(drv.urllib.request, "urlopen", fake_urlopen):
+            for u in ("http://x:1", "http://x:1/v1",
+                      "http://x:1/v1/chat/completions"):
+                got = drv.list_models(u)
+                self.assertEqual(got, ["m-a", "m-b"])         # blank id dropped
+                self.assertTrue(seen["url"].endswith("/v1/models"))
+                self.assertNotIn("/v1/v1", seen["url"])       # no double /v1
+
+
 class TestQualify(unittest.TestCase):
     class _OracleJudge:
         """Kalibrasyon-cevaplarını bilen hakem (accuracy 1.0 beklenir)."""
