@@ -9,7 +9,7 @@
 
   <!-- banner: a real drawn rectangle, no box-drawing glyphs to misalign -->
   <rect x="20" y="74" width="486" height="52" rx="6" fill="none" stroke="#e8a33d" stroke-width="1.5"/>
-  <text x="38" y="97" fill="#e8a33d" font-weight="bold">JOURNEYMAN v0.0.2</text>
+  <text x="38" y="97" fill="#e8a33d" font-weight="bold">JOURNEYMAN v0.0.3</text>
   <text x="250" y="97" font-size="12" fill="#c98f36">process-quality bench</text>
   <text x="38" y="116" font-size="12" fill="#b7c0d4">measures how agents work — and how they fail</text>
 
