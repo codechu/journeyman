@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.4 — 2026-08-12
+- `run --model` is now optional: the endpoint is asked for its models
+  (`/v1/models`) — the only one is used, or they are listed to pick from.
+- Install docs lead with `pipx` and explain PEP 668
+  (`externally-managed-environment`).
+
 ## 0.0.3 — 2026-08-12
 - Real terminal colour (TTY-gated, `NO_COLOR`/`FORCE_COLOR` aware,
   Windows-safe) — the screenshot now matches the CLI.
