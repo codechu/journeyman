@@ -67,3 +67,10 @@ should work (vLLM, LM Studio, Ollama's OpenAI endpoint, the OpenAI API
 itself) — and when a server speaks a different dialect, cells fail
 LOUDLY as INVALID with the reason, never as silently wrong numbers.
 If your server misbehaves, please open an issue with the events.jsonl.
+
+**`pip install` says "externally-managed-environment" — is it broken?**
+No — that is PEP 668 on Debian/Ubuntu/Homebrew Python refusing
+system-wide installs, and it affects every package, not Journeyman.
+Install with `pipx install journeyman-bench` (ideal for a CLI tool), or
+inside a virtualenv (`python3 -m venv .venv && . .venv/bin/activate`
+then `pip install journeyman-bench`).

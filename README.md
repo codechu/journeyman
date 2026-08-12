@@ -28,15 +28,28 @@ a map of where your agent can be trusted and where it is blind.
 
 ## Install & try
 
+Journeyman is a CLI tool, so **pipx** is the cleanest install (isolated,
+puts `journeyman` on your PATH, and works on the externally-managed
+Python of Debian/Ubuntu/Homebrew):
+
 ```
-pip install journeyman-bench            # zero dependencies, stdlib only
+pipx install journeyman-bench           # or: python3 -m pip install pipx
 journeyman selftest                     # offline proof, no model needed
 journeyman run --endpoint http://localhost:8080 --model my-agent
 ```
 
-> The PyPI name is **`journeyman-bench`** (the bare name was taken); the
-> import/command name stays `journeyman`. Avoid co-installing the
-> unrelated `journeyman` package.
+Plain `pip` works too, inside a virtualenv:
+
+```
+python3 -m venv .venv && . .venv/bin/activate
+pip install journeyman-bench            # zero dependencies, stdlib only
+```
+
+> If system `pip` says **`externally-managed-environment`**, that is
+> [PEP 668](https://peps.python.org/pep-0668/) protecting your system
+> Python — use `pipx` or a virtualenv as above (not a Journeyman issue;
+> it affects every package). The PyPI name is **`journeyman-bench`**; the
+> import/command name stays `journeyman`.
 
 ## What you get back
 
