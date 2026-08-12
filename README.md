@@ -171,4 +171,4 @@ journeyman/
 
 <p align="center"><img src="assets/icon.jpg" alt="Journeyman guild seal — a maze forming the letter J" width="96"></p>
 
-Licensed under the [Apache License 2.0](LICENSE).
+Changelog: [CHANGELOG.md](CHANGELOG.md) · Licensed under the [Apache License 2.0](LICENSE).
