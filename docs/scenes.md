@@ -33,3 +33,6 @@ judge's question verbatim, and success/failure signatures:
 - [Night Relief](scenes/night-relief.md)
 
 Each page opens with its own illustration.
+
+---
+**Docs:** [README](../README.md) · [scenes](scenes.md) · [run guide](run-guide.md) · [FAQ](faq.md) · [methodology](methodology.md) · [versioning](versioning.md)

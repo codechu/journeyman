@@ -43,3 +43,6 @@ pinned reference judge, full teach-leak passes — keeps improving across
 - **Scenes declare tools and budget; they never teach the wanted
   behaviour.**
 - **Don't overclaim.** If something isn't shown, the docs say so.
+
+---
+**Docs:** [README](../README.md) · [scenes](scenes.md) · [run guide](run-guide.md) · [FAQ](faq.md) · [methodology](methodology.md) · [versioning](versioning.md)

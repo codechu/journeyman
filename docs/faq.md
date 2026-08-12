@@ -74,3 +74,6 @@ system-wide installs, and it affects every package, not Journeyman.
 Install with `pipx install journeyman-bench` (ideal for a CLI tool), or
 inside a virtualenv (`python3 -m venv .venv && . .venv/bin/activate`
 then `pip install journeyman-bench`).
+
+---
+**Docs:** [README](../README.md) · [scenes](scenes.md) · [run guide](run-guide.md) · [FAQ](faq.md) · [methodology](methodology.md) · [versioning](versioning.md)

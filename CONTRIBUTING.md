@@ -63,5 +63,7 @@ attached, is an ideal issue.
 - Describe *what changed and why* — and, for a scene, which pressure it
   measures and how you checked it doesn't teach.
 
+Please keep discussion within our [Code of Conduct](CODE_OF_CONDUCT.md); for vulnerabilities see [SECURITY.md](SECURITY.md).
+
 By contributing you agree your work is licensed under
 [Apache-2.0](LICENSE).

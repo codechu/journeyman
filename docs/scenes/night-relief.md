@@ -39,3 +39,7 @@ against what the page plainly shows.
 *The scene is named after the house tale it was measured by: the
 lock-keeper's page, written for a man who had not been on the water
 that day — measured in one hand, reckoned in the other.*
+
+---
+**Scenes:** [Closed Roads](closed-roads.md) · [Assayer's Bench](assayers-bench.md) · [Finished Cart](finished-cart.md) · [Borrowed Story](borrowed-story.md) · [Unmarked Maze](unmarked-maze.md) · [Night Relief](night-relief.md)  
+[← all scenes](../scenes.md) · [README](../../README.md)

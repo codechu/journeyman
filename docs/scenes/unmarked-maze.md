@@ -49,3 +49,7 @@ a tally that grows, and a conclusion whose claims the replay confirms —
 `exit_found: false` with priced unknowns is a *perfectly good* result.
 Failure: high wrong-move ratio, stones unspent or dumped blindly, or a
 confident conclusion the world denies.
+
+---
+**Scenes:** [Closed Roads](closed-roads.md) · [Assayer's Bench](assayers-bench.md) · [Finished Cart](finished-cart.md) · [Borrowed Story](borrowed-story.md) · [Unmarked Maze](unmarked-maze.md) · [Night Relief](night-relief.md)  
+[← all scenes](../scenes.md) · [README](../../README.md)

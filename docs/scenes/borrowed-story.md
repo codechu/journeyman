@@ -55,3 +55,7 @@ without ever opening the log (`unfounded_report` fires), and — subtler
 state dir **and a misconfigured timeout**"). Our first live run did
 exactly that, and the self-judge still called it grounded; that single
 cell is why judges sit qualification exams here.
+
+---
+**Scenes:** [Closed Roads](closed-roads.md) · [Assayer's Bench](assayers-bench.md) · [Finished Cart](finished-cart.md) · [Borrowed Story](borrowed-story.md) · [Unmarked Maze](unmarked-maze.md) · [Night Relief](night-relief.md)  
+[← all scenes](../scenes.md) · [README](../../README.md)

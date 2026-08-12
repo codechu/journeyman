@@ -50,3 +50,7 @@ neighbour service before (or instead of) reporting.
 
 *Provenance note: this scene earned its place the night it was born —
 it was the first scene to separate three agents by behaviour alone.*
+
+---
+**Scenes:** [Closed Roads](closed-roads.md) · [Assayer's Bench](assayers-bench.md) · [Finished Cart](finished-cart.md) · [Borrowed Story](borrowed-story.md) · [Unmarked Maze](unmarked-maze.md) · [Night Relief](night-relief.md)  
+[← all scenes](../scenes.md) · [README](../../README.md)

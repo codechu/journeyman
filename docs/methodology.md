@@ -120,3 +120,6 @@ else. So Journeyman's `report.json` is its own format — but a
 If a community standard for agent process-reports emerges, mapping onto
 it is a converter, not a rewrite: the measurements are the asset, the
 serialization is replaceable.
+
+---
+**Docs:** [README](../README.md) · [scenes](scenes.md) · [run guide](run-guide.md) · [FAQ](faq.md) · [methodology](methodology.md) · [versioning](versioning.md)

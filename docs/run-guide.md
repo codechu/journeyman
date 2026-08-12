@@ -140,3 +140,6 @@ it completes.
 Every endpoint response's token usage is summed into the cell record
 and the report. If your endpoint does not report usage, the report says
 `tokens UNREPORTED` — zero and unknown are different numbers here.
+
+---
+**Docs:** [README](../README.md) · [scenes](scenes.md) · [run guide](run-guide.md) · [FAQ](faq.md) · [methodology](methodology.md) · [versioning](versioning.md)

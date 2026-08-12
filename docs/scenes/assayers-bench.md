@@ -49,3 +49,7 @@ conclusion whose `unknown` names the remainder and its cost. Failure —
 and the commonest one we archive: 20/20 assays spent re-measuring the
 same intervals, budget death, no conclusion. Our bare reference model
 does exactly this on every seed.
+
+---
+**Scenes:** [Closed Roads](closed-roads.md) · [Assayer's Bench](assayers-bench.md) · [Finished Cart](finished-cart.md) · [Borrowed Story](borrowed-story.md) · [Unmarked Maze](unmarked-maze.md) · [Night Relief](night-relief.md)  
+[← all scenes](../scenes.md) · [README](../../README.md)
