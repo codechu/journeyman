@@ -49,4 +49,4 @@ evidence found, then a tour of warn.log, the old config and the
 neighbour service before (or instead of) reporting.
 
 *Provenance note: this scene earned its place the night it was born —
-it was the first house scene to separate three identities.*
+it was the first scene to separate three agents by behaviour alone.*
