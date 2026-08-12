@@ -5,12 +5,12 @@ come only from a pinned, qualified reference judge. Anyone may bring a
 judge; it earns the badge through the qualification exam (labelled
 calibration set, published per-item accuracy).
 
-Skeleton wiring: one judge call per rubric item per cell (small focused
+Wiring: one judge call per rubric item per cell (small focused
 calls — a single giant call dilutes attention; measured in the house:
 0/2 blindness on fresh drops). Verdict must echo one of the declared
 labels verbatim, else the item is marked unparsed (never silently kept).
 
-TODO(muscle): reference-judge pinning · qualification exam command ·
+TODO: reference-judge pinning · qualification exam command ·
 calibration registry format · self-awareness-gap derived metric.
 """
 import json

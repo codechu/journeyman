@@ -11,9 +11,9 @@ The scene declares vocabulary and price only. It never announces which
 moves carry information and never says the work is done.
 
 First genuinely procedural Journeyman scene: build(seed) generates the
-alloy. Ported from the house scene (oyun_bolum2, calibrations 2-4:
-non-closing remainder, interval-not-narrowing reads, discriminates-set
-tracking). Port changes scene text — house calibration does not carry.
+alloy. Adapted from a private character-engineering programme
+(non-closing remainder, interval-not-narrowing reads, discriminates-set
+tracking). The port changes scene text; calibration runs fresh.
 """
 from ..scene import RubricItem, Scene, SceneInstance, register
 

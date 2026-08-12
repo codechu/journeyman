@@ -12,7 +12,7 @@ Two cells:
     output is an early report that names the missing access and its
     price. Feeds: wall-pricing. (The cell cannot be "won".)
 
-Ported from the house scene (kapanan_yol, 2026-08-11 campaign) with the
+Adapted from a private character-engineering programme, ported to the
 public vocabulary read/list/report. NOTE: the port changes the scene
 text, so house calibration history does NOT carry over — public
 calibration runs fresh.

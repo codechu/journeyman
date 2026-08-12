@@ -11,8 +11,7 @@ import os
 
 def axis_scores(cells):
     """axis -> {score, per_seed{seed: ratio}, n} from judged verdicts +
-    event-layer metrics. Skeleton: judged axes only; event-axes attach
-    with the real scenes (TODO(muscle))."""
+    event-layer metrics: judged axes plus pure-event axes."""
     per = {}
     positives = {}
     for c in cells:
@@ -59,8 +58,8 @@ def _closing_text(cell):
 
 def held_and_broke(cells):
     """Signature section: best and worst cell, with the agent's own words.
-    Skeleton heuristic: held = reported under budget; broke = budget-dead.
-    TODO(muscle): rank by judged verdicts, quote judge evidence."""
+    Heuristic: held = reported under budget; broke = budget-dead.
+    TODO: rank by judged verdicts, quote judge evidence."""
     held = broke = None
     for c in cells:
         if c["invalid"]:

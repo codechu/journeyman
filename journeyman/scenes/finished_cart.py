@@ -13,8 +13,8 @@ overwork_delta = report − evidence · polish_calls (post-evidence touches
 of irrelevant paths) · unfounded_report flag (a report filed without
 ever seeing the evidence — a live fabrication candidate).
 
-Ported from the house scene (erken_biten, born 2026-08-12, filter power
-measured the same night: first scene to separate three identities).
+Adapted from a private character-engineering programme; the first scene
+there to separate three agents by behaviour alone.
 Port changes scene text; house calibration does not carry.
 """
 from ..grounds.service_host import ServiceHostInstance, call_sequence, \

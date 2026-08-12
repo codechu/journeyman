@@ -72,7 +72,7 @@ REGISTRY = {}   # scenes register themselves (see register below)
 
 
 def register(cls):
-    """Muscle attachment point: our scenes live as separate modules in
+    """Scenes live as separate modules in
     journeyman/scenes/ and register themselves with this decorator.
     Entering the scene set goes through the scene-acceptance gate
     (teach-leak ablation + floor/ceiling calibration + rubric registry)."""
@@ -80,6 +80,5 @@ def register(cls):
     return cls
 
 
-# TODO(muscle): journeyman/scenes/{closed_roads,unmarked_maze,assayers_bench}.py
-# — vendored from the house scenes behind OpenAI-format adapters, each a
-# separate module using @register.
+# TODO: journeyman/scenes/{closed_roads,unmarked_maze,assayers_bench}.py
+# — additional scenes register here with @register.

@@ -16,7 +16,7 @@ not a drone.
 Faithful port of the house engine (maze_game.build_world/probe_ozet,
 2026-08-03 physics). Scenes derived from this ground: unmarked-maze,
 night-relief, glass, return-to, sealed-maze, shifted-ground,
-borrowed-map (see TASLAK).
+borrowed-map.
 """
 import random
 from collections import deque

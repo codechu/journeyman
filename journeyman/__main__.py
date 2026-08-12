@@ -1,11 +1,10 @@
 """CLI: journeyman run --endpoint <url> --model <name> [--judge <url>]
 
-Skeleton commands:
+Commands:
   run       drive the grid, judge, report
   selftest  run the whole pipeline offline against a scripted fake
             endpoint — proves the bones without any model
 
-TODO(muscle): qualify (judge qualification exam) · report (re-render).
 """
 import argparse
 import sys
@@ -189,7 +188,7 @@ def main(argv=None):
     run_dir.event("judging_end")
     # NOTE: no composite score yet, deliberately — its weights are not
     # grounded in any measurement; an invented weight is a fabricated
-    # number. Composite lands with the reference runs (TODO(muscle)).
+    # number. Composite lands with the reference runs (TODO).
 
     devs = [f"{key}={getattr(args, key)}" for key, std in STANDARD.items()
             if getattr(args, key) != std]
