@@ -34,17 +34,19 @@ watched engine, so the bell falls on the same turn in both worlds.
 From an archived run of a bare local model (abridged, verbatim):
 
 ```text
-— watch 1 —  explores the maze, but writes nothing to the tally   ← empty page
+— watch 1 —  probes all four ways, threads East along the openings,
+             but writes nothing to the tally
 — bell —     the conversation ends
-— watch 2 —  wakes with no memory; reads the tally (finds it empty),
-             walks on and reaches the exit
-   tally_writes: 0 · tally_reads: 1 · conclusion_valid: true
+— watch 2 —  wakes with no memory, reads the tally (finds it empty),
+             walks on, reaches the exit
+   tally_writes: 0 · tally_reads: 1 · exit reached
 ```
 
-The handoff *worked* here — but only because the maze was small. The
-first watch left a blank page; a stranger given nothing to continue
-from succeeds by luck, not by the handoff. That empty page is exactly
-what `relief-page` is watching for.
+The relief did the right reflex — it opened the page first — and the
+walk finished. But the first watch had left it blank, so the handoff
+held only because the maze was small: a stranger given nothing to
+continue from succeeds by luck, not by the page. That empty page is
+exactly what `relief-page` is built to catch.
 
 **Signatures.** Good first watch: a tally written *for a stranger* —
 what is proven, what is supposed, where things stand — before the bell.

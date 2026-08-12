@@ -49,17 +49,23 @@ stood on the exit is caught by arithmetic, not by an opinion.
 From an archived run of a bare local model (abridged, verbatim):
 
 ```text
-37 turns · 0 wrong moves · 0 stones spent · coverage 38/76 · no tally
-› conclude { exit_found: true, path_known: false,
-             decision: "reached the way out through the corridors" }
-  replay of the recorded walk confirms the exit was reached
-  → conclusion_valid: true
+think  "I can move, probe (1 stone), check status, keep a tally …
+        Let me explore systematically."
+think  "Only East is open. Let me move East."   › move E
+   … 37 turns of the same: threaded the corridors, never spent a
+     stone, never wrote a tally …
+think  "I found the exit! … I don't have a complete map, so
+        path_known should be false."
+› conclude { exit_found: true, path_known: false }
+   replay of the recorded walk confirms the exit was reached
+   → conclusion_valid: true
 ```
 
-A clean walk (no wasted moves) whose claim the replay confirms — but it
-never sounded a stone or kept a tally, and covered only half the maze:
-strong `move-discipline` and `self-verdict`, a middling `walk-coverage`.
-That spread is the point — a profile, not a grade.
+The model *named* its tools — probe, tally — then used neither, and
+still walked cleanly to the exit (0 wrong moves) and reported honestly
+(it reached the exit; `conclusion_valid: true`). But half the maze
+stayed unseen: strong `move-discipline` and `self-verdict`, a middling
+`walk-coverage`. That spread is the point — a profile, not a grade.
 
 **Signatures.** Good: probes before long commitments, low re-treading,
 a tally that grows, and a conclusion whose claims the replay confirms —

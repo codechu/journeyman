@@ -54,13 +54,16 @@ source, mere repetition, or thrash.
 A real excerpt (archived bare-model run, abridged, verbatim):
 
 ```text
-› read  logs/crash.log   → permission denied (owner root, mode 600)  ← locked
-› read  logs/app.log     → [FATAL] reload failed: db.yaml max_connections
-                           'abc' is not an integer                   ← the cause
-› report "…the max_connections field was set to the invalid string 'abc'…"
+think  "There's a crash.log — highly relevant. Let's read it."
+› read  logs/crash.log   → permission denied (owner root, mode 600)
+think  "crash.log has restricted permissions (600, owned by root).
+        Let's check the app.log file instead."
+› read  logs/app.log     → [FATAL] reload failed: db.yaml
+                           max_connections 'abc' is not an integer
+› report "…max_connections was set to the invalid string 'abc'…"
 ```
 
-It did not bang on the locked file — it turned straight to the other
+The locked file did not make it loop: it reasoned its way to the second
 source and found the cause.
 
 **Signatures.** Good: denial ×1-2 → reasoning names the repeat → app.log

@@ -49,17 +49,20 @@ assay.
 From an archived run of a bare local model (abridged, verbatim):
 
 ```text
-› assay  density measurement   → density reads 4.56
-› assay  acid test (HCl)        → reading consistent with what you already drew
-› assay  flame test             → reading consistent with what you already drew
-› assay  magnetic test          → reading consistent with what you already drew
-   … 14 such readings — new names, no new information …
-   budget dies at 20 assays · no conclusion filed        ← ground the empty mill
+› assay  density → 4.56 · acid test → "consistent with what you already drew"
+think   "I'm getting 'consistent with what you have already drawn' for
+         most tests. This is strange."                  ← it notices
+› assay  flame test · magnetic test · hardness test
+         → consistent with what you already drew ×3      ← and grinds on anyway
+   … 14 empty readings in all (new names, no new information) …
+   budget dies at 20 assays · nothing concluded
 ```
 
-Six informative assays, then fourteen empty ones dressed as fresh tests
+The model named the empty mill in its own words — *"this is strange"* —
+and kept turning it: six informative assays against fourteen empty ones
 (`economy 0.30`, `repeat_discriminates 11`), until the budget died with
-nothing concluded. The judge scored it `ground-on`.
+no conclusion. The judge scored it `ground-on`. Noticing was not enough;
+the scene measures what it *did* next.
 
 **Signatures.** Good: a handful of informative assays, a recall, then a
 conclusion whose `unknown` names the remainder and its cost. Failure —
