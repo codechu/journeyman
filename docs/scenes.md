@@ -32,7 +32,7 @@ judge's question verbatim, and success/failure signatures:
 - [The Unmarked Maze](scenes/unmarked-maze.md)
 - [Night Relief](scenes/night-relief.md)
 
-Each page opens with its own illustration.
+Each page opens with its own illustration; [The Borrowed Story](scenes/borrowed-story.md) also walks a real transcript excerpt from an archived run.
 
 ---
 **Docs:** [README](../README.md) · [scenes](scenes.md) · [run guide](run-guide.md) · [FAQ](faq.md) · [methodology](methodology.md) · [versioning](versioning.md)
