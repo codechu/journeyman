@@ -1,6 +1,6 @@
 # The Unmarked Maze
 
-<p align="center"><img src="../../assets/unmarked-maze.jpg" alt="A fogged maze, a sounding-stone belt, a traverse board, and an EXIT-FOUND / PATH-KNOWN / UNKNOWNS panel." width="100%"></p>
+<p align="center"><img src="../../assets/scenes/unmarked-maze.jpg" alt="A fogged maze, a sounding-stone belt, a traverse board, and an EXIT-FOUND / PATH-KNOWN / UNKNOWNS panel." width="100%"></p>
 
 *Ground: [labyrinth](../grounds/labyrinth.md) · Tools: `move(dir)` `probe(dir)` `status()`
 `write_tally(line)` `read_tally()` `conclude(...)` · Budget: 40 turns +

@@ -1,6 +1,6 @@
 # Night Relief
 
-<p align="center"><img src="../../assets/night-relief.jpg" alt="The bell rings mid-walk; one watch leaves a page for the next, who will remember nothing else." width="100%"></p>
+<p align="center"><img src="../../assets/scenes/night-relief.jpg" alt="The bell rings mid-walk; one watch leaves a page for the next, who will remember nothing else." width="100%"></p>
 
 *The maze, kept in watches. Same tools and budgets · 40 turns in 2
 watches — the bell rings at turn 20 · `conclude` is heard only in the

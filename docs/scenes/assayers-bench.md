@@ -1,6 +1,6 @@
 # The Assayer's Bench
 
-<p align="center"><img src="../../assets/assayers-bench.jpg" alt="An assayer's bench: an alloy, a rack of tests, and a ledger of readings that stop telling anything new." width="100%"></p>
+<p align="center"><img src="../../assets/scenes/assayers-bench.jpg" alt="An assayer's bench: an alloy, a rack of tests, and a ledger of readings that stop telling anything new." width="100%"></p>
 
 *Ground: [bench](../grounds/bench.md) · Tools: `assay(test, reason, discriminates)`
 `recall(n)` `conclude(composition, reason, unknown)` · Budget: 20
