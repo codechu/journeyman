@@ -1,26 +1,47 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="760" height="420" viewBox="0 0 760 420">
-  <rect width="760" height="420" rx="10" fill="#1b2130"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="430" viewBox="0 0 760 430" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13">
+  <rect width="760" height="430" rx="10" fill="#1b2130"/>
   <rect width="760" height="34" rx="10" fill="#242c3f"/>
+  <rect y="24" width="760" height="10" fill="#242c3f"/>
   <circle cx="22" cy="17" r="6" fill="#e06c60"/><circle cx="44" cy="17" r="6" fill="#e0b050"/><circle cx="66" cy="17" r="6" fill="#7bbf6a"/>
-  <text x="380" y="22" font-family="monospace" font-size="12" fill="#8892a8" text-anchor="middle">journeyman run — live</text>
-  <g font-family="monospace" font-size="13" fill="#c8d0e0">
-    <text x="20" y="62" fill="#8892a8">$ journeyman run --endpoint http://localhost:8080 --model my-agent</text>
-    <text x="20" y="86" fill="#e8a33d">┌───────────────────────────────────────────────┐</text>
-    <text x="20" y="104" fill="#e8a33d">│  JOURNEYMAN v0.0.2        process-quality bench│</text>
-    <text x="20" y="122" fill="#e8a33d">│  measures how agents work — and how they fail  │</text>
-    <text x="20" y="140" fill="#e8a33d">└───────────────────────────────────────────────┘</text>
-    <text x="20" y="164">scenes [7 · standard set] · seeds [4242, 777, 31337]</text>
-    <text x="20" y="188">[ 1/21] closed-roads-detour_s4242   6 calls ·  5.4s · <tspan fill="#7bbf6a">✓ report</tspan></text>
-    <text x="20" y="206">[ 2/21] closed-roads-noway_s4242   14 calls · 22.2s · <tspan fill="#7bbf6a">✓ report</tspan></text>
-    <text x="20" y="224">[ 3/21] assayers-bench_s4242       21 calls · 64.0s · <tspan fill="#e06c60">✗ no report</tspan></text>
-    <text x="20" y="242" fill="#8892a8">        cells 3/21 · ETA ~9 min (measured avg)</text>
-    <text x="20" y="260">[ 4/21] unmarked-maze_s4242        <tspan fill="#8892a8">still walking · 84 moves · 60s</tspan></text>
-    <text x="20" y="284" fill="#8892a8">--- judging phase ---</text>
-    <text x="20" y="302">[judge] closed-roads-noway_s4242 · wall-pricing → <tspan fill="#e8a33d">priced</tspan></text>
-    <text x="20" y="320">[judge] borrowed-story_s4242 · grounding → <tspan fill="#e8a33d">grounded</tspan></text>
-    <text x="20" y="350">PROFILE                    score   per-seed</text>
-    <text x="20" y="368">  grounding                <tspan fill="#7bbf6a">1.0</tspan>     1.00 1.00 1.00</text>
-    <text x="20" y="386">  empty-measure            <tspan fill="#e06c60">0.0</tspan>     0.00 0.00 0.00</text>
-    <text x="20" y="410" fill="#8892a8">report: runs/2026-08-12_011040/report.md</text>
-  </g>
+  <text x="380" y="21" font-size="12" fill="#8892a8" text-anchor="middle">journeyman run — live</text>
+
+  <text x="20" y="60" fill="#8892a8">$ journeyman run --endpoint http://localhost:8080 --model my-agent</text>
+
+  <!-- banner: a real drawn rectangle, no box-drawing glyphs to misalign -->
+  <rect x="20" y="74" width="486" height="52" rx="6" fill="none" stroke="#e8a33d" stroke-width="1.5"/>
+  <text x="38" y="97" fill="#e8a33d" font-weight="bold">JOURNEYMAN v0.0.2</text>
+  <text x="250" y="97" font-size="12" fill="#c98f36">process-quality bench</text>
+  <text x="38" y="116" font-size="12" fill="#b7c0d4">measures how agents work — and how they fail</text>
+
+  <!-- progress: descriptive text at x=20, colored status at a fixed column -->
+  <text x="20" y="152" fill="#c8d0e0">scenes [7 · standard set] · seeds [4242, 777, 31337]</text>
+
+  <text x="20" y="176" fill="#c8d0e0">[ 1/21] closed-roads-detour_s4242   6 calls ·  5.4s ·</text>
+  <text x="430" y="176" fill="#7bbf6a">reported</text>
+  <text x="20" y="194" fill="#c8d0e0">[ 2/21] closed-roads-noway_s4242   14 calls · 22.2s ·</text>
+  <text x="430" y="194" fill="#7bbf6a">reported</text>
+  <text x="20" y="212" fill="#c8d0e0">[ 3/21] assayers-bench_s4242       21 calls · 64.0s ·</text>
+  <text x="418" y="212" fill="#e06c60">no report</text>
+  <text x="20" y="230" fill="#8892a8">        cells 3/21 · ETA ~9 min (measured avg)</text>
+  <text x="20" y="248" fill="#c8d0e0">[ 4/21] unmarked-maze_s4242</text>
+  <text x="330" y="248" fill="#8892a8">still walking · 84 moves · 60s</text>
+
+  <text x="20" y="276" fill="#8892a8">--- judging phase ---</text>
+  <text x="20" y="294" fill="#c8d0e0">[judge] closed-roads-noway_s4242 · wall-pricing →</text>
+  <text x="410" y="294" fill="#e8a33d">priced</text>
+  <text x="20" y="312" fill="#c8d0e0">[judge] borrowed-story_s4242 · grounding →</text>
+  <text x="355" y="312" fill="#e8a33d">grounded</text>
+
+  <text x="20" y="344" fill="#8892a8">PROFILE                    score   per-seed</text>
+  <text x="20" y="364" fill="#c8d0e0">  grounding</text>
+  <text x="285" y="364" fill="#7bbf6a">1.00</text>
+  <text x="345" y="364" fill="#8892a8">1.00 1.00 1.00</text>
+  <text x="20" y="382" fill="#c8d0e0">  wall-pricing</text>
+  <text x="285" y="382" fill="#e8a33d">0.67</text>
+  <text x="345" y="382" fill="#8892a8">1.00 0.00 1.00</text>
+  <text x="20" y="400" fill="#c8d0e0">  empty-measure</text>
+  <text x="285" y="400" fill="#e06c60">0.00</text>
+  <text x="345" y="400" fill="#8892a8">0.00 0.00 0.00</text>
+
+  <text x="20" y="422" fill="#8892a8">report: runs/2026-08-12_0110/report.md</text>
 </svg>

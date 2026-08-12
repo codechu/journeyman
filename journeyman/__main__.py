@@ -115,11 +115,13 @@ def main(argv=None):
     judge_label = "SELF (default)" if self_judged else args.judge
 
     from . import __version__
-    print(f"""\
-┌─────────────────────────────────────────────────────────┐
-│  JOURNEYMAN  v{__version__:<20} process-quality bench │
-│  measures how agents work — and how they fail           │
-└─────────────────────────────────────────────────────────┘""")
+    from .color import paint
+    banner = (
+        "┌─────────────────────────────────────────────────────────┐\n"
+        f"│  JOURNEYMAN  v{__version__:<20} process-quality bench │\n"
+        "│  measures how agents work — and how they fail           │\n"
+        "└─────────────────────────────────────────────────────────┘")
+    print(paint(banner, "amber"))
     print(f"scenes {scenes} · seeds {seeds}")
     if self_judged:
         print("judge: SELF — scores will be marked NOT COMPARABLE; "

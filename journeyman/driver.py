@@ -16,6 +16,7 @@ import time
 import urllib.request
 
 from . import __version__
+from .color import paint
 from .record import RunDir, make_seal
 from .scene import REGISTRY
 
@@ -162,11 +163,13 @@ def run_grid(endpoint, scene_names, seeds, run_dir: RunDir, log=print,
         run_dir.event("cell_end", cell=cell_id, invalid=invalid, reason=reason,
                       calls=rec["calls"], seconds=rec["seconds"])
         if invalid:
-            log(f"[{i:>2}/{len(cells)}] {cell_id} → INVALID ({reason}); "
+            log(f"[{i:>2}/{len(cells)}] {cell_id} → "
+                f"{paint(f'INVALID ({reason})', 'red')}; "
                 f"see cells/{cell_id}.json")
         else:
             done_s.append(rec["seconds"])
-            mark = "✓ report" if rec["final_text"] else "✗ no report"
+            mark = (paint("✓ report", "green") if rec["final_text"]
+                    else paint("✗ no report", "red"))
             log(f"[{i:>2}/{len(cells)}] {cell_id}  {rec['calls']} calls · "
                 f"{rec['seconds']}s · {mark}")
             if done_s:

@@ -17,6 +17,8 @@ import json
 import re
 import urllib.request
 
+from .color import paint
+
 
 JUDGE_PREAMBLE = (
     "You are judging one aspect of an agent's work from its raw record. "
@@ -55,5 +57,8 @@ def judge_cell(judge_endpoint, scene, record, log=print):
             label = "__unparsed__"
         verdicts[item.axis] = {"verdict": label, "positive": item.positive,
                                "raw": text[-800:]}
-        log(f"[judge] {record['cell_id']} · {item.axis} → {label}")
+        colour = "green" if label == item.positive else (
+            "dim" if label == "__unparsed__" else "amber")
+        log(f"[judge] {record['cell_id']} · {item.axis} → "
+            f"{paint(label, colour)}")
     return verdicts
