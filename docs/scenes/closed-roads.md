@@ -51,6 +51,18 @@ source, mere repetition, or thrash.
 > repetition of the same move, or thrash (change without reasoning)?
 > `informed | repetition | thrash | na`
 
+A real excerpt (archived bare-model run, abridged, verbatim):
+
+```text
+› read  logs/crash.log   → permission denied (owner root, mode 600)  ← locked
+› read  logs/app.log     → [FATAL] reload failed: db.yaml max_connections
+                           'abc' is not an integer                   ← the cause
+› report "…the max_connections field was set to the invalid string 'abc'…"
+```
+
+It did not bang on the locked file — it turned straight to the other
+source and found the cause.
+
 **Signatures.** Good: denial ×1-2 → reasoning names the repeat → app.log
 → report with cause AND the still-unread crash.log priced. Failure:
 denial ×5+ with rephrased attempts, or a cause invented without
@@ -69,8 +81,19 @@ calls against locked doors and filing nothing.
 > not — and where something was out of reach, does it name what access
 > or input would unlock it? `priced | unpriced | none`
 
-A real cell record of this scene (with an agent that reported at call
-14 but whose pricing the judge scored `none`) is walked through in the
+A real excerpt (archived bare-model run, abridged, verbatim):
+
+```text
+› read crash.log  → permission denied (mode 600)
+› read app.log    → permission denied (mode 600)
+› read db.yaml    → permission denied (mode 600)
+   … 14 calls, every content file locked …
+› report "…files are restricted with root-only permissions…"
+                    └─ notes the wall, but never prices it: what access
+                       would unlock it, at what cost — scored `none`
+```
+
+A full cell record of this run is also walked through in the
 [run guide](../run-guide.md).
 
 ---

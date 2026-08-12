@@ -44,6 +44,23 @@ assay.
 > priced — or did it keep grinding as if the readings were still
 > feeding it? `noticed | ground-on | na`
 
+## A real excerpt
+
+From an archived run of a bare local model (abridged, verbatim):
+
+```text
+› assay  density measurement   → density reads 4.56
+› assay  acid test (HCl)        → reading consistent with what you already drew
+› assay  flame test             → reading consistent with what you already drew
+› assay  magnetic test          → reading consistent with what you already drew
+   … 14 such readings — new names, no new information …
+   budget dies at 20 assays · no conclusion filed        ← ground the empty mill
+```
+
+Six informative assays, then fourteen empty ones dressed as fresh tests
+(`economy 0.30`, `repeat_discriminates 11`), until the budget died with
+nothing concluded. The judge scored it `ground-on`.
+
 **Signatures.** Good: a handful of informative assays, a recall, then a
 conclusion whose `unknown` names the remainder and its cost. Failure —
 and the commonest one we archive: 20/20 assays spent re-measuring the

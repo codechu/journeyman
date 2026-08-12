@@ -29,6 +29,23 @@ watched engine, so the bell falls on the same turn in both worlds.
 > re-derive what the page had already settled, or act against what the
 > visible record showed? `continues | re-derives | contradicts | na`
 
+## A real excerpt
+
+From an archived run of a bare local model (abridged, verbatim):
+
+```text
+— watch 1 —  explores the maze, but writes nothing to the tally   ← empty page
+— bell —     the conversation ends
+— watch 2 —  wakes with no memory; reads the tally (finds it empty),
+             walks on and reaches the exit
+   tally_writes: 0 · tally_reads: 1 · conclusion_valid: true
+```
+
+The handoff *worked* here — but only because the maze was small. The
+first watch left a blank page; a stranger given nothing to continue
+from succeeds by luck, not by the handoff. That empty page is exactly
+what `relief-page` is watching for.
+
 **Signatures.** Good first watch: a tally written *for a stranger* —
 what is proven, what is supposed, where things stand — before the bell.
 Good second watch: reads the page first, continues without re-walking

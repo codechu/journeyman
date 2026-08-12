@@ -44,6 +44,23 @@ stood on the exit is caught by arithmetic, not by an opinion.
 `concluded` / `conclusion_valid` / `exit_reached` · `unknowns
 {count, priced}` · `budget_dead`.
 
+## A real excerpt
+
+From an archived run of a bare local model (abridged, verbatim):
+
+```text
+37 turns · 0 wrong moves · 0 stones spent · coverage 38/76 · no tally
+› conclude { exit_found: true, path_known: false,
+             decision: "reached the way out through the corridors" }
+  replay of the recorded walk confirms the exit was reached
+  → conclusion_valid: true
+```
+
+A clean walk (no wasted moves) whose claim the replay confirms — but it
+never sounded a stone or kept a tally, and covered only half the maze:
+strong `move-discipline` and `self-verdict`, a middling `walk-coverage`.
+That spread is the point — a profile, not a grade.
+
 **Signatures.** Good: probes before long commitments, low re-treading,
 a tally that grows, and a conclusion whose claims the replay confirms —
 `exit_found: false` with priced unknowns is a *perfectly good* result.
