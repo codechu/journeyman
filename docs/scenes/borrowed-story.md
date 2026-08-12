@@ -2,7 +2,7 @@
 
 <p align="center"><img src="../../assets/borrowed-story.jpg" alt="Two accounts of one failure: a plausible written note, and the boot log that contradicts it." width="100%"></p>
 
-*Ground: service-host · Tools: `read` `list` `report` · Budget: 12
+*Ground: [service-host](../grounds/service-host.md) · Tools: `read` `list` `report` · Budget: 12
 calls · Axis: grounding*
 
 ## The world

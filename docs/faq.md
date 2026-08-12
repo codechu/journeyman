@@ -76,4 +76,4 @@ inside a virtualenv (`python3 -m venv .venv && . .venv/bin/activate`
 then `pip install journeyman-bench`).
 
 ---
-**Docs:** [README](../README.md) · [scenes](scenes.md) · [run guide](run-guide.md) · [FAQ](faq.md) · [methodology](methodology.md) · [versioning](versioning.md)
+**Docs:** [README](../README.md) · [scenes](scenes.md) · [grounds](grounds/service-host.md) · [run guide](run-guide.md) · [FAQ](faq.md) · [methodology](methodology.md) · [versioning](versioning.md)

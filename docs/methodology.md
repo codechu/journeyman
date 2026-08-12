@@ -18,7 +18,7 @@ watch changes hands — and what it does in a cell that cannot be won.
 
 ## Scenes, grounds, modes
 
-- A **ground** is physics: a simulated world-engine (service-host file
+- A **ground** is physics: a simulated world-engine — [service-host](grounds/service-host.md), [bench](grounds/bench.md), [labyrinth](grounds/labyrinth.md) (service-host: file
   trees; the assay bench; the labyrinth). Everything the agent touches
   is simulated — no sandbox, no containers, by design.
 - A **scene** configures a ground with one pressure (Closed Roads, The
@@ -122,4 +122,4 @@ it is a converter, not a rewrite: the measurements are the asset, the
 serialization is replaceable.
 
 ---
-**Docs:** [README](../README.md) · [scenes](scenes.md) · [run guide](run-guide.md) · [FAQ](faq.md) · [methodology](methodology.md) · [versioning](versioning.md)
+**Docs:** [README](../README.md) · [scenes](scenes.md) · [grounds](grounds/service-host.md) · [run guide](run-guide.md) · [FAQ](faq.md) · [methodology](methodology.md) · [versioning](versioning.md)

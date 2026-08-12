@@ -32,7 +32,7 @@ No build step, no install needed to develop — it's pure Python.
 demanding. A scene lives in `journeyman/scenes/`, registers with
 `@register`, and provides `build(seed)`, `events(record)` (facts only),
 and optionally `rubric()` (judged) and `event_axes(events)` (pure-event
-scores). Reuse a `grounds/` world-engine where one fits. Read
+scores). Reuse a [`grounds/`](docs/grounds/service-host.md) world-engine where one fits. Read
 [docs/scenes/](docs/scenes/) for the shape and
 [docs/methodology.md](docs/methodology.md) for the rules a scene must
 satisfy to enter the *standard set*:

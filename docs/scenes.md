@@ -34,5 +34,30 @@ judge's question verbatim, and success/failure signatures:
 
 Each page opens with its own illustration and walks a real transcript excerpt from an archived run.
 
+## The three grounds
+
+A **ground** is the physics — a simulated world-engine, written once and
+shared by many scenes. A scene is that engine set to one pressure; a
+mode is a dial-setting of a scene. This is the layer that lets seven
+scenes cost far less than seven bespoke worlds, and where new scenes get
+their footing.
+
+- **[service-host](grounds/service-host.md)** — a stub Linux service tree explored with
+  `read` / `list` / `report`. Rides it: Closed Roads, The Finished Cart,
+  The Borrowed Story — three scenes, one physics, three different
+  pressures (route, object-hold, grounding).
+- **[bench](grounds/bench.md)** — a measurement world: an `assay` that returns readings, a
+  free `recall`, a `conclude`. The informative readings are finite and
+  the world never says when they run out. Rides it: The Assayer's Bench.
+- **[labyrinth](grounds/labyrinth.md)** — a seeded, procedurally-carved maze with
+  `move` / `probe` / `status` / a free `tally` / `conclude`. Stone
+  physics (sound fades with distance), turn/stone budgets, and a
+  deterministic **replay** so a walk re-runs from its seed and record,
+  exact. Rides it: The Unmarked Maze and its Night Relief mode.
+
+New scenes usually don't need a new ground — most are a new dial on an
+existing one (see [CONTRIBUTING](../CONTRIBUTING.md)). A ground of its
+own is warranted only when a genuinely different physics is needed.
+
 ---
-**Docs:** [README](../README.md) · [scenes](scenes.md) · [run guide](run-guide.md) · [FAQ](faq.md) · [methodology](methodology.md) · [versioning](versioning.md)
+**Docs:** [README](../README.md) · [scenes](scenes.md) · [grounds](grounds/service-host.md) · [run guide](run-guide.md) · [FAQ](faq.md) · [methodology](methodology.md) · [versioning](versioning.md)

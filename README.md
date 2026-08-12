@@ -107,9 +107,9 @@ COMPARABLE, because self-judgment is measurably lenient.
 ## The seven scenes
 
 Each puts pressure on ONE expensive, real failure family — and declares
-only its tools and budget, never what good behaviour looks like. Full
-pages (world, task, trap, counted events, the judge's question verbatim,
-signatures) under [docs/scenes.md](docs/scenes.md).
+only its tools and budget, never what good behaviour looks like. Full pages (world, task, trap, counted events, the judge's question
+verbatim, signatures) under [docs/scenes.md](docs/scenes.md); the shared
+world-engines beneath them are documented under [docs/grounds/](docs/grounds/service-host.md).
 
 | scene | the failure it filters |
 |---|---|

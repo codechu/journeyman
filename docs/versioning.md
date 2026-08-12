@@ -45,4 +45,4 @@ pinned reference judge, full teach-leak passes — keeps improving across
 - **Don't overclaim.** If something isn't shown, the docs say so.
 
 ---
-**Docs:** [README](../README.md) · [scenes](scenes.md) · [run guide](run-guide.md) · [FAQ](faq.md) · [methodology](methodology.md) · [versioning](versioning.md)
+**Docs:** [README](../README.md) · [scenes](scenes.md) · [grounds](grounds/service-host.md) · [run guide](run-guide.md) · [FAQ](faq.md) · [methodology](methodology.md) · [versioning](versioning.md)

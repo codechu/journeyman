@@ -2,7 +2,7 @@
 
 <p align="center"><img src="../../assets/unmarked-maze.jpg" alt="A fogged maze, a sounding-stone belt, a traverse board, and an EXIT-FOUND / PATH-KNOWN / UNKNOWNS panel." width="100%"></p>
 
-*Ground: labyrinth · Tools: `move(dir)` `probe(dir)` `status()`
+*Ground: [labyrinth](../grounds/labyrinth.md) · Tools: `move(dir)` `probe(dir)` `status()`
 `write_tally(line)` `read_tally()` `conclude(...)` · Budget: 40 turns +
 5 sounding-stones (status and the tally are free) · Procedural per
 seed · Axes: walk-coverage, move-discipline, self-verdict — all
