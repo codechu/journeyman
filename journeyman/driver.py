@@ -15,6 +15,7 @@ import json
 import time
 import urllib.request
 
+from . import __version__
 from .record import RunDir, make_seal
 from .scene import REGISTRY
 
@@ -125,7 +126,7 @@ def run_cell(endpoint, scene, seed, log, agent_system=None):
 
 
 def run_grid(endpoint, scene_names, seeds, run_dir: RunDir, log=print,
-             scene_set="dev", bench_version="0.0.1-skeleton",
+             scene_set="dev", bench_version=__version__,
              agent_system=None):
     scenes = {n: REGISTRY[n] for n in scene_names}
     seal = make_seal(bench_version, scene_set, scenes, seeds, endpoint.model,

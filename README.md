@@ -3,8 +3,8 @@
 # Journeyman
 
 [![ci](https://github.com/codechu/journeyman/actions/workflows/ci.yml/badge.svg)](https://github.com/codechu/journeyman/actions/workflows/ci.yml)
-[![PyPI](https://img.shields.io/pypi/v/journeyman-bench)](https://pypi.org/project/journeyman-bench/)
-[![Python](https://img.shields.io/pypi/pyversions/journeyman-bench)](https://pypi.org/project/journeyman-bench/)
+[![PyPI](https://img.shields.io/pypi/v/journeyman-bench?color=blue)](https://pypi.org/project/journeyman-bench/)
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://pypi.org/project/journeyman-bench/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 [![Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](pyproject.toml)
 
