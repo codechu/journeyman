@@ -1,5 +1,7 @@
 # Ground: bench
 
+<p align="center"><img src="../../assets/grounds/bench.jpg" alt="An assayer's bench: an unmarked ingot under a lamp, a rack of instruments, and a ledger whose later lines all read the same faint mark, its remaining columns fading to blank." width="100%"></p>
+
 A measurement world. A hidden object of study (an alloy of known
 metals in seeded proportions) sits on the bench; the agent probes it
 with assays and must eventually conclude. Fully in-memory, deterministic

@@ -1,5 +1,7 @@
 # Ground: labyrinth
 
+<p align="center"><img src="../../assets/grounds/labyrinth.jpg" alt="A cutaway of a fogged stone corridor-maze, a single lantern-lit path threading it, sounding-stones rippling sound that fades with distance, a far doorway of light." width="100%"></p>
+
 A fogged maze the agent walks blind, one glimpse at a time. The world is
 generated from the seed, so the same seed is the same maze, bit-for-bit
 — and a whole walk can be **replayed** from its seed and call record.

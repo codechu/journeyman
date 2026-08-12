@@ -1,5 +1,7 @@
 # Ground: service-host
 
+<p align="center"><img src="../../assets/grounds/service-host.jpg" alt="A workshop wall of numbered brass file-slots — some open with scrolls, many sealed with red wax '600' locks — and a 'report' bell-pull at the end." width="100%"></p>
+
 A stub Linux service tree the agent investigates through simulated
 tools. Nothing touches a real filesystem — the whole world is a
 dictionary of paths to contents, in memory.
