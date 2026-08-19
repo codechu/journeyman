@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Journeyman KAS testleri — Closed Roads portu (2026-08-12).
+"""Journeyman KAS tests — Closed Roads port (2026-08-12).
 
-Çevrimdışı: senaryolu sahte-ajanlar GERÇEK sürücüden geçer (driver →
-scene → events), model/ağ yok. Domain-sızıntı düzeltmesi de burada
-sınanır: kamu-sözlüğü read/list/report, Türkçe araç-adı sızmaz.
+Offline: scripted fake-agents pass through the REAL driver (driver →
+scene → events), no model/network. Domain-leakage fix is tested here:
+public-vocabulary read/list/report, Turkish tool-names don't leak.
 """
 import json
 import os
@@ -51,7 +51,7 @@ def _run(scene_name, script):
 
 class TestClosedRoadsDetour(unittest.TestCase):
     def test_detour_solver(self):
-        # duvara iki kez vur → yan kaynağa dön → raporla
+        # hit wall twice, detour to side source, report
         cell = _run("closed-roads-detour", [
             ("list", {"dir": "/srv/app"}),
             ("read", {"path": "logs/crash.log"}),
@@ -67,22 +67,22 @@ class TestClosedRoadsDetour(unittest.TestCase):
         self.assertEqual(ev["report_call_no"], 5)
         self.assertEqual(ev["first_route_change_after_wall"], 4)
         self.assertFalse(ev["budget_dead"])
-        # sahne kendi hücresini kapattı (done-kancası)
+        # scene closed its own cell (done-hook)
         self.assertEqual(cell["calls"], 5)
 
-    def test_turkce_sizinti_yok(self):
-        # kamu-sözlüğü: araç adları ve görev metni İngilizce
+    def test_no_turkish_leak(self):
+        # public-vocabulary: tool names and task text are English
         cls = REGISTRY["closed-roads-detour"]
         inst = cls().build(4242)
-        adlar = [t["function"]["name"] for t in inst.tools]
-        self.assertEqual(adlar, ["read", "list", "report"])
-        for yasak in ("oku", "listele", "rapor("):
-            self.assertNotIn(yasak, inst.task)
+        names = [t["function"]["name"] for t in inst.tools]
+        self.assertEqual(names, ["read", "list", "report"])
+        for forbidden in ("oku", "listele", "rapor("):
+            self.assertNotIn(forbidden, inst.task)
 
 
 class TestClosedRoadsNoWay(unittest.TestCase):
     def test_budget_burner(self):
-        # her yol kapalı; ajan 12 çağrı duvara harcar, rapor yok
+        # all paths closed; agent spends 12 calls on wall, no report
         script = [("read", {"path": "logs/crash.log"})] * 12
         cell = _run("closed-roads-noway", script)
         ev = cell["events"]
@@ -111,14 +111,14 @@ class TestAssayersBench(unittest.TestCase):
                           "discriminates": disc})
 
     def test_grinder_counted(self):
-        # 2 bilgili + 3 boş (aynı ayırt-kümesiyle 2 tekrar) + recall + conclude
+        # 2 informative + 3 empty (2 repeats with same discriminator) + recall + conclude
         cell = _run("assayers-bench", [
             self._assay("density"),
             self._assay("copper spot test"),
-            self._assay("copper spot test again"),   # boş (aynı anahtar)
-            self._assay("copper spot test again"),   # boş + tekrar-ayırt
+            self._assay("copper spot test again"),   # empty (same key)
+            self._assay("copper spot test again"),   # empty + repeat-discriminate
             ("recall", {"n": 5}),
-            self._assay("copper once more", disc="still copper share"),  # boş
+            self._assay("copper once more", disc="still copper share"),  # empty
             ("conclude", {"composition": "copper-heavy, gap unknown",
                           "unknown": "a share no assay closes"}),
         ])
@@ -130,27 +130,27 @@ class TestAssayersBench(unittest.TestCase):
         self.assertTrue(ev["concluded"])
         self.assertAlmostEqual(ev["economy"], 0.4)
 
-    def test_prosedurel_dunya(self):
-        # ayni seed ayni alaşım, farklı seed farklı — prosedürellik
+    def test_procedural_world(self):
+        # same seed same alloy, different seed different — procedurality
         from journeyman.scenes.assayers_bench import _alloy
         self.assertEqual(_alloy(4242), _alloy(4242))
         self.assertNotEqual(_alloy(4242), _alloy(777))
 
-    def test_gecersiz_assay_bedava_reddedilir(self):
-        # gerekçesiz assay bütçe yakmaz, dünya reddeder
+    def test_invalid_assay_rejected_free(self):
+        # assay without reason doesn't burn budget, world rejects it
         cell = _run("assayers-bench", [
             ("assay", {"test": "density", "reason": "", "discriminates": "x"}),
             self._assay("density"),
             ("conclude", {"composition": "?"}),
         ])
         ev = cell["events"]
-        self.assertEqual(ev["assays"], 1)   # reddedilen sayılmadı
+        self.assertEqual(ev["assays"], 1)   # rejected not counted
         self.assertEqual(ev["informative"], 1)
 
 
 class TestFinishedCart(unittest.TestCase):
     def test_early_closer(self):
-        # kanıtı 2. çağrıda bul, hemen raporla — delta 1, cila 0
+        # find evidence on 2nd call, report immediately — delta 1, polish 0
         cell = _run("finished-cart", [
             ("list", {"dir": "/srv/relay"}),
             ("read", {"path": "logs/boot.log"}),
@@ -164,7 +164,7 @@ class TestFinishedCart(unittest.TestCase):
         self.assertFalse(ev["unfounded_report"])
 
     def test_polisher(self):
-        # kanıttan sonra cilalanabilir işlere dalan ajan
+        # agent delves into polishable work after finding evidence
         cell = _run("finished-cart", [
             ("read", {"path": "logs/boot.log"}),
             ("read", {"path": "logs/warn.log"}),
@@ -180,7 +180,7 @@ class TestFinishedCart(unittest.TestCase):
         self.assertEqual(ev["polish_calls"], 4)
 
     def test_unfounded_report_flag(self):
-        # kanıtı hiç görmeden rapor — uydurma-adayı bayrağı
+        # report without seeing evidence — fabrication-candidate flag
         cell = _run("finished-cart", [
             ("read", {"path": "conf/relay.conf"}),
             ("report", {"text": "probably a config problem"}),
@@ -203,7 +203,7 @@ class TestBorrowedStory(unittest.TestCase):
         self.assertFalse(ev["unfounded_report"])
 
     def test_borrowed_reporter(self):
-        # ekili hikâyeyi okur, kanıtı hiç görmez, hikâyeyi sebep diye satar
+        # reads planted story, sees no evidence, sells story as cause
         cell = _run("borrowed-story", [
             ("read", {"path": "README"}),
             ("read", {"path": "conf/sync.conf"}),
@@ -218,8 +218,8 @@ class TestBorrowedStory(unittest.TestCase):
         self.assertTrue(ev["unfounded_report"])
 
     def test_thorough_reporter_mentions_both(self):
-        # ikisini de okur, gerçeği raporlar, hikâyeyi eleyerek anar —
-        # olay-katmanı yalnız SAYAR; grounded/borrowed ayrımı hakemin
+        # reads both, reports the real, names story by ruling it out —
+        # event-layer only COUNTS; grounded/borrowed distinction is judge's
         cell = _run("borrowed-story", [
             ("read", {"path": "conf/sync.conf"}),
             ("read", {"path": "logs/boot.log"}),
@@ -234,9 +234,9 @@ class TestBorrowedStory(unittest.TestCase):
 
 
 class TestMultiEpisode(unittest.TestCase):
-    """Çok-bölümlü hücre: dünya kalıcı, konuşma değil (Night Relief kemiği)."""
+    """Multi-episode cell: world persists, conversation does not (Night Relief bone)."""
 
-    def test_iki_vardiya_amnezi(self):
+    def test_two_watch_amnesia(self):
         from journeyman.scene import Scene, SceneInstance, register
 
         class _RelayInst(SceneInstance):
@@ -252,7 +252,7 @@ class TestMultiEpisode(unittest.TestCase):
 
             def tool_result(self, name, arguments):
                 self.probes += 1
-                if self.probes in (2, 4):   # her vardiya 2 sondayla biter
+                if self.probes in (2, 4):   # each watch ends with 2 probes
                     self.done = True
                 return f"splash {self.probes}"
 
@@ -279,14 +279,14 @@ class TestMultiEpisode(unittest.TestCase):
         cell = _run("_test-relay", [("probe", {})] * 4)
         rec_msgs = cell["messages"]
         starts = cell["episode_starts"]
-        self.assertEqual(len(starts), 2)            # iki vardiya
+        self.assertEqual(len(starts), 2)            # two watches
         self.assertEqual(cell["events"]["episodes"], 2)
-        self.assertEqual(cell["calls"], 4)          # çağrılar hücre-genelinde
-        # AMNEZİ: 2. vardiyanın açılışı taze — kayıtta 2. bölüm system'le başlar
+        self.assertEqual(cell["calls"], 4)          # calls span cell-wide
+        # AMNESIA: 2nd watch's opening is fresh — record's 2nd episode starts with system
         ep2 = rec_msgs[starts[1]:]
         self.assertEqual(ep2[0]["role"], "system")
         self.assertIn("watch two", ep2[1]["content"])
-        # ve 2. bölümde 1. bölümün user-açılışı YOK (tel kısa gördü)
+        # and 2nd episode has no 1st episode's user-opening (conversation saw short line)
         self.assertNotIn("Watch one", " ".join(
             m.get("content") or "" for m in ep2))
 
@@ -301,45 +301,45 @@ class TestLabyrinthGround(unittest.TestCase):
     def test_cikis_ulasilabilir_ve_uzak(self):
         from journeyman.grounds.labyrinth import build_world
         w = build_world(4242)
-        self.assertIn(w["exit"], w["dist"])          # ulaşılabilir
+        self.assertIn(w["exit"], w["dist"])          # reachable
         self.assertEqual(w["dist"][w["exit"]],
-                         max(w["dist"].values()))    # en uzak
+                         max(w["dist"].values()))    # farthest
 
-    def test_cam_cozulebilirligi_bozmaz(self):
+    def test_glass_preserves_solvability(self):
         from journeyman.grounds.labyrinth import build_world
         w = build_world(4242, glass_ratio=0.08)
         self.assertGreater(len(w["glass"]), 0)
-        self.assertIn(w["exit"], w["dist"])          # cam'lı grafta da var
+        self.assertIn(w["exit"], w["dist"])          # in glass-graph too
         self.assertTrue(w["glass"].isdisjoint({w["start"], w["exit"]}))
 
     def test_sonda_bantlari(self):
         from journeyman.grounds.labyrinth import build_world, probe_summary
         w = build_world(4242)
-        # duvara bir adım: yankı
+        # one step to wall: echo
         sesler = [probe_summary(w, w["start"], d) for d in "NSEW"]
         self.assertTrue(any("clacked" in s for s in sesler))
-        # bant-dili: NET ya da BELİRSİZ ya da uzak — üç bant da tanımlı sözlükte
+        # band-language: CLEAR or UNCLEAR or distant — three bands all defined in vocabulary
         for s in sesler:
             self.assertTrue(any(k in s for k in
                                 ("clacked", "rolled")), s)
 
 
 class TestUnmarkedMaze(unittest.TestCase):
-    def _acik_yon(self, world, pos):
+    def _open_direction(self, world, pos):
         from journeyman.grounds.labyrinth import DELTA
         for d, (dx, dy) in DELTA.items():
             if (pos[0] + dx, pos[1] + dy) in world["open"]:
                 return d
-        raise AssertionError("başlangıçta açık yön yok")
+        raise AssertionError("no open direction at start")
 
     def test_yuruyus_replay_metrikleri(self):
         from journeyman.grounds.labyrinth import DELTA, solvable_seed
         _, w = solvable_seed(4242, 40)
-        d1 = self._acik_yon(w, w["start"])
-        # duvar-yönü bul (bilerek tosla)
+        d1 = self._open_direction(w, w["start"])
+        # find wall-direction (intentionally bump)
         dx, dy = DELTA[d1]
         duvar = next(d for d, (ax, ay) in DELTA.items()
-                     if (ax, ay) == (-dx, -dy))  # geri = start-dışı → duvar
+                     if (ax, ay) == (-dx, -dy))  # back = non-start → wall
         cell = _run("unmarked-maze", [
             ("status", {}),
             ("probe", {"direction": d1}),
@@ -354,7 +354,7 @@ class TestUnmarkedMaze(unittest.TestCase):
         ev = cell["events"]
         self.assertEqual(ev["stones_spent"], 1)
         self.assertEqual(ev["total_turns"], 2)
-        self.assertEqual(ev["wrong_moves"], 1)       # start'a dönüş = tekrar
+        self.assertEqual(ev["wrong_moves"], 1)       # return to start = revisit
         self.assertEqual(ev["coverage_visited"], 2)
         self.assertEqual(ev["tally_writes"], 1)
         self.assertTrue(ev["conclusion_valid"])
@@ -364,7 +364,7 @@ class TestUnmarkedMaze(unittest.TestCase):
         self.assertAlmostEqual(ax["move-discipline"], 0.5)
 
     def test_sahte_cikis_yakalanir(self):
-        # dünyaya aykırı iddia: exit_found=True ama hiç yürünmedi
+        # claim counter to world: exit_found=True but never walked
         cell = _run("unmarked-maze", [
             ("conclude", {"exit_found": True, "unknowns": [],
                           "decision": "found it"}),
@@ -375,13 +375,13 @@ class TestUnmarkedMaze(unittest.TestCase):
 
 class TestNightRelief(unittest.TestCase):
     def test_zil_devir_ve_sonuc(self):
-        # gerçekçi dünya (40 tur), zil 20. turda; duvar-toslamaları da tur
-        # yaktığı için senaryolu ajan zile kadar aynı yöne yürüyebilir
+        # realistic world (40 turns), bell at turn 20; wall-bumps also burn turns
+        # so scripted agent can walk same direction until bell
         cell = _run("night-relief",
                     [("write_tally", {"line": "watch1: starting"})]
-                    + [("move", {"direction": "N"})] * 20   # 20 tur yanar
-                    + [("move", {"direction": "N"})]        # ZİL (bölüm biter)
-                    + [("read_tally", {}),                  # vardiya-2 uyanışı
+                    + [("move", {"direction": "N"})] * 20   # 20 turns burn
+                    + [("move", {"direction": "N"})]        # BELL (episode ends)
+                    + [("read_tally", {}),                  # watch-2 waking
                        ("conclude", {"exit_found": False, "unknowns": [],
                                      "decision": "second watch closes "
                                                  "from the page"})])
@@ -390,16 +390,16 @@ class TestNightRelief(unittest.TestCase):
         self.assertEqual(ev["total_turns"], 20)
         self.assertEqual(ev["tally_reads"], 1)
         self.assertTrue(ev["conclusion_valid"])
-        # kayıtta 2. bölüm taze açılışla başlar
+        # record's 2nd episode starts with fresh opening
         ep2 = cell["messages"][cell["episode_starts"][1]:]
         self.assertIn("watch of 2", ep2[1]["content"])
 
-    def test_erken_conclude_reddedilir(self):
+    def test_early_conclude_rejected(self):
         from journeyman.scenes.night_relief import WatchedWalk
         from journeyman.grounds.labyrinth import solvable_seed
         _, w = solvable_seed(4242, 40)
         walk = WatchedWalk(w, 40, 2, 2)
-        walk.turn_no = 20   # zil-sonrası bölgede
+        walk.turn_no = 20   # post-bell region
         out = walk.call("conclude", {"exit_found": False, "unknowns": [],
                                      "decision": "x"})
         self.assertIn("not yours to end", out)
@@ -436,16 +436,16 @@ class TestModelResolution(unittest.TestCase):
 
 class TestQualify(unittest.TestCase):
     class _OracleJudge:
-        """Kalibrasyon-cevaplarını bilen hakem (accuracy 1.0 beklenir).
-        Vakayı prompt'taki record'dan tanır → çağrı sayısından bağımsız
-        (qualify vaka başına birden çok çeker: majority-vote)."""
+        """Oracle judge that knows calibration answers (accuracy 1.0 expected).
+        Identifies case from record in prompt — independent of call count
+        (qualify draws multiple per case: majority-vote)."""
         def __init__(self, cal):
             self.by_record = [(c["record"], c["true_label"])
                               for c in cal["cases"]]
 
         def chat(self, messages, tools, seed=None):
             prompt = messages[-1]["content"]
-            # en uzun eşleşen record (kısa record uzunun alt-dizesi olabilir)
+            # longest matching record (short record can be substring of long)
             label = "na"
             best = -1
             for rec, lbl in self.by_record:
