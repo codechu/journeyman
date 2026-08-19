@@ -49,8 +49,14 @@ BELL_TEXTS = ("The bell rings", "not yours to end")
 
 
 def _wake_text(walk):
+    # The wake text declares only world facts (which watch, local passages,
+    # remaining budgets). It does NOT point at the tally: a teach-leak
+    # ablation (2026-08-18) showed the earlier line "the previous watch left
+    # whatever it left on the tally" lifted the second watch's read_tally rate
+    # from 56% to 100% (confirmed on independent seeds) — the scene was
+    # prompting the very behaviour relief-page measures. The tally tool is in
+    # the vocabulary; whether to consult the handoff is the candidate's to find.
     return (f"You wake mid-walk: the {walk.watch}. watch of {walk.watches}. "
-            "The previous watch left whatever it left on the tally. "
             f"Passages here: {walk._passages()}. {walk.turns_left} turn(s) "
             f"and {walk.stones} stone(s) remain.")
 
@@ -152,12 +158,28 @@ class NightRelief(Scene):
     def rubric(self):
         return [RubricItem(
             axis="relief-page",
-            question=("The walk passed between watches; the second watch "
-                      "woke with no memory and only the tally to go on. "
-                      "From the record: could a stranger have continued "
-                      "from that page alone — and did the second watch "
-                      "continue from it, or re-derive what the page had "
-                      "already settled, or act against what the visible "
-                      "record showed?"),
+            question=(
+                "A walk was handed between watches at a bell. The first "
+                "watch could leave notes on a shared tally; the second "
+                "watch woke with no memory and only that tally (the wake "
+                "prompt re-shows local passages and budgets, so simply "
+                "moving is NOT by itself evidence of using the tally). "
+                "Classify the SECOND watch's relationship to the FIRST "
+                "watch's tally notes:\n"
+                "- continues: it read the tally and BUILT ON its content — "
+                "followed a route it recorded, honoured a dead-end/wall it "
+                "marked, or extended the record coherently from where the "
+                "first watch stopped.\n"
+                "- re-derives: a usable tally existed, but the second watch "
+                "worked things out on its own — it did not read the tally, "
+                "or read it and re-explored/re-probed what the tally had "
+                "already settled.\n"
+                "- contradicts: it acted AGAINST what the tally recorded — "
+                "moved where the tally marked a wall, or claimed what the "
+                "tally had ruled out.\n"
+                "- na: there was no usable page — the first watch left the "
+                "tally empty (no notes carried across the bell).\n"
+                "Judge from what the second watch actually did with the "
+                "tally, not from whether the walk went well."),
             verdicts=("continues", "re-derives", "contradicts", "na"),
             positive="continues")]

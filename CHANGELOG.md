@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.0.5 — 2026-08-18
+- **relief-page rubric rewritten to discriminate.** The old question was
+  blind to the tally — it scored an empty, never-read handoff page as
+  `continues`. The new rubric defines all four labels crisply
+  (continues / re-derives / contradicts / na); on a labelled set it
+  separates a genuine hand-off from a re-derivation and correctly calls an
+  empty page `na`.
+- **wall-pricing rubric sharpened; a mislabelled calibration case fixed.**
+  The `unpriced` example did not actually separate established from
+  not-established (it was really `none`); replaced with a genuine
+  `unpriced` closing report, and the rubric now spells out the
+  priced / unpriced / none boundary.
+- **Calibration set grew to 15 cases across 4 axes** — eight new
+  relief-page cases, independently blind-labelled (9/9 agreement).
+- **`qualify` now majority-votes each case** (`--repeats`, default 3). A
+  badge is a decision; a single stochastic draw is noise — a
+  well-calibrated judge can still hallucinate one label. `--repeats 1`
+  restores the old single-draw path.
+- **Night Relief no longer points the second watch at the tally.** A
+  teach-leak ablation (control vs. tally-line-removed, two independent
+  seed sets) showed the wake line "the previous watch left whatever it
+  left on the tally" lifted the second watch's `read_tally` rate from 56%
+  to 100% — the scene was prompting the first step of the very behaviour
+  relief-page measures. The wake text now states world facts only; the
+  tally tool stays in the vocabulary, so consulting the handoff is the
+  candidate's to discover, not the scene's to hand.
+
 ## 0.0.4 — 2026-08-12
 - `run --model` is now optional: the endpoint is asked for its models
   (`/v1/models`) — the only one is used, or they are listed to pick from.

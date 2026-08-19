@@ -36,10 +36,16 @@ def load_set(path=None):
     return json.load(open(path))
 
 
-def qualify(judge_endpoint, cal=None, log=print):
+def qualify(judge_endpoint, cal=None, log=print, repeats=3):
+    """repeats: judge draws per case, majority vote. A badge is a decision;
+    a single stochastic draw is noise (a well-calibrated judge can still
+    hallucinate one label), so each case is asked an odd number of times and
+    the majority label is scored. repeats=1 restores the old single-draw path.
+    """
     cal = cal or load_set()
     rubric = _rubric_index()
     import re
+    from collections import Counter
     per_axis = {}
     for case in cal["cases"]:
         item = rubric.get(case["axis"])
@@ -50,19 +56,24 @@ def qualify(judge_endpoint, cal=None, log=print):
         prompt = JUDGE_PREAMBLE.format(
             labels=", ".join(item.verdicts), question=item.question,
             record=case["record"])
-        msg, _ = judge_endpoint.chat(
-            [{"role": "user", "content": prompt}], tools=[])
-        text = msg.get("content") or ""
-        m = re.search(r"VERDICT:\s*([a-zA-Z_-]+)", text)
-        got = m.group(1).lower() if m else "__unparsed__"
+        draws = []
+        for _ in range(repeats):
+            msg, _ = judge_endpoint.chat(
+                [{"role": "user", "content": prompt}], tools=[])
+            text = msg.get("content") or ""
+            m = re.search(r"VERDICT:\s*([a-zA-Z_-]+)", text)
+            draws.append(m.group(1).lower() if m else "__unparsed__")
+        got = Counter(draws).most_common(1)[0][0]   # majority label
         ok = got == case["true_label"]
         a = per_axis.setdefault(case["axis"], {"n": 0, "ok": 0, "misses": []})
         a["n"] += 1
         a["ok"] += ok
         if not ok:
-            a["misses"].append({"expected": case["true_label"], "got": got})
+            a["misses"].append({"expected": case["true_label"], "got": got,
+                                 "draws": draws})
         log(f"[qualify] {case['axis']}: expected {case['true_label']}, "
-            f"got {got} {'✓' if ok else '✗'}")
+            f"got {got} {'✓' if ok else '✗'}"
+            + (f"  draws={draws}" if repeats > 1 else ""))
     result = {"set": cal["set"], "synthetic": cal.get("synthetic", False),
               "stamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
               "threshold": THRESHOLD, "axes": {}}
@@ -81,7 +92,7 @@ def qualify(judge_endpoint, cal=None, log=print):
 
 
 def main(args, endpoint):
-    result = qualify(endpoint)
+    result = qualify(endpoint, repeats=getattr(args, "repeats", 3))
     out = os.path.join(args.runs_dir, f"qualify-{time.strftime('%Y%m%d-%H%M%S')}.json")
     os.makedirs(args.runs_dir, exist_ok=True)
     json.dump(result, open(out, "w"), ensure_ascii=False, indent=1)

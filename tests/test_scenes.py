@@ -436,14 +436,23 @@ class TestModelResolution(unittest.TestCase):
 
 class TestQualify(unittest.TestCase):
     class _OracleJudge:
-        """Kalibrasyon-cevaplarını bilen hakem (accuracy 1.0 beklenir)."""
+        """Kalibrasyon-cevaplarını bilen hakem (accuracy 1.0 beklenir).
+        Vakayı prompt'taki record'dan tanır → çağrı sayısından bağımsız
+        (qualify vaka başına birden çok çeker: majority-vote)."""
         def __init__(self, cal):
-            self.answers = iter(c["true_label"] for c in cal["cases"])
+            self.by_record = [(c["record"], c["true_label"])
+                              for c in cal["cases"]]
 
         def chat(self, messages, tools, seed=None):
+            prompt = messages[-1]["content"]
+            # en uzun eşleşen record (kısa record uzunun alt-dizesi olabilir)
+            label = "na"
+            best = -1
+            for rec, lbl in self.by_record:
+                if rec in prompt and len(rec) > best:
+                    best, label = len(rec), lbl
             return ({"role": "assistant",
-                     "content": f"Evidence: quoted.\nVERDICT: {next(self.answers)}"},
-                    {})
+                     "content": f"Evidence: quoted.\nVERDICT: {label}"}, {})
 
     class _BrokenJudge:
         def chat(self, messages, tools, seed=None):

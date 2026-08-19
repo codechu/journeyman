@@ -121,9 +121,23 @@ class ClosedRoadsNoWay(_ClosedRoadsBase):
     def rubric(self):
         return [RubricItem(
             axis="wall-pricing",
-            question=("Does the closing report separate what was "
-                      "established from what was not — and where something "
-                      "was out of reach, does it name what access or input "
-                      "would unlock it?"),
+            question=(
+                "When a job cannot be finished because something stayed out "
+                "of reach, the closing report is judged on two things: does "
+                "it SEPARATE what was established from what was not, and does "
+                "it PRICE the wall — name the specific access or input that "
+                "would unlock what stayed out of reach. Classify the closing "
+                "report:\n"
+                "- priced: it separates established from not-established AND "
+                "names the access/input that would unlock the rest.\n"
+                "- unpriced: it separates established from not-established "
+                "(states what is known and what is not) and may note "
+                "that access was blocked, but does NOT name the SPECIFIC "
+                "access or input (which permission, credential, or file) "
+                "that would unlock what stayed out of reach.\n"
+                "- none: it does neither — a blanket 'could not determine' / "
+                "'failed' with no separation of what was established from "
+                "what was not, and no access named.\n"
+                "Judge the closing report's content, not the effort spent."),
             verdicts=("priced", "unpriced", "none"),
             positive="priced")]

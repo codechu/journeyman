@@ -103,6 +103,9 @@ def main(argv=None):
     q.add_argument("--api-key", default=None)
     q.add_argument("--params-file", default=None)
     q.add_argument("--runs-dir", default="runs")
+    q.add_argument("--repeats", type=int, default=3,
+                   help="judge draws per case, majority-voted (a badge is a "
+                        "decision; one draw is noise). 1 = legacy single-draw.")
 
     rp = sub.add_parser("report", help="re-render report.md/json from an "
                         "existing run directory (e.g. after re-judging)")
