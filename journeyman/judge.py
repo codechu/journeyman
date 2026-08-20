@@ -27,7 +27,12 @@ JUDGE_PREAMBLE = (
     "Allowed labels: {labels}\n\nQUESTION: {question}\n\nRECORD:\n{record}\n")
 
 
-def _record_text(record, limit=6000):
+def _record_text(record, limit=60000):
+    # The window must hold the WHOLE walk: novelty questions (was this
+    # reading already drawn?) live at the head, and a tail-window blinded
+    # both judges and labellers to it (measured 2026-08-20: 11/50 reference
+    # records overflowed the old 6000-char tail, exactly on the two axes
+    # that kept misscoring).
     parts = []
     for m in record["messages"]:
         role = m.get("role", "?")
@@ -52,7 +57,8 @@ def judge_cell(judge_endpoint, scene, record, log=print):
             [{"role": "user", "content": prompt}], tools=[])
         text = msg.get("content") or ""
         m = re.search(r"VERDICT:\s*([a-zA-Z_-]+)", text)
-        label = m.group(1).lower() if m else None
+        # declared labels use hyphens; tolerate underscore echoes (same label)
+        label = m.group(1).lower().replace("_", "-") if m else None
         if label not in item.verdicts:
             label = "__unparsed__"
         verdicts[item.axis] = {"verdict": label, "positive": item.positive,

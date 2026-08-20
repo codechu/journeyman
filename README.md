@@ -142,13 +142,29 @@ More: [docs/faq.md](docs/faq.md) · [docs/methodology.md](docs/methodology.md).
 
 We would rather you read these here than discover them:
 
-- **Validated against one model so far.** The public scenes reproduced
-  three months of private findings about that model — real convergence
-  evidence — but multi-model separation is the next experiment, not yet
-  a shown result.
-- **The calibration set is synthetic** (7 hand-labelled cases) — which
-  is why a passing judge gets only a PROVISIONAL badge. The real set is
-  distilled from reference-run records.
+- **The ground truth is a panel, not an oracle.** The real calibration
+  set (59 cases distilled from real reference-run transcripts) is
+  labelled by a blind three-labeller LLM panel (Claude Sonnet — a family
+  that never sits the exam), with contested cases adjudicated case-by-
+  case by the maintainer against mechanical evidence. A cross-family
+  probe (three non-Claude labellers over the contested cases) agreed
+  with the shipped labels on 6 of 9 decidable cases; the two cases where
+  every panel splits 2-1 are flagged `cross_family_contested` rather
+  than hidden. One divergence is editorial by design: a closing report
+  that elevates an unsupported story into an action item is `mixed`
+  here, even though average models read it leniently.
+- **Most judges fail the exam — that is the finding, not a defect.**
+  Twenty-plus judge configurations were examined (open-weights, cheap
+  cloud, and several frontier-adjacent models). The qualified judges are
+  Qwen3.6-35B-A3B, both self-hosted (free) and via OpenRouter (~$0.25
+  per exam). The discriminating axis is empty-measure — noticing that
+  work has stopped yielding information — which no other examined model
+  read at threshold. Historical note: GLM-5.2 qualified on an earlier
+  set revision and later fell one axis short on a draw; both records are
+  published. The scenes were distilled from behaviour studies of the
+  qualifying judge's model family — labels come from a different family
+  and the records from third-party models, but that distribution
+  familiarity is disclosed rather than denied.
 - **The archived runs are self- or same-model-judged**, and stamped so.
   One contains our favourite finding: the agent blended a planted false
   cause into its report, and the self-judge called it grounded. The
@@ -161,8 +177,14 @@ We would rather you read these here than discover them:
 **v1 engineering complete:** seven sealed scenes/modes on three grounds,
 two scoring layers, the judge qualification exam, sealed reports.
 Reference runs are archived under [runs-archive/](runs-archive/).
-**Next:** an independent pinned reference judge, the real calibration
-set distilled from reference runs, and multi-model separation results.
+**Shown since v0.0.5:** multi-model separation (a four-model panel under
+an independent judge — the strong model lifts every "floored" axis,
+proving those axes hard rather than broken); the REAL calibration set
+(59 cases, blind-panel labelled, adjudicated, cross-family probed) with
+full QUALIFIED badges earned on it; hardest-first exam ordering and
+mathematical early-exit, so failing an exam costs cents.
+**Next:** wider agent leaderboards on the standard set, and re-judging
+the archived runs with a qualified judge.
 
 <details>
 <summary>Package layout</summary>

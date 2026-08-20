@@ -106,6 +106,14 @@ def main(argv=None):
     q.add_argument("--repeats", type=int, default=3,
                    help="judge draws per case, majority-voted (a badge is a "
                         "decision; one draw is noise). 1 = legacy single-draw.")
+    q.add_argument("--early-exit", action="store_true",
+                   help="abort as soon as any axis can mathematically no "
+                        "longer reach the 0.8 bar (funnel/screening use; "
+                        "default off — a full profile is worth keeping for "
+                        "reference-judge candidates)")
+    q.add_argument("--set", dest="cal_set", default=None,
+                   help="path to a labelled calibration set (default: the "
+                        "bundled v0 synthetic set — grants only PROVISIONAL)")
 
     rp = sub.add_parser("report", help="re-render report.md/json from an "
                         "existing run directory (e.g. after re-judging)")

@@ -58,8 +58,16 @@ conclusion — and the self-judge called it grounded).
 
 Comparable scores require a judge that has passed the **qualification
 exam**: every rubric item answered over a labelled calibration set,
-per-item accuracy published beside the verdicts. The v0 calibration set
-is synthetic and grants only a PROVISIONAL badge; the real set is
+per-item accuracy published beside the verdicts. The v0 synthetic set
+grants only a PROVISIONAL badge. The real set (59 cases) is distilled
+from reference-run transcripts: each case is the full record exactly as
+the judge will see it, labelled by a blind three-labeller LLM panel
+(a family that never sits the exam), majority >=2/3, splits discarded;
+contested cases are adjudicated by the maintainer against mechanical
+evidence (replayable world-state, call counts) and a cross-family panel
+probe, with irreducibly contested cases flagged in the registry. The
+0.8 per-axis threshold is frozen; cases are ordered hardest-first so a
+failing exam exits early. A QUALIFIED badge on the real set is
 distilled from reference-run records. No judge — including ours — is
 exempt.
 

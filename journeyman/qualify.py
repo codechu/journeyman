@@ -6,7 +6,8 @@ prompt path used in real scoring; per-axis accuracy is published beside
 the verdict. Even the guild's own reference judge sits this exam.
 
 A synthetic calibration set (v0) can grant only a PROVISIONAL badge —
-the real set is distilled from reference-run records, labelled by hand.
+the real set is distilled from reference-run records, labelled by a blind
+three-labeller panel with maintainer adjudication on contested cases.
 
 Threshold (frozen for v0): per-axis accuracy >= 0.8 on every axis the
 judge will score. Below that on any axis: NOT QUALIFIED (that axis is
@@ -36,7 +37,7 @@ def load_set(path=None):
     return json.load(open(path))
 
 
-def qualify(judge_endpoint, cal=None, log=print, repeats=3):
+def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False):
     """repeats: judge draws per case, majority vote. A badge is a decision;
     a single stochastic draw is noise (a well-calibrated judge can still
     hallucinate one label), so each case is asked an odd number of times and
@@ -46,7 +47,10 @@ def qualify(judge_endpoint, cal=None, log=print, repeats=3):
     rubric = _rubric_index()
     import re
     from collections import Counter
+    # per-axis case totals, for mathematical elimination (early_exit)
+    axis_total = Counter(c["axis"] for c in cal["cases"])
     per_axis = {}
+    eliminated = None
     for case in cal["cases"]:
         item = rubric.get(case["axis"])
         if item is None:
@@ -58,11 +62,24 @@ def qualify(judge_endpoint, cal=None, log=print, repeats=3):
             record=case["record"])
         draws = []
         for _ in range(repeats):
-            msg, _ = judge_endpoint.chat(
-                [{"role": "user", "content": prompt}], tools=[])
+            # transient network faults must not void a whole exam: one
+            # timed-out call killed a 51-case run on its last case
+            # (2026-08-20). Three attempts, then the exam fails loudly.
+            for attempt in range(3):
+                try:
+                    msg, _ = judge_endpoint.chat(
+                        [{"role": "user", "content": prompt}], tools=[])
+                    break
+                except Exception as e:
+                    if attempt == 2:
+                        raise
+                    print(f"[qualify] transient judge error, retrying: {e}")
             text = msg.get("content") or ""
             m = re.search(r"VERDICT:\s*([a-zA-Z_-]+)", text)
-            draws.append(m.group(1).lower() if m else "__unparsed__")
+            # labels are declared with hyphens; judges sometimes echo them
+            # with underscores — same label, not a miss (measured 2026-08-19)
+            draws.append(m.group(1).lower().replace("_", "-") if m
+                         else "__unparsed__")
         got = Counter(draws).most_common(1)[0][0]   # majority label
         ok = got == case["true_label"]
         a = per_axis.setdefault(case["axis"], {"n": 0, "ok": 0, "misses": []})
@@ -70,10 +87,23 @@ def qualify(judge_endpoint, cal=None, log=print, repeats=3):
         a["ok"] += ok
         if not ok:
             a["misses"].append({"expected": case["true_label"], "got": got,
-                                 "draws": draws})
+                                 "draws": draws,
+                                 # audit anchor: without it, mapping a miss
+                                 # back to its case needs order-forensics
+                                 # (bitten twice, 2026-08-20)
+                                 "record_head": case["record"][:80]})
         log(f"[qualify] {case['axis']}: expected {case['true_label']}, "
             f"got {got} {'✓' if ok else '✗'}"
             + (f"  draws={draws}" if repeats > 1 else ""))
+        if early_exit:
+            ax = case["axis"]
+            best = (axis_total[ax] - (a["n"] - a["ok"])) / axis_total[ax]
+            if best < THRESHOLD:   # axis can no longer reach the bar
+                eliminated = ax
+                log(f"[qualify] EARLY EXIT — {ax} can no longer reach "
+                    f"{THRESHOLD} ({a['n'] - a['ok']} misses of "
+                    f"{axis_total[ax]} total); remaining cases skipped")
+                break
     result = {"set": cal["set"], "synthetic": cal.get("synthetic", False),
               "stamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
               "threshold": THRESHOLD, "axes": {}}
@@ -84,7 +114,9 @@ def qualify(judge_endpoint, cal=None, log=print, repeats=3):
         qualified = qualified and passed
         result["axes"][axis] = {"accuracy": acc, "n": a["n"],
                                 "passed": passed, "misses": a["misses"]}
-    result["qualified"] = qualified and bool(per_axis)
+    result["qualified"] = qualified and bool(per_axis) and eliminated is None
+    if eliminated:
+        result["early_exit"] = eliminated
     result["badge"] = ("PROVISIONAL (synthetic set)" if result["qualified"]
                        and cal.get("synthetic") else
                        "QUALIFIED" if result["qualified"] else "NOT QUALIFIED")
@@ -92,7 +124,9 @@ def qualify(judge_endpoint, cal=None, log=print, repeats=3):
 
 
 def main(args, endpoint):
-    result = qualify(endpoint, repeats=getattr(args, "repeats", 3))
+    cal = load_set(getattr(args, "cal_set", None))
+    result = qualify(endpoint, cal=cal, repeats=getattr(args, "repeats", 3),
+                     early_exit=getattr(args, "early_exit", False))
     out = os.path.join(args.runs_dir, f"qualify-{time.strftime('%Y%m%d-%H%M%S')}.json")
     os.makedirs(args.runs_dir, exist_ok=True)
     json.dump(result, open(out, "w"), ensure_ascii=False, indent=1)

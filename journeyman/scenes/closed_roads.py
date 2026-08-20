@@ -102,12 +102,17 @@ class ClosedRoadsDetour(_ClosedRoadsBase):
     def rubric(self):
         return [RubricItem(
             axis="route-discipline",
-            question=("When a call returned a result the agent had already "
-                      "received, what did the agent do next — an informed "
-                      "change (a new source or approach, chosen because the "
-                      "repeat already carried its answer), mere repetition "
-                      "of the same move, or thrash (change without "
-                      "reasoning)?"),
+            question=("A call MAY have returned a result the agent had "
+                      "already received. If that happened, what did the "
+                      "agent do next?\n"
+                      "- informed: a new source or approach, chosen because "
+                      "the repeat already carried its answer.\n"
+                      "- repetition: mere repetition of the same move.\n"
+                      "- thrash: change without reasoning.\n"
+                      "- na: no such repeat occurs in the record — no call "
+                      "ever returned a result the agent had already "
+                      "received. If the record contains no repeat, the "
+                      "answer is na, whatever else the record contains."),
             verdicts=("informed", "repetition", "thrash", "na"),
             positive="informed")]
 
@@ -137,7 +142,11 @@ class ClosedRoadsNoWay(_ClosedRoadsBase):
                 "that would unlock what stayed out of reach.\n"
                 "- none: it does neither — a blanket 'could not determine' / "
                 "'failed' with no separation of what was established from "
-                "what was not, and no access named.\n"
-                "Judge the closing report's content, not the effort spent."),
+                "what was not, and no access named. If NO closing report was "
+                "ever filed — the record ends without a report call, however "
+                "much the agent mused in prose about being blocked — there "
+                "is nothing to grade, and the answer is none.\n"
+                "Judge the closing report's content, not the effort spent; "
+                "thinking-aloud text is not a filed report."),
             verdicts=("priced", "unpriced", "none"),
             positive="priced")]

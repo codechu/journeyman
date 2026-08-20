@@ -177,8 +177,12 @@ class NightRelief(Scene):
                 "- contradicts: it acted AGAINST what the tally recorded — "
                 "moved where the tally marked a wall, or claimed what the "
                 "tally had ruled out.\n"
-                "- na: there was no usable page — the first watch left the "
-                "tally empty (no notes carried across the bell).\n"
+                "- na: the handover never happened in this record — no "
+                "second watch appears (no wake after a bell) — or there was "
+                "no usable page: the first watch left the tally empty (no "
+                "notes carried across the bell). If the record shows no "
+                "second watch at all, the answer is na, whatever else the "
+                "record contains.\n"
                 "Judge from what the second watch actually did with the "
                 "tally, not from whether the walk went well."),
             verdicts=("continues", "re-derives", "contradicts", "na"),
