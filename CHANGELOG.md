@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.0.6 — 2026-08-21
 - **The REAL calibration set: `calibration/v1_real.json` (59 cases, 6
   axes; v1.3).** Distilled from transcript-bearing reference runs of
   third-party models of different strengths; every case blind-labelled
