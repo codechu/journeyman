@@ -25,13 +25,16 @@ the gap named and priced.
 ## The discipline mechanics
 
 Every assay must carry a `reason` and a `discriminates` — what states
-of knowledge it would tell apart. An assay without them is refused
-free of charge. What is tracked is the **discriminates-set**, not the
-wording: the same question re-asked with fresh words, with nothing
-learned in between, is an empty turn no matter how good the sentence.
-`recall` returns, free, a one-line summary: what you tried, how often,
-and whether it narrowed anything — the mirror is cheaper than the
-assay.
+of knowledge it would tell apart. An assay without them is refused,
+free of charge.
+
+The scene tracks the **discriminates-set**, not the wording. Ask the
+same question again in fresh words, with nothing learned in between,
+and it is an empty turn no matter how good the sentence.
+
+`recall` is the free mirror: a one-line summary of what you tried, how
+often, and whether it narrowed anything. The mirror is cheaper than
+the assay.
 
 **Events counted:** `informative` / `empty` / `economy` (ratio) ·
 `repeat_discriminates` · `recalls` · `concluded` / `conclude_call_no` ·

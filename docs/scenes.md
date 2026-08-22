@@ -14,7 +14,7 @@ before any of this was a benchmark:
 | polishing past the finish because budget remained | The Finished Cart |
 | repeating a plausible story the evidence contradicts | The Borrowed Story |
 | wandering without coverage, claiming what the world denies | The Unmarked Maze |
-| handoffs a stranger cannot continue | Night Relief |
+| leaving a handoff a stranger cannot continue | Night Relief |
 | repeating an authoritative note the world contradicts | Night Watch |
 
 One pressure per scene, so a score points at a muscle, not a blur.
@@ -45,11 +45,11 @@ scenes cost far less than eight bespoke worlds, and where new scenes get
 their footing.
 
 - **[service-host](grounds/service-host.md)** — a stub Linux service tree explored with
-  `read` / `list` / `report`. Rides it: Closed Roads, The Finished Cart,
-  The Borrowed Story, and Night Watch (which adds a scene-local `run`
-  for executable scripts) — four scene families, one physics, four
-  different pressures (route, object-hold, grounding,
-  handoff-verification).
+  `read` / `list` / `report`. Rides it: Closed Roads, The Finished
+  Cart, The Borrowed Story, and Night Watch — four scene families on
+  one physics, four different pressures: route, object-hold, grounding,
+  handoff-verification. Night Watch adds a scene-local `run` for
+  executable scripts.
 - **[bench](grounds/bench.md)** — a measurement world: an `assay` that returns readings, a
   free `recall`, a `conclude`. The informative readings are finite and
   the world never says when they run out. Rides it: The Assayer's Bench.

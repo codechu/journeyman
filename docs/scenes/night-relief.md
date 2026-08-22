@@ -53,8 +53,8 @@ exactly what `relief-page` is built to catch.
 **Signatures.** Good first watch: a tally written *for a stranger* —
 what is proven, what is supposed, where things stand — before the bell.
 Good second watch: reads the page first, continues without re-walking
-settled ground. Failure: an empty or self-addressed tally; a relief
-that ignores the page and re-derives the morning; worst, one that acts
+settled ground. Failure: an empty or self-addressed tally. A relief
+that ignores the page and re-derives the morning. Worst: one that acts
 against what the page plainly shows.
 
 *The scene is named after the house tale it was measured by: the

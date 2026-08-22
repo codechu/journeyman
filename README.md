@@ -123,7 +123,7 @@ world-engines beneath them are documented under [docs/grounds/](docs/grounds/ser
 | [The Finished Cart](docs/scenes/finished-cart.md) | polishing past the finish because budget remained |
 | [The Borrowed Story](docs/scenes/borrowed-story.md) | asserting a plausible story the evidence contradicts |
 | [The Unmarked Maze](docs/scenes/unmarked-maze.md) | wandering without coverage, claiming what the world denies |
-| [Night Relief](docs/scenes/night-relief.md) | handoffs a stranger cannot continue |
+| [Night Relief](docs/scenes/night-relief.md) | leaving a handoff a stranger cannot continue |
 | [Night Watch](docs/scenes/night-watch.md) | repeating an authoritative note the world contradicts |
 
 ## How it works
@@ -148,32 +148,36 @@ More: [docs/faq.md](docs/faq.md) · [docs/methodology.md](docs/methodology.md).
 We would rather you read these here than discover them:
 
 - **The ground truth is a panel, not an oracle.** The real calibration
-  set (59 cases distilled from real reference-run transcripts) is
-  labelled by a blind three-labeller LLM panel (Claude Sonnet — a family
-  that never sits the exam), with contested cases adjudicated case-by-
-  case by the maintainer against mechanical evidence. A cross-family
-  probe (three non-Claude labellers over the contested cases) agreed
-  with the shipped labels on 6 of 9 decidable cases; the two cases where
-  every panel splits 2-1 are flagged `cross_family_contested` rather
-  than hidden. One divergence is editorial by design: a closing report
-  that elevates an unsupported story into an action item is `mixed`
-  here, even though average models read it leniently.
+  set holds 59 cases, distilled from real reference-run transcripts.
+  Every case is labelled by a blind three-labeller LLM panel. The panel
+  is Claude Sonnet — a family that never sits the exam. Contested cases
+  were adjudicated one by one by the maintainer, against mechanical
+  evidence. A cross-family probe put three non-Claude labellers over
+  those contested cases: they agreed with the shipped labels on 6 of 9
+  decidable ones. The two cases where every panel splits 2-1 are flagged
+  `cross_family_contested`, not hidden. One divergence is editorial by
+  design: a closing report that elevates an unsupported story into an
+  action item is `mixed` here, even though average models read it
+  leniently.
 - **Most judges fail the exam — that is the finding, not a defect.**
-  Twenty-plus judge configurations were examined (open-weights, cheap
-  cloud, and several frontier-adjacent models). The qualified judges are
-  Qwen3.6-35B-A3B, both self-hosted (free) and via OpenRouter (~$0.25
-  per exam). The discriminating axis is empty-measure — noticing that
-  work has stopped yielding information — which no other examined model
-  read at threshold. Historical note: GLM-5.2 qualified on an earlier
-  set revision and later fell one axis short on a draw; both records are
-  published. The scenes were distilled from behaviour studies of the
-  qualifying judge's model family — labels come from a different family
-  and the records from third-party models, but that distribution
-  familiarity is disclosed rather than denied.
-- **The archived runs are self- or same-model-judged**, and stamped so.
-  One contains our favourite finding: the agent blended a planted false
-  cause into its report, and the self-judge called it grounded. The
-  stamps exist because of moments like that.
+  Twenty-plus judge configurations sat the exam or its screening gate:
+  open-weights, cheap cloud, several frontier-adjacent. The badge
+  holders are Qwen3.6-35B-A3B — self-hosted for free, or on OpenRouter
+  for about $0.25 an exam. The discriminating axis is empty-measure:
+  noticing that work has stopped yielding information. No other examined
+  model read it at threshold. GLM-5.2 qualified on an earlier set
+  revision and later fell one axis short on a draw; both records are
+  published. One familiarity is disclosed rather than denied: the
+  scenes were distilled from behaviour studies of the qualifying
+  judge's model family. The labels come from a different family, the
+  records from third-party models — but the judge grew up on this
+  ground, and we say so.
+- **Most archived runs are self- or same-model-judged**, and stamped
+  so; the newest reference run is judged by a qualified judge, and that
+  is where the archive is headed. One self-judged run contains our
+  favourite finding: the agent blended a planted false cause into its
+  report, and the self-judge called it grounded. The stamps exist
+  because of moments like that.
 - **Scene texts are young.** Teach-leak ablation is a standing
   acceptance gate; the public ports have not yet had a full pass.
 
