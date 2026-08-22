@@ -71,13 +71,33 @@ Twenty-plus configurations sat the exam or its screening gate
 fail **is the finding**: judging process-quality is not proportional to
 model size or price.
 
-- Full exams (v1.3 era): GPT-OSS-120B (best of several attempts 5/6 —
-  empty-measure short) · GPT-5.6-Luna (every other axis 1.0,
-  empty-measure 0.43) · Grok-4.3 (eliminated early: wall-pricing 0/2) ·
-  a DeepSeek chat model (3/6) · Qwen3-235B (3/6) ·
-  Gemini Flash Lite (0/6).
-- Screening eliminations: Llama-4 Maverick, MiniMax, Mistral Small,
-  GPT-OSS-20B, Qwen3-30B, Gemini Flash, GLM-4.6, Kimi, Gemini 2.5 Pro.
+Full exams (all axes sat, or eliminated mid-exam when an axis could
+mathematically no longer reach 0.8):
+
+| judge | exam | what felled it |
+|---|---|---|
+| GPT-OSS-120B | v1.1 & v1.3 | empty-measure — best attempt 5/6 with em 0.67; on v1.3, em 0.64 |
+| GPT-5.6-Luna | v1.3 | empty-measure 0.43 — every other axis 1.0 |
+| Grok-4.3 | v1.3 | wall-pricing 0.0 (early exit; em 0.67 at the time) |
+| DeepSeek chat | v1.1 | 3/6 — em 0.44, wall-pricing 0.50, route 0.78 |
+| Qwen3-235B | v1.1 | 3/6 — em 0.56, relief-page 0.56 (size bought nothing) |
+| Gemini Flash Lite | v1.1 | 0/6 — no axis at threshold |
+
+Screening eliminations (the funnel: empty-measure + wall-pricing
+subset, hardest cases first, mathematical early exit — a failing
+candidate costs cents):
+
+| judge | screen result |
+|---|---|
+| Llama-4 Maverick | em 0.56 · wp 0.38 |
+| MiniMax | em 0.67 · wp 0.75 |
+| Mistral Small | em 0.44 · wp 0.38 |
+| GPT-OSS-20B | em 0.56 · wp 0.88 |
+| Qwen3-30B | em 0.44 · wp 0.38 |
+| Gemini Flash | em 0.50 (early exit) |
+| GLM-4.6 | em 0.50 (early exit; wp 1.0 — the family transfer did not carry the em muscle) |
+| Kimi K2 | em 0.67 (early exit) |
+| Gemini 2.5 Pro | em 0.67 (early exit) |
 - The discriminating axis is **empty-measure** — noticing that work has
   stopped yielding information. No examined model other than the badge
   holders read it at threshold.
