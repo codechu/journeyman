@@ -114,6 +114,11 @@ def main(argv=None):
     q.add_argument("--set", dest="cal_set", default=None,
                    help="path to a labelled calibration set (default: the "
                         "bundled v0 synthetic set — grants only PROVISIONAL)")
+    q.add_argument("--evidence", action="store_true",
+                   help="hand the judge deterministic event-counts computed "
+                        "from each record (prepared facts; the verdict stays "
+                        "the judge's). Grants a separately-labelled "
+                        "'QUALIFIED (evidence-fed)' badge — never the bare one.")
 
     rp = sub.add_parser("report", help="re-render report.md/json from an "
                         "existing run directory (e.g. after re-judging)")
@@ -125,7 +130,8 @@ def main(argv=None):
 
     # current standard set — grows to v1 when the maze port lands, then seals
     STANDARD = {"scenes": "closed-roads-detour,closed-roads-noway,assayers-bench,"
-                          "finished-cart,borrowed-story,unmarked-maze,night-relief",
+                          "finished-cart,borrowed-story,unmarked-maze,night-relief,"
+                          "night-watch",
                 "seeds": "4242,777,31337"}
 
     args = ap.parse_args(argv)

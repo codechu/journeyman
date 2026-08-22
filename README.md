@@ -13,15 +13,16 @@
 > **Journeyman measures how agents work — and how they fail.**
 
 You point it at your agent (any OpenAI-compatible endpoint). It drops
-the agent into seven small **simulated jobs** — diagnose a crashed
-service, assay an alloy at a bench, walk a fogged maze, hand a shift to
-a stranger — and grades **how it worked**, not just whether it finished:
+the agent into eight small **simulated jobs** — diagnose a crashed
+service, assay an alloy at a bench, walk a fogged maze, pick up a night
+shift from a note that lies — and grades **how it worked**, not just
+whether it finished:
 did it keep hitting the same wall? did it stop when the job was done, or
 keep polishing? could it say "I don't know" with a price tag? did it buy
 a planted false story? Nothing touches your real files — every world is
 simulated, so there is nothing to set up or sandbox.
 
-You get back a **profile**: nine axes, each 0-1. Not a pass/fail grade —
+You get back a **profile**: ten axes, each 0-1. Not a pass/fail grade —
 a map of where your agent can be trusted and where it is blind.
 
 <p align="center"><img src="assets/terminal.svg" alt="A live journeyman run: banner, per-cell progress lines with measured ETA, judging phase, and the final profile." width="760"></p>
@@ -81,6 +82,7 @@ WHERE IT BROKE  assayers-bench_s4242 — budget died after 21 calls;
 | walk-coverage / move-discipline | explores broadly without re-treading |
 | self-verdict | its closing claim agrees with the replayed world |
 | relief-page | leaves a page a stranger could continue from |
+| handoff-verification | checks an inherited claim against the world before repeating it |
 
 `WHERE IT HELD / WHERE IT BROKE` quote the agent's own best and worst
 moment. A `NOT COMPARABLE` stamp means the run was self-judged or
@@ -102,9 +104,11 @@ In `run` the student sits the exam; in `qualify` the teacher does. The
 judge is pluggable and can be a different model or provider than the
 agent (`--judge`, `--judge-model`, `--judge-api-key`). With no `--judge`
 the agent judges itself — fine for tracking yourself, stamped NOT
-COMPARABLE, because self-judgment is measurably lenient.
+COMPARABLE, because self-judgment is measurably lenient. The public
+registry of badge holders — and the twenty-plus configurations that
+were examined and failed — is at [docs/judges.md](docs/judges.md).
 
-## The seven scenes
+## The eight scenes
 
 Each puts pressure on ONE expensive, real failure family — and declares
 only its tools and budget, never what good behaviour looks like. Full pages (world, task, trap, counted events, the judge's question
@@ -120,6 +124,7 @@ world-engines beneath them are documented under [docs/grounds/](docs/grounds/ser
 | [The Borrowed Story](docs/scenes/borrowed-story.md) | asserting a plausible story the evidence contradicts |
 | [The Unmarked Maze](docs/scenes/unmarked-maze.md) | wandering without coverage, claiming what the world denies |
 | [Night Relief](docs/scenes/night-relief.md) | handoffs a stranger cannot continue |
+| [Night Watch](docs/scenes/night-watch.md) | repeating an authoritative note the world contradicts |
 
 ## How it works
 
@@ -174,7 +179,7 @@ We would rather you read these here than discover them:
 
 ## Status & roadmap
 
-**v1 engineering complete:** seven sealed scenes/modes on three grounds,
+**v1 engineering complete:** eight sealed scenes/modes on three grounds,
 two scoring layers, the judge qualification exam, sealed reports.
 Reference runs are archived under [runs-archive/](runs-archive/).
 **Shown since v0.0.5:** multi-model separation (a four-model panel under
@@ -194,7 +199,7 @@ journeyman/
   scene.py     scene contract + registry (scenes attach here, @register)
   grounds/     shared world-engines (service-host, labyrinth) —
                a ground is physics; scenes configure it with pressures
-  scenes/      the seven official scenes/modes — the standard set
+  scenes/      the eight official scenes/modes — the standard set
   driver.py    sequential grid runner — crash-safe, honest progress,
                multi-episode cells (a new watch remembers nothing)
   record.py    seals, cell records, events.jsonl (single source of truth)

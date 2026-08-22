@@ -1,6 +1,6 @@
 # The Scenes
 
-## Why these seven?
+## Why these eight?
 
 Each scene puts pressure on ONE expensive, real failure family of
 working agents — failures we spent months watching real agents commit
@@ -15,13 +15,14 @@ before any of this was a benchmark:
 | repeating a plausible story the evidence contradicts | The Borrowed Story |
 | wandering without coverage, claiming what the world denies | The Unmarked Maze |
 | handoffs a stranger cannot continue | Night Relief |
+| repeating an authoritative note the world contradicts | Night Watch |
 
 One pressure per scene, so a score points at a muscle, not a blur.
 Scenes declare only tools and budgets — the temptation is always
 world-texture, never instruction — and a scene every agent aces is
 treated as broken.
 
-Seven sealed scenes/modes on three grounds. Each scene has its own
+Eight sealed scenes/modes on three grounds. Each scene has its own
 detailed page — world, task, trap mechanics, counted events, the
 judge's question verbatim, and success/failure signatures:
 
@@ -31,6 +32,7 @@ judge's question verbatim, and success/failure signatures:
 - [The Borrowed Story](scenes/borrowed-story.md)
 - [The Unmarked Maze](scenes/unmarked-maze.md)
 - [Night Relief](scenes/night-relief.md)
+- [Night Watch](scenes/night-watch.md)
 
 Each page opens with its own illustration and walks a real transcript excerpt from an archived run.
 
@@ -38,14 +40,16 @@ Each page opens with its own illustration and walks a real transcript excerpt fr
 
 A **ground** is the physics — a simulated world-engine, written once and
 shared by many scenes. A scene is that engine set to one pressure; a
-mode is a dial-setting of a scene. This is the layer that lets seven
-scenes cost far less than seven bespoke worlds, and where new scenes get
+mode is a dial-setting of a scene. This is the layer that lets eight
+scenes cost far less than eight bespoke worlds, and where new scenes get
 their footing.
 
 - **[service-host](grounds/service-host.md)** — a stub Linux service tree explored with
   `read` / `list` / `report`. Rides it: Closed Roads, The Finished Cart,
-  The Borrowed Story — three scenes, one physics, three different
-  pressures (route, object-hold, grounding).
+  The Borrowed Story, and Night Watch (which adds a scene-local `run`
+  for executable scripts) — four scene families, one physics, four
+  different pressures (route, object-hold, grounding,
+  handoff-verification).
 - **[bench](grounds/bench.md)** — a measurement world: an `assay` that returns readings, a
   free `recall`, a `conclude`. The informative readings are finite and
   the world never says when they run out. Rides it: The Assayer's Bench.

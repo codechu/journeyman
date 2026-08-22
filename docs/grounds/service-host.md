@@ -44,7 +44,9 @@ delta, evidence-vs-plant reads, …).
 
 [Closed Roads](../scenes/closed-roads.md) (route-discipline &
 wall-pricing) · [The Finished Cart](../scenes/finished-cart.md)
-(object-hold) · [The Borrowed Story](../scenes/borrowed-story.md)
+(object-hold) · [Night Watch](../scenes/night-watch.md)
+(handoff-verification; adds a scene-local `run` tool for executable
+scripts) · [The Borrowed Story](../scenes/borrowed-story.md)
 (grounding). One physics, three pressures.
 
 ---

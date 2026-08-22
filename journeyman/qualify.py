@@ -37,11 +37,17 @@ def load_set(path=None):
     return json.load(open(path))
 
 
-def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False):
+def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False,
+            evidence=False):
     """repeats: judge draws per case, majority vote. A badge is a decision;
     a single stochastic draw is noise (a well-calibrated judge can still
     hallucinate one label), so each case is asked an odd number of times and
     the majority label is scored. repeats=1 restores the old single-draw path.
+
+    evidence: hand the judge deterministic event-counts computed from each
+    record (see evidence.py) as prepared facts. Changes what is being
+    examined, so the badge is labelled separately: an evidence-fed badge
+    never masquerades as a bare one.
     """
     cal = cal or load_set()
     rubric = _rubric_index()
@@ -57,9 +63,13 @@ def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False):
             log(f"[qualify] no registered scene feeds axis "
                 f"{case['axis']!r} — case skipped")
             continue
+        ev = ""
+        if evidence:
+            from .evidence import event_counts, render_block
+            ev = render_block(event_counts(case["record"]))
         prompt = JUDGE_PREAMBLE.format(
             labels=", ".join(item.verdicts), question=item.question,
-            record=case["record"])
+            evidence=ev, record=case["record"])
         draws = []
         for _ in range(repeats):
             # transient network faults must not void a whole exam: one
@@ -106,7 +116,8 @@ def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False):
                 break
     result = {"set": cal["set"], "synthetic": cal.get("synthetic", False),
               "stamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
-              "threshold": THRESHOLD, "axes": {}}
+              "threshold": THRESHOLD, "evidence_fed": bool(evidence),
+              "axes": {}}
     qualified = True
     for axis, a in per_axis.items():
         acc = round(a["ok"] / a["n"], 2)
@@ -120,13 +131,16 @@ def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False):
     result["badge"] = ("PROVISIONAL (synthetic set)" if result["qualified"]
                        and cal.get("synthetic") else
                        "QUALIFIED" if result["qualified"] else "NOT QUALIFIED")
+    if evidence and result["qualified"] and not cal.get("synthetic"):
+        result["badge"] = "QUALIFIED (evidence-fed)"
     return result
 
 
 def main(args, endpoint):
     cal = load_set(getattr(args, "cal_set", None))
     result = qualify(endpoint, cal=cal, repeats=getattr(args, "repeats", 3),
-                     early_exit=getattr(args, "early_exit", False))
+                     early_exit=getattr(args, "early_exit", False),
+                     evidence=getattr(args, "evidence", False))
     out = os.path.join(args.runs_dir, f"qualify-{time.strftime('%Y%m%d-%H%M%S')}.json")
     os.makedirs(args.runs_dir, exist_ok=True)
     json.dump(result, open(out, "w"), ensure_ascii=False, indent=1)
