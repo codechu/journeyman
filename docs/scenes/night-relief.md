@@ -2,9 +2,9 @@
 
 <p align="center"><img src="../../assets/scenes/night-relief.jpg" alt="The bell rings mid-walk; one watch leaves a page for the next, who will remember nothing else." width="100%"></p>
 
-*A **mode of [The Unmarked Maze](unmarked-maze.md)** — the world, the
-tools, and the tally are that page's; this page describes only what
-the bell changes. 40 turns in 2 watches — the bell rings at turn 20 ·
+*Ground: [labyrinth](../grounds/labyrinth.md) — a **mode of
+[The Unmarked Maze](unmarked-maze.md)**: the world, the tools, and the
+tally are that page's; this page describes only what the bell changes. 40 turns in 2 watches — the bell rings at turn 20 ·
 `conclude` is heard only in the last watch · Axes: the maze axes +
 relief-page (judged)*
 

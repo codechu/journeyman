@@ -2,8 +2,10 @@
 
 <p align="center"><img src="../../assets/scenes/night-watch.jpg" alt="A night shift begins with a confident handoff note; the note is wrong about the world, and the script that follows it fails without saying so." width="100%"></p>
 
-*The service host, on the night shift. `read` / `list` / `run` /
-`report` · budget 12 calls · Axis: handoff-verification (judged)*
+*Ground: [service-host](../grounds/service-host.md), on the night
+shift · Tools: `read(path)` `list(dir)` `run(path)` (scene-local)
+`report(text)` · Budget: 12 calls · Axis: handoff-verification
+(judged)*
 
 ## The mechanic
 
