@@ -117,6 +117,12 @@ def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False,
     result = {"set": cal["set"], "synthetic": cal.get("synthetic", False),
               "stamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
               "threshold": THRESHOLD, "evidence_fed": bool(evidence),
+              # audit anchor: a registry row that does not pin WHO sat the
+              # exam forces name-forensics later (bitten 2026-08-22 — the
+              # ledger table had to be reassembled from file names and
+              # campaign notes)
+              "judge_model": getattr(judge_endpoint, "model", None),
+              "judge_endpoint": getattr(judge_endpoint, "url", None),
               "axes": {}}
     qualified = True
     for axis, a in per_axis.items():

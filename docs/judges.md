@@ -43,24 +43,27 @@ model size or price.
 | judge | exam | em | verdict |
 |---|---|---|---|
 | **Qwen3.6-35B-A3B** (self-hosted, GGUF IQ4_XS) | v1.3 full | **0.88** | **QUALIFIED** (2026-08-20) — 6/6 axes, mean 0.96; free, ~35 min |
-| **Qwen3.6-35B-A3B** (OpenRouter) | v1.3 full | **0.82** | **QUALIFIED** (2026-08-20) — 6/6 axes, mean 0.95; ~$0.25, ~25 min |
-| GLM-5.2 | v1.1 full | 1.0 (v1.1) | QUALIFIED, historical — fell one axis short on a v1.3 re-draw; see below |
-| Claude Sonnet 5 | v1.3 full | 1.0 | passed every axis — **hors concours**, outside the badge registry; see below |
-| GPT-OSS-120B | v1.1 & v1.3 full | 0.67 / 0.64 | not qualified — best attempt 5/6, empty-measure short both times |
-| Gemini 2.5 Pro | screen | 0.67 | not qualified — early exit on em |
-| Grok-4.3 | v1.3 full | 0.67 | not qualified — felled by wall-pricing 0.0 (early exit) |
-| Kimi K2 | screen | 0.67 | not qualified — early exit on em |
-| MiniMax | screen | 0.67 | not qualified — wp 0.75, em short |
-| GPT-OSS-20B | screen | 0.56 | not qualified — wp 0.88, em short |
-| Llama-4 Maverick | screen | 0.56 | not qualified — wp 0.38 |
-| Qwen3-235B | v1.1 full | 0.56 | not qualified — 3/6; size bought nothing |
-| Gemini Flash | screen | 0.50 | not qualified — early exit on em |
-| GLM-4.6 | screen | 0.50 | not qualified — wp 1.0, yet the family transfer did not carry the em muscle |
-| DeepSeek chat | v1.1 full | 0.44 | not qualified — 3/6 |
-| Mistral Small | screen | 0.44 | not qualified — wp 0.38 |
-| Qwen3-30B | screen | 0.44 | not qualified — wp 0.38 |
-| GPT-5.6-Luna | v1.3 full | 0.43 | not qualified — every other axis 1.0; the guillotine in its purest form |
-| Gemini Flash Lite | v1.1 full | 0.33 | not qualified — 0/6, no axis at threshold |
+| **Qwen3.6-35B-A3B** (OpenRouter `qwen/qwen3.6-35b-a3b`) | v1.3 full | **0.82** | **QUALIFIED** (2026-08-20) — 6/6 axes, mean 0.95; ~$0.25, ~25 min |
+| GLM-5.2 (`z-ai/glm-5.2`) | v1.1 full | 1.0 (v1.1) | QUALIFIED, historical — fell one axis short on a v1.3 re-draw; see below |
+| Claude Sonnet 5 (`claude-sonnet-5`) | v1.3 full | 1.0 | passed every axis — **hors concours**, outside the badge registry; see below |
+| GPT-OSS-120B (`openai/gpt-oss-120b`) | v1.1 & v1.3 full | 0.67 / 0.64 | not qualified — best attempt 5/6, empty-measure short both times |
+| Gemini 2.5 Pro (`gemini-2.5-pro`) | screen | 0.67 | not qualified — early exit on em |
+| Grok-4.3 (`grok-4.3`) | v1.3 full | 0.67 | not qualified — felled by wall-pricing 0.0 (early exit) |
+| Kimi K2 (`kimi-k2`) | screen | 0.67 | not qualified — early exit on em |
+| MiniMax M2 (`minimax-m2`) | screen | 0.67 | not qualified — wp 0.75, em short |
+| GPT-OSS-20B (`openai/gpt-oss-20b`) | screen | 0.56 | not qualified — wp 0.88, em short |
+| Llama-4 Maverick (`llama-4-maverick`) | screen | 0.56 | not qualified — wp 0.38 |
+| Qwen3-235B (`qwen3-235b-a22b-2507`) | v1.1 full | 0.56 | not qualified — 3/6; size bought nothing |
+| Gemini 2.5 Flash (`gemini-2.5-flash`) | screen | 0.50 | not qualified — early exit on em |
+| GLM-4.6 (`glm-4.6`) | screen | 0.50 | not qualified — wp 1.0, yet the family transfer did not carry the em muscle |
+| DeepSeek (`deepseek-v3.2-exp`) | v1.1 full | 0.44 | not qualified — 3/6 |
+| Mistral Small (`mistralai/mistral-small-3.2-24b-instruct`) | screen | 0.44 | not qualified — wp 0.38 |
+| Qwen3-30B (`qwen/qwen3-30b-a3b-instruct-2507`) | screen | 0.44 | not qualified — wp 0.38 |
+| GPT-5.6-Luna (`gpt-5.6-luna`) | v1.3 full | 0.43 | not qualified — every other axis 1.0; the guillotine in its purest form |
+| Gemini 2.5 Flash Lite (`gemini-2.5-flash-lite`) | v1.1 full | 0.33 | not qualified — 0/6, no axis at threshold |
+
+
+Model ids are as pinned in the exam ledger records. Where a row shows a bare name, the record pinned the model without a provider path — the name is given as recorded rather than guessed. Two more configurations were attempted and recorded **DNF** (no verdict, infrastructure): `glm-4.5-air` (provider latency stalled the exam) and `nova-lite` (HTTP 400 at the gate).
 
 The same open-weights model holds the badge on both routes, so there are
 two ways to run a qualified judge: **host it yourself for free, or rent
