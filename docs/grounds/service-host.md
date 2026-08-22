@@ -18,6 +18,12 @@ Paths are normalised: a bare name is resolved under the scene's service
 root (e.g. `logs/app.log` → `/srv/app/logs/app.log`), so the agent can
 be terse or absolute.
 
+A scene may extend this vocabulary with a tool of its own: Night Watch
+adds `run(path)`, which executes a script with simulated, deterministic
+effects (the world's listings and files change accordingly). The ground
+itself stays three tools; the extension is declared in the scene's tool
+schema like any other.
+
 ## Mechanics that matter
 
 - **Permissions are content.** A locked file returns
@@ -47,7 +53,7 @@ wall-pricing) · [The Finished Cart](../scenes/finished-cart.md)
 (object-hold) · [Night Watch](../scenes/night-watch.md)
 (handoff-verification; adds a scene-local `run` tool for executable
 scripts) · [The Borrowed Story](../scenes/borrowed-story.md)
-(grounding). One physics, three pressures.
+(grounding). One physics, four pressures.
 
 ---
 **Grounds:** [service-host](service-host.md) · [bench](bench.md) · [labyrinth](labyrinth.md)  
