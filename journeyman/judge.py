@@ -15,6 +15,7 @@ calibration registry format · self-awareness-gap derived metric.
 """
 import json
 import re
+import time
 import urllib.request
 
 from .color import paint
@@ -67,6 +68,7 @@ def judge_cell(judge_endpoint, scene, record, log=print):
                 if attempt == 2:
                     raise
                 log(f"[judge] transient error, retrying: {e}")
+                time.sleep(5 * (attempt + 1))
         text = msg.get("content") or ""
         m = re.search(r"VERDICT:\s*([a-zA-Z_-]+)", text)
         # declared labels use hyphens; tolerate underscore echoes (same label)

@@ -84,6 +84,9 @@ def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False,
                     if attempt == 2:
                         raise
                     print(f"[qualify] transient judge error, retrying: {e}")
+                    # 429s answer immediate retries with more 429s — an
+                    # unslept retry loop is the impolite one (2026-08-22)
+                    time.sleep(5 * (attempt + 1))
             text = msg.get("content") or ""
             m = re.search(r"VERDICT:\s*([a-zA-Z_-]+)", text)
             # labels are declared with hyphens; judges sometimes echo them

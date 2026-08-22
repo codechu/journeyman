@@ -51,7 +51,9 @@ model size or price.
 | Grok-4.3 (`grok-4.3`) | v1.3 full | 0.67 | not qualified — felled by wall-pricing 0.0 (early exit) |
 | Kimi K2 (`kimi-k2`) | screen | 0.67 | not qualified — early exit on em |
 | MiniMax M2 (`minimax-m2`) | screen | 0.67 | not qualified — wp 0.75, em short |
+| DeepSeek-R1 (`deepseek/deepseek-r1-0528`) | screen | 0.60 | not qualified — early exit on em; the reasoning-class hypothesis died here: long thinking did not buy the em muscle |
 | GPT-OSS-20B (`openai/gpt-oss-20b`) | screen | 0.56 | not qualified — wp 0.88, em short |
+| Nemotron 3 Super (`nvidia/nemotron-3-super-120b-a12b`) | screen | 0.56 | not qualified — early exit on em; sat the exam politely through provider 429s, read cleanly — its production reputation did not transfer to the reading task, in either direction |
 | Llama-4 Maverick (`llama-4-maverick`) | screen | 0.56 | not qualified — wp 0.38 |
 | Qwen3-235B (`qwen3-235b-a22b-2507`) | v1.1 full | 0.56 | not qualified — 3/6; size bought nothing |
 | Gemini 2.5 Flash (`gemini-2.5-flash`) | screen | 0.50 | not qualified — early exit on em |
@@ -61,6 +63,10 @@ model size or price.
 | Qwen3-30B (`qwen/qwen3-30b-a3b-instruct-2507`) | screen | 0.44 | not qualified — wp 0.38 |
 | GPT-5.6-Luna (`gpt-5.6-luna`) | v1.3 full | 0.43 | not qualified — every other axis 1.0; the guillotine in its purest form |
 | Gemini 2.5 Flash Lite (`gemini-2.5-flash-lite`) | v1.1 full | 0.33 | not qualified — 0/6, no axis at threshold |
+| Phi-4 (`microsoft/phi-4`) | screen | 0.33 | not qualified — early exit on em |
+| DeepSeek-R1 distill (`deepseek/deepseek-r1-distill-llama-70b`) | screen | 0.20 | not qualified — early exit on em |
+| Gemma 3 27B (`google/gemma-3-27b-it`) | screen | 0.20 | not qualified — early exit on em |
+| Llama-4 Scout (`meta-llama/llama-4-scout`) | screen | 0.20 | not qualified — early exit on em |
 
 
 Model ids are as pinned in the exam ledger records. Where a row shows a bare name, the record pinned the model without a provider path — the name is given as recorded rather than guessed. Two more configurations were attempted and recorded **DNF** (no verdict, infrastructure): `glm-4.5-air` (provider latency stalled the exam) and `nova-lite` (HTTP 400 at the gate).
@@ -93,7 +99,7 @@ labelled outside the family; that gate stays open.
 
 ## Reading the failures
 
-Fifteen configurations below the line, one axis doing almost all the
+Twenty-one configurations below the line, one axis doing almost all the
 felling. Read down the `em` column: no examined model other than the
 badge holders — and the two special rows above them — crossed 0.8 on
 empty-measure — noticing that work has stopped yielding information —
