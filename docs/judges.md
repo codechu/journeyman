@@ -31,12 +31,36 @@ journeyman qualify --set journeyman/calibration/v1_real.json \
 - **The badge** is per model *and* per route: a quantized local build and
   a cloud deployment of the same weights are examined separately.
 
-## Qualified judges
+## The ledger — every configuration examined
 
-| judge | route | exam | result | cost per exam |
-|---|---|---|---|---|
-| **Qwen3.6-35B-A3B** | self-hosted, GGUF IQ4_XS (llama.cpp) | v1.3, 6/6 axes, mean 0.96 | **QUALIFIED** (2026-08-20) | free, ~35 min |
-| **Qwen3.6-35B-A3B** | cloud, OpenRouter `qwen/qwen3.6-35b-a3b` | v1.3, 6/6 axes, mean 0.95 (empty-measure 0.82, grounding 0.88, rest 1.0) | **QUALIFIED** (2026-08-20) | ~$0.25, ~25 min |
+One table, best first. `em` is empty-measure — the one axis every
+candidate faced (full exams sit all six axes; `screen` is the
+empty-measure + wall-pricing funnel, hardest cases first, mathematical
+early exit — a failing candidate costs cents). That most rows fail
+**is the finding**: judging process-quality is not proportional to
+model size or price.
+
+| judge | exam | em | verdict |
+|---|---|---|---|
+| **Qwen3.6-35B-A3B** (self-hosted, GGUF IQ4_XS) | v1.3 full | **0.88** | **QUALIFIED** (2026-08-20) — 6/6 axes, mean 0.96; free, ~35 min |
+| **Qwen3.6-35B-A3B** (OpenRouter) | v1.3 full | **0.82** | **QUALIFIED** (2026-08-20) — 6/6 axes, mean 0.95; ~$0.25, ~25 min |
+| GLM-5.2 | v1.1 full | 1.0 (v1.1) | QUALIFIED, historical — fell one axis short on a v1.3 re-draw; see below |
+| Claude Sonnet 5 | v1.3 full | 1.0 | passed every axis — **hors concours**, outside the badge registry; see below |
+| GPT-OSS-120B | v1.1 & v1.3 full | 0.67 / 0.64 | not qualified — best attempt 5/6, empty-measure short both times |
+| Gemini 2.5 Pro | screen | 0.67 | not qualified — early exit on em |
+| Grok-4.3 | v1.3 full | 0.67 | not qualified — felled by wall-pricing 0.0 (early exit) |
+| Kimi K2 | screen | 0.67 | not qualified — early exit on em |
+| MiniMax | screen | 0.67 | not qualified — wp 0.75, em short |
+| GPT-OSS-20B | screen | 0.56 | not qualified — wp 0.88, em short |
+| Llama-4 Maverick | screen | 0.56 | not qualified — wp 0.38 |
+| Qwen3-235B | v1.1 full | 0.56 | not qualified — 3/6; size bought nothing |
+| Gemini Flash | screen | 0.50 | not qualified — early exit on em |
+| GLM-4.6 | screen | 0.50 | not qualified — wp 1.0, yet the family transfer did not carry the em muscle |
+| DeepSeek chat | v1.1 full | 0.44 | not qualified — 3/6 |
+| Mistral Small | screen | 0.44 | not qualified — wp 0.38 |
+| Qwen3-30B | screen | 0.44 | not qualified — wp 0.38 |
+| GPT-5.6-Luna | v1.3 full | 0.43 | not qualified — every other axis 1.0; the guillotine in its purest form |
+| Gemini Flash Lite | v1.1 full | 0.33 | not qualified — 0/6, no axis at threshold |
 
 The same open-weights model holds the badge on both routes, so there are
 two ways to run a qualified judge: **host it yourself for free, or rent
@@ -64,43 +88,13 @@ majority went *against* its own family's label — the family prime is
 not a mirror.) A Claude-family badge would require a calibration set
 labelled outside the family; that gate stays open.
 
-## Examined and not qualified
+## Reading the failures
 
-Twenty-plus configurations sat the exam or its screening gate
-(empty-measure + wall-pricing first, hardest cases first). That most
-fail **is the finding**: judging process-quality is not proportional to
-model size or price.
-
-Full exams (all axes sat, or eliminated mid-exam when an axis could
-mathematically no longer reach 0.8):
-
-| judge | exam | what felled it |
-|---|---|---|
-| GPT-OSS-120B | v1.1 & v1.3 | empty-measure — best attempt 5/6 with em 0.67; on v1.3, em 0.64 |
-| GPT-5.6-Luna | v1.3 | empty-measure 0.43 — every other axis 1.0 |
-| Grok-4.3 | v1.3 | wall-pricing 0.0 (early exit; em 0.67 at the time) |
-| DeepSeek chat | v1.1 | 3/6 — em 0.44, wall-pricing 0.50, route 0.78 |
-| Qwen3-235B | v1.1 | 3/6 — em 0.56, relief-page 0.56 (size bought nothing) |
-| Gemini Flash Lite | v1.1 | 0/6 — no axis at threshold |
-
-Screening eliminations (the funnel: empty-measure + wall-pricing
-subset, hardest cases first, mathematical early exit — a failing
-candidate costs cents):
-
-| judge | screen result |
-|---|---|
-| Llama-4 Maverick | em 0.56 · wp 0.38 |
-| MiniMax | em 0.67 · wp 0.75 |
-| Mistral Small | em 0.44 · wp 0.38 |
-| GPT-OSS-20B | em 0.56 · wp 0.88 |
-| Qwen3-30B | em 0.44 · wp 0.38 |
-| Gemini Flash | em 0.50 (early exit) |
-| GLM-4.6 | em 0.50 (early exit; wp 1.0 — the family transfer did not carry the em muscle) |
-| Kimi K2 | em 0.67 (early exit) |
-| Gemini 2.5 Pro | em 0.67 (early exit) |
-- The discriminating axis is **empty-measure** — noticing that work has
-  stopped yielding information. No examined model other than the badge
-  holders read it at threshold.
+Fifteen configurations below the line, one axis doing almost all the
+felling. Read down the `em` column: no examined model other than the
+badge holders — and the two special rows above them — crossed 0.8 on
+empty-measure — noticing that work has stopped yielding information —
+whatever its size, price, or pedigree.
 
 ## Named limits
 
