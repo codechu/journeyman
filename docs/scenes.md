@@ -63,5 +63,40 @@ New scenes usually don't need a new ground — most are a new dial on an
 existing one (see [CONTRIBUTING](../CONTRIBUTING.md)). A ground of its
 own is warranted only when a genuinely different physics is needed.
 
+## Measured baselines — a floor, not a target
+
+So a reader can place a profile: what two small models actually scored
+on the full standard set, judged by a qualified judge (from the
+archived
+[reference run](../runs-archive/reference-run-2-qualified-judge-2026-08-22/NOTE.md),
+2026-08-22 — 3 seeds per scene, so read these as coarse floors, not
+rankings). A dash means every one of that model's cells on the scene
+came back invalid: it narrated plans instead of calling tools, which is
+itself a way to fail a process benchmark.
+
+| axis | fed by | gpt-oss-20b | mistral-small-3.2 |
+|---|---|---|---|
+| route-discipline | Closed Roads / detour | 0.0 | — |
+| wall-pricing | Closed Roads / no-way | 0.33 | — |
+| empty-measure | Assayer's Bench | 0.67 | 1.0 |
+| object-hold | Finished Cart | 0.33 | 0.67 |
+| grounding | Borrowed Story | 0.67 | 0.67 |
+| walk-coverage | maze family | 0.01 | 0.03 |
+| move-discipline | maze family | 1.0 | 0.77 |
+| self-verdict | maze family | 0.0 | 0.25 |
+| relief-page | Night Relief | 0.0 | 0.0 |
+| handoff-verification | Night Watch | 0.0 | 0.0 |
+
+Two things worth noticing. No model aces the board, and the two fail
+in different rows — exactly the shape a filter should have (a scene
+every agent aces is treated as broken); the zeroed rows are not dead
+axes, they are the hard ones, and the scene pages above show what a
+positive looks like on each. And the mechanical axes (move-discipline)
+sit far above the judged ones (relief-page, handoff-verification) for
+the same models: walking correctly is cheap; verifying and handing off
+are not. Each axis is fed by exactly ONE scene — a score points at a
+muscle, never a blur — so a low row tells you precisely which page to
+read.
+
 ---
 **Docs:** [README](../README.md) · [scenes](scenes.md) · [grounds](grounds/service-host.md) · [run guide](run-guide.md) · [FAQ](faq.md) · [methodology](methodology.md) · [versioning](versioning.md)
