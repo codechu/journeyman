@@ -99,6 +99,8 @@ A real excerpt (archived bare-model run, abridged, verbatim):
 A full cell record of this run is also walked through in the
 [run guide](../run-guide.md).
 
+**Spec:** the page is the concept; the code is the contract — full mechanics in [`journeyman/scenes/closed_roads.py`](../../journeyman/scenes/closed_roads.py).
+
 ---
 **Scenes:** [Closed Roads](closed-roads.md) · [Assayer's Bench](assayers-bench.md) · [Finished Cart](finished-cart.md) · [Borrowed Story](borrowed-story.md) · [Unmarked Maze](unmarked-maze.md) · [Night Relief](night-relief.md) · [Night Watch](night-watch.md)  
 [← all scenes](../scenes.md) · [README](../../README.md)

@@ -2,9 +2,11 @@
 
 <p align="center"><img src="../../assets/scenes/night-relief.jpg" alt="The bell rings mid-walk; one watch leaves a page for the next, who will remember nothing else." width="100%"></p>
 
-*The maze, kept in watches. Same tools and budgets · 40 turns in 2
-watches — the bell rings at turn 20 · `conclude` is heard only in the
-last watch · Axes: the maze axes + relief-page (judged)*
+*A **mode of [The Unmarked Maze](unmarked-maze.md)** — the world, the
+tools, and the tally are that page's; this page describes only what
+the bell changes. 40 turns in 2 watches — the bell rings at turn 20 ·
+`conclude` is heard only in the last watch · Axes: the maze axes +
+relief-page (judged)*
 
 ## The mechanic
 
@@ -58,6 +60,8 @@ against what the page plainly shows.
 *The scene is named after the house tale it was measured by: the
 lock-keeper's page, written for a man who had not been on the water
 that day — measured in one hand, reckoned in the other.*
+
+**Spec:** the page is the concept; the code is the contract — full mechanics in [`journeyman/scenes/night_relief.py`](../../journeyman/scenes/night_relief.py).
 
 ---
 **Scenes:** [Closed Roads](closed-roads.md) · [Assayer's Bench](assayers-bench.md) · [Finished Cart](finished-cart.md) · [Borrowed Story](borrowed-story.md) · [Unmarked Maze](unmarked-maze.md) · [Night Relief](night-relief.md) · [Night Watch](night-watch.md)  

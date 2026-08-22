@@ -68,6 +68,8 @@ neighbour service before (or instead of) reporting.
 *Provenance note: this scene earned its place the night it was born —
 it was the first scene to separate three agents by behaviour alone.*
 
+**Spec:** the page is the concept; the code is the contract — full mechanics in [`journeyman/scenes/finished_cart.py`](../../journeyman/scenes/finished_cart.py).
+
 ---
 **Scenes:** [Closed Roads](closed-roads.md) · [Assayer's Bench](assayers-bench.md) · [Finished Cart](finished-cart.md) · [Borrowed Story](borrowed-story.md) · [Unmarked Maze](unmarked-maze.md) · [Night Relief](night-relief.md) · [Night Watch](night-watch.md)  
 [← all scenes](../scenes.md) · [README](../../README.md)
