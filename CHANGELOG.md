@@ -1,5 +1,23 @@
 # Changelog
 
+## Unreleased
+- **Fixed: calls the driver refused were counted as if they had happened.**
+  A call past the declared budget is answered with "budget exhausted" and
+  never reaches the scene — but the events layer replayed the whole call
+  list, so an agent that burned its budget and only then emitted a report
+  was scored `reported: true, budget_dead: false`. `call_sequence` now
+  returns answered calls only. Measured blast radius on our own records:
+  54 of 526 live cells change, 40 of them on a decision-bearing field
+  (`reported` / `concluded` / `conclusion_valid`). Five cases in the
+  shipped calibration set contain such a refused closing call and are
+  labelled as if it had been filed — they are under review; the set is
+  unchanged until that lands, and a guard test fails if a sixth appears.
+- **Regression tests for the class, not just the bug**: a refused report
+  is not filed; a refused conclude is not a conclusion; `call_sequence`
+  skips only refused calls; stored events must equal events recomputed
+  from the record; every axis in the shipped set must exercise more than
+  one verdict (route-discipline is the known, flagged exception).
+
 ## 0.0.8 — 2026-08-23
 - **The second labelling: calibration set v2_real (70 cases, seven
   axes) and the v2.2 rubric questions.** Labels no longer come from one

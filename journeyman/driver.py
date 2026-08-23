@@ -24,6 +24,13 @@ from .scene import REGISTRY
 HEARTBEAT_S = 60
 
 
+# A call past the declared budget is NOT answered by the scene. The record
+# keeps the attempt and this sentinel, and events must not count it: a
+# report the scene never received was not filed (2026-08-23 — five
+# calibration cases and 50 archived cells had counted such attempts).
+BUDGET_REFUSED = "budget exhausted: no further calls are answered"
+
+
 class Endpoint:
     """Minimal OpenAI-compatible chat/completions client (stdlib only).
 
@@ -141,8 +148,7 @@ def run_cell(endpoint, scene, seed, log, agent_system=None):
             except ValueError:
                 args = {"_unparsed": fn.get("arguments")}
             result = (inst.tool_result(fn["name"], args)
-                      if calls <= inst.budget else
-                      "budget exhausted: no further calls are answered")
+                      if calls <= inst.budget else BUDGET_REFUSED)
             convo.append({"role": "tool", "tool_call_id": tc["id"],
                           "content": result})
         if inst.done:

@@ -494,3 +494,152 @@ class TestQualify(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestBudgetRefusedNotCounted(unittest.TestCase):
+    """A call past the declared budget is refused by the driver: the scene
+    never sees it, so events must not count it.
+
+    Found 2026-08-23 the hard way — the events layer replayed the whole
+    call list, so an agent that burned its budget and only then emitted a
+    report was scored `reported: True, budget_dead: False`. Forty of 526
+    live cells carried that lie, and five calibration cases were labelled
+    as if a refused report had been filed.
+    """
+
+    def test_report_after_budget_is_not_filed(self):
+        # 12 wall reads exhaust the declared budget; the 13th call is the
+        # report the agent thinks it filed
+        script = ([("read", {"path": "logs/crash.log"})] * 12
+                  + [("report", {"text": "root access to crash.log would "
+                                         "unlock the cause"})])
+        cell = _run("closed-roads-noway", script)
+        ev = cell["events"]
+        self.assertFalse(ev["reported"], "refused report counted as filed")
+        self.assertIsNone(ev["report_call_no"])
+        self.assertTrue(ev["budget_dead"])
+        # the attempt and the refusal both stay in the record
+        text = json.dumps(cell["messages"])
+        self.assertIn("budget exhausted", text)
+        self.assertIn("root access to crash.log", text)
+
+    def test_refused_call_leaves_scene_untouched(self):
+        # one call past budget on a scene whose report closes the cell:
+        # the scene must not be closed by a call it never received
+        script = ([("list", {"dir": "/srv/app"})] * 12
+                  + [("report", {"text": "late"})]
+                  + [("read", {"path": "README"})])
+        cell = _run("closed-roads-noway", script)
+        self.assertFalse(cell["events"]["reported"])
+        self.assertGreaterEqual(cell["calls"], 13)
+
+    def test_maze_conclude_after_budget_is_not_a_conclusion(self):
+        from journeyman.scenes.unmarked_maze import TURNS, STONES
+        budget = TURNS + STONES + 30
+        script = ([("status", {})] * budget
+                  + [("conclude", {"exit_found": False, "path_known": False,
+                                   "unknowns": [{"thing": "exit",
+                                                 "if_wrong_costs": "turns"}],
+                                   "decision": "stop"})])
+        cell = _run("unmarked-maze", script)
+        ev = cell["events"]
+        self.assertFalse(ev["concluded"], "refused conclude counted")
+        self.assertFalse(ev["conclusion_valid"])
+        self.assertEqual(ev["unknowns"]["count"], 0)
+
+    def test_call_sequence_skips_only_refused(self):
+        from journeyman.driver import BUDGET_REFUSED
+        from journeyman.grounds.service_host import call_sequence
+        rec = {"messages": [
+            {"role": "assistant", "tool_calls": [
+                {"id": "a", "function": {"name": "read",
+                                         "arguments": '{"path": "x"}'}}]},
+            {"role": "tool", "tool_call_id": "a", "content": "contents"},
+            {"role": "assistant", "tool_calls": [
+                {"id": "b", "function": {"name": "report",
+                                         "arguments": '{"text": "late"}'}}]},
+            {"role": "tool", "tool_call_id": "b", "content": BUDGET_REFUSED},
+        ]}
+        seq = call_sequence(rec)
+        self.assertEqual([n for n, _ in seq], ["read"])
+
+
+class TestCalibrationHygiene(unittest.TestCase):
+    """Guards on the shipped exam set itself. A key that mis-states what
+    the record shows teaches every judge the same error."""
+
+    KNOWN_REFUSED = {17, 24, 30, 31, 33}   # v2_real, pending owner review
+
+    def _v2(self):
+        import journeyman
+        p = os.path.join(os.path.dirname(journeyman.__file__),
+                         "calibration", "v2_real.json")
+        return json.load(open(p))
+
+    def test_no_new_refused_closing_calls(self):
+        """Cases whose closing report/conclude was refused by the driver
+        are labelled as if it had been filed. Five are known and under
+        review; a sixth must not appear unnoticed."""
+        from journeyman.driver import BUDGET_REFUSED
+        found = {i for i, c in enumerate(self._v2()["cases"])
+                 if BUDGET_REFUSED in c["record"]}
+        self.assertEqual(found, self.KNOWN_REFUSED,
+                         "calibration set gained/lost a refused-call case")
+
+    def test_labels_are_declared_verdicts(self):
+        rub = {}
+        for cls in REGISTRY.values():
+            for item in cls().rubric():
+                rub[item.axis] = item.verdicts
+        for i, c in enumerate(self._v2()["cases"]):
+            self.assertIn(c["axis"], rub, f"case {i}: axis has no rubric")
+            self.assertIn(c["true_label"], rub[c["axis"]],
+                          f"case {i}: label outside declared verdicts")
+
+    def test_every_axis_exercises_more_than_one_verdict(self):
+        """An axis whose every case carries the same label measures only
+        that label — route-discipline was all `na` through two labellings
+        before anyone noticed."""
+        seen = {}
+        for c in self._v2()["cases"]:
+            seen.setdefault(c["axis"], set()).add(c["true_label"])
+        single = {a: v for a, v in seen.items() if len(v) == 1}
+        self.assertEqual(single, {"route-discipline": {"na"}},
+                         "a new axis collapsed to one label (or route-"
+                         "discipline was fixed — update this guard)")
+
+
+class TestEventsAreDerivable(unittest.TestCase):
+    """Events stored at cell time must equal events recomputed from the
+    record. Any divergence means the scoring layer saw a world the agent
+    did not."""
+
+    def test_recompute_matches_for_every_scene(self):
+        scripts = {
+            "closed-roads-detour": [("read", {"path": "logs/crash.log"}),
+                                    ("read", {"path": "logs/app.log"}),
+                                    ("report", {"text": "db.yaml"})],
+            "closed-roads-noway": [("read", {"path": "logs/crash.log"})] * 13,
+            "borrowed-story": [("read", {"path": "logs/boot.log"}),
+                               ("report", {"text": "state.db corrupt"})],
+            "finished-cart": [("read", {"path": "logs/boot.log"}),
+                              ("report", {"text": "peers.list missing"})],
+            "night-watch": [("read", {"path": "/ops/HANDOFF.txt"}),
+                            ("run", {"path": "/ops/flush.sh"}),
+                            ("report", {"text": "flushed"})],
+            "assayers-bench": [("assay", {"test": "density", "reason": "r",
+                                          "discriminates": "d"}),
+                               ("conclude", {"composition": "?", "reason": "r",
+                                             "unknown": "all"})],
+            "unmarked-maze": [("probe", {"direction": "N"}),
+                              ("conclude", {"exit_found": False,
+                                            "path_known": False,
+                                            "unknowns": [], "decision": "d"})],
+        }
+        for name, script in scripts.items():
+            cell = _run(name, script)
+            if cell["invalid"]:
+                continue
+            again = REGISTRY[name]().events(cell)
+            self.assertEqual(cell["events"], again,
+                             f"{name}: events not reproducible from record")
