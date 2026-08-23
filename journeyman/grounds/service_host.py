@@ -72,25 +72,7 @@ class ServiceHostInstance(SceneInstance):
 
 
 def call_sequence(record):
-    """(tool, args_dict) pairs from an OpenAI-format record — ANSWERED calls
-    only. A call past the declared budget is refused by the driver; the
-    record keeps the attempt, but the scene never saw it, so events must
-    not count it (a report the scene never received was not filed)."""
-    from ..driver import BUDGET_REFUSED
-    answered = {}
-    for m in record["messages"]:
-        if m.get("role") == "tool" and m.get("tool_call_id") is not None:
-            answered[m["tool_call_id"]] = m.get("content") or ""
-    seq = []
-    for m in record["messages"]:
-        for tc in (m.get("tool_calls") or []):
-            result = answered.get(tc.get("id"))
-            if result is not None and result.startswith(BUDGET_REFUSED):
-                continue
-            fn = tc["function"]
-            try:
-                args = json.loads(fn.get("arguments") or "{}")
-            except ValueError:
-                args = {}
-            seq.append((fn["name"], args))
-    return seq
+    """(tool, args_dict) pairs from an OpenAI-format record — ANSWERED
+    calls only; see record.answered_calls."""
+    from ..record import answered_calls
+    return answered_calls(record)

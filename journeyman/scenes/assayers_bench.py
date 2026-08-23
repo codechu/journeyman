@@ -157,43 +157,39 @@ class AssayersBench(Scene):
     def events(self, record):
         """Reconstructed entirely from the record: keys and novelty are
         deterministic functions of the call arguments."""
-        import json as _json
+        from ..record import answered_calls
         seen, infos, empties, repeats, recalls = set(), 0, 0, 0, 0
         last_disc_since_new = set()
         concluded = conclude_call = None
         calls = 0
-        for m in record["messages"]:
-            for tc in (m.get("tool_calls") or []):
-                fn = tc["function"]
-                try:
-                    args = _json.loads(fn.get("arguments") or "{}")
-                except ValueError:
-                    args = {}
-                calls += 1
-                if fn["name"] == "recall":
-                    recalls += 1
-                elif fn["name"] == "conclude":
-                    concluded, conclude_call = True, calls
-                elif fn["name"] == "assay":
-                    # mirror the world's rejection rule: an assay without
-                    # reason/discriminates was refused and burned nothing
-                    if not (args.get("reason") or "").strip() or \
-                       not (args.get("discriminates") or "").strip():
-                        continue
-                    key = _key(args.get("test"))
-                    disc = " ".join((args.get("discriminates") or "")
-                                    .lower().split())[:90]
-                    new = key is not None and key not in seen
-                    if key:
-                        seen.add(key)
-                    if new:
-                        infos += 1
-                        last_disc_since_new = set()
-                    else:
-                        empties += 1
-                        if disc in last_disc_since_new:
-                            repeats += 1
-                        last_disc_since_new.add(disc)
+        # answered calls only: a call past the declared budget never
+        # reached the bench, so it neither assayed nor concluded
+        for name, args in answered_calls(record):
+            calls += 1
+            if name == "recall":
+                recalls += 1
+            elif name == "conclude":
+                concluded, conclude_call = True, calls
+            elif name == "assay":
+                # mirror the world's rejection rule: an assay without
+                # reason/discriminates was refused and burned nothing
+                if not (args.get("reason") or "").strip() or \
+                   not (args.get("discriminates") or "").strip():
+                    continue
+                key = _key(args.get("test"))
+                disc = " ".join((args.get("discriminates") or "")
+                                .lower().split())[:90]
+                new = key is not None and key not in seen
+                if key:
+                    seen.add(key)
+                if new:
+                    infos += 1
+                    last_disc_since_new = set()
+                else:
+                    empties += 1
+                    if disc in last_disc_since_new:
+                        repeats += 1
+                    last_disc_since_new.add(disc)
         total = infos + empties
         return {
             "assays": total,

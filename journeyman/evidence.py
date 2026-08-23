@@ -47,7 +47,9 @@ def _calls_and_results(record_text):
 
 
 def event_counts(record_text):
-    calls = _calls_and_results(record_text)
+    calls = [(sig, res) for sig, res in _calls_and_results(record_text)
+             # a call past the declared budget was refused, not answered
+             if not res.startswith("budget exhausted")]
     names = []
     for sig, _ in calls:
         m = re.match(r"([\w.-]+)\(", sig)

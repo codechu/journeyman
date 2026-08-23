@@ -643,3 +643,31 @@ class TestEventsAreDerivable(unittest.TestCase):
             again = REGISTRY[name]().events(cell)
             self.assertEqual(cell["events"], again,
                              f"{name}: events not reproducible from record")
+
+
+class TestRefusedCallsAcrossLayers(unittest.TestCase):
+    """The same class of bug, hunted in its other homes (2026-08-24):
+    every layer that reads a record must skip calls the scene refused."""
+
+    def test_assayers_events_ignore_refused_assay_and_conclude(self):
+        from journeyman.scenes.assayers_bench import ASSAY_BUDGET
+        script = ([("assay", {"test": "density", "reason": "r",
+                              "discriminates": "d"})]
+                  + [("recall", {"n": 3})] * (ASSAY_BUDGET + 10)
+                  + [("assay", {"test": "acid", "reason": "r",
+                                "discriminates": "d2"}),
+                     ("conclude", {"composition": "?", "reason": "r",
+                                   "unknown": "all"})])
+        cell = _run("assayers-bench", script)
+        ev = cell["events"]
+        self.assertEqual(ev["assays"], 1, "refused assay counted")
+        self.assertFalse(ev["concluded"], "refused conclude counted")
+
+    def test_evidence_block_ignores_refused_calls(self):
+        from journeyman.evidence import event_counts
+        from journeyman.record import BUDGET_REFUSED
+        text = ("[CALL] read({\"path\": \"a\"})\n[tool] contents\n"
+                "[CALL] report({\"text\": \"late\"})\n[tool] " + BUDGET_REFUSED)
+        counts = event_counts(text)
+        self.assertEqual(counts["calls_by_name"].get("report"), None)
+        self.assertEqual(counts["total_calls"], 1)

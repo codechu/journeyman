@@ -18,17 +18,10 @@ import urllib.request
 
 from . import __version__
 from .color import paint
-from .record import RunDir, make_seal
+from .record import BUDGET_REFUSED, RunDir, make_seal
 from .scene import REGISTRY
 
 HEARTBEAT_S = 60
-
-
-# A call past the declared budget is NOT answered by the scene. The record
-# keeps the attempt and this sentinel, and events must not count it: a
-# report the scene never received was not filed (2026-08-23 — five
-# calibration cases and 50 archived cells had counted such attempts).
-BUDGET_REFUSED = "budget exhausted: no further calls are answered"
 
 
 class Endpoint:

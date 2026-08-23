@@ -12,6 +12,13 @@
   shipped calibration set contain such a refused closing call and are
   labelled as if it had been filed — they are under review; the set is
   unchanged until that lands, and a guard test fails if a sixth appears.
+- **The same fix in its other homes.** The refused-call sentinel and the
+  answered-calls helper now live in `record.py`, and every layer that
+  reads a record uses it: the bench scene's own event reconstruction (a
+  refused assay counted as an assay, a refused conclude as a conclusion),
+  the deterministic evidence block, and the maintainers' mechanical
+  empty-measure counter. Measured impact of these three: no archived cell
+  and no shipped label changes — they were latent, not active.
 - **Regression tests for the class, not just the bug**: a refused report
   is not filed; a refused conclude is not a conclusion; `call_sequence`
   skips only refused calls; stored events must equal events recomputed

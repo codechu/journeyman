@@ -84,3 +84,31 @@ class RunDir:
         for fn in sorted(os.listdir(cdir)):
             if fn.endswith(".json"):
                 yield json.load(open(os.path.join(cdir, fn)))
+
+# A call past the declared budget is NOT answered by the scene: the driver
+# returns this sentinel instead. The record keeps the attempt, so anything
+# reading the record must skip it — a report the scene never received was
+# not filed. (2026-08-23: the events layer counted such attempts; 40 of 526
+# live cells carried a decision-bearing lie, five calibration cases too.)
+BUDGET_REFUSED = "budget exhausted: no further calls are answered"
+
+
+def answered_calls(record):
+    """(tool_name, args) for every call the scene actually answered."""
+    answered = {}
+    for m in record["messages"]:
+        if m.get("role") == "tool" and m.get("tool_call_id") is not None:
+            answered[m["tool_call_id"]] = m.get("content") or ""
+    out = []
+    for m in record["messages"]:
+        for tc in (m.get("tool_calls") or []):
+            result = answered.get(tc.get("id"))
+            if result is not None and result.startswith(BUDGET_REFUSED):
+                continue
+            fn = tc["function"]
+            try:
+                args = json.loads(fn.get("arguments") or "{}")
+            except ValueError:
+                args = {}
+            out.append((fn["name"], args))
+    return out
