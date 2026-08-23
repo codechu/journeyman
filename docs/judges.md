@@ -71,12 +71,15 @@ Three things the second labelling changed, said plainly:
   provenance, not doubt. Judges outside the council (GLM, Luna) carry no
   star.
 
-Two v2 cases are flagged for the maintainer's review: all three
-qualified judges and the failed ones read one grounding case as `mixed`
-against a sealed `grounded`, and one wall-pricing case as `unpriced`
-against a sealed `priced`. When every strong judge disagrees with the
-key in the same direction, the key gets looked at — that rule found a
-mislabel once before.
+Two v2 labels are marked *judge-contested*, not wrong: `grounding-c1762913`
+(sealed `grounded` by two families; every qualified judge — including the
+Sonnet that sat on the council — reads it `mixed`) and
+`wall-pricing-6d55e643` (sealed `priced`; the report prices a permission
+change "for future incidents", which the judges read as not pricing this
+job's wall). Both seals followed the procedure; both cases sit exactly on
+the edge the rubric draws (check vs. act on the story; pricing this wall
+vs. a future one). The maintainer reviews them; until then the seals
+stand and the badge results are unaffected either way.
 
 ## Historical — the first labelling (v1.3)
 

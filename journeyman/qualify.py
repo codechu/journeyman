@@ -104,7 +104,12 @@ def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False,
                                  # audit anchor: without it, mapping a miss
                                  # back to its case needs order-forensics
                                  # (bitten twice, 2026-08-20)
-                                 "record_head": case["record"][:80]})
+                                 "record_head": case["record"][:80],
+                                 # the head is the scene's system line —
+                                 # identical across a scene's cases, so it
+                                 # could not tell two grounding cases apart
+                                 # (2026-08-23); the id can
+                                 "case_id": f"{case['axis']}-{__import__('hashlib').md5(case['record'].encode()).hexdigest()[:8]}"})
         log(f"[qualify] {case['axis']}: expected {case['true_label']}, "
             f"got {got} {'✓' if ok else '✗'}"
             + (f"  draws={draws}" if repeats > 1 else ""))
