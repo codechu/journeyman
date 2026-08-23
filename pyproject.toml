@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "journeyman-bench"
-version = "0.0.7"
+version = "0.0.8"
 description = "Journeyman - a process-quality benchmark for agents. Measures how agents work, and how they fail."
 readme = "README.pypi.md"
 requires-python = ">=3.10"

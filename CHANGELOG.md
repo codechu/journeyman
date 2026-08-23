@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.0.8 — 2026-08-23
 - **The second labelling: calibration set v2_real (70 cases, seven
   axes) and the v2.2 rubric questions.** Labels no longer come from one
   model family. A council of three families (claude-sonnet-5, kimi-k2,
