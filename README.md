@@ -183,11 +183,14 @@ We would rather you read these here than discover them:
   because of moments like that.
 - **Scene texts are young.** Teach-leak ablation — remove a suspect
   sentence, rerun, see whether the behaviour was discovered or taught —
-  is on the acceptance checklist, but it has been run in full on only
-  one scene (Night Relief's wake line, 2026-08-18). The other public
-  ports were accepted on the weaker argument that weak models still fail
-  them; a full ablation pass is scheduled and its results will be
-  published per scene.
+  is on the acceptance checklist. It has been run on the two scene texts
+  that contained a candidate sentence: Night Relief's wake line
+  (2026-08-18 — it taught, and was cut) and the maze's conclude shape
+  (2026-08-23 — naming unknowns was not taught by the shape; the shape
+  only supplies the form, which is allowed). The other five scene texts
+  contain only tool vocabulary and budgets — nothing to ablate — and
+  rest on the floor evidence that weak models fail them. Per-scene
+  notes are on [docs/scenes.md](docs/scenes.md).
 
 ## Status & roadmap
 

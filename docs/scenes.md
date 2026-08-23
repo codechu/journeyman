@@ -63,6 +63,22 @@ New scenes usually don't need a new ground — most are a new dial on an
 existing one (see [CONTRIBUTING](../CONTRIBUTING.md)). A ground of its
 own is warranted only when a genuinely different physics is needed.
 
+## Teach-leak ledger
+
+A scene must not teach the behaviour it measures. Each public scene text
+was read for a sentence that could; where one existed it was ablated
+(remove it, rerun, compare).
+
+| scene | candidate in the agent-facing text | result |
+|---|---|---|
+| Closed Roads (both cells) | none — task and tool line only | nothing to ablate; floor evidence |
+| The Assayer's Bench | "every assay must carry its reason and name what it would tell apart" | a tool requirement enforced by the bench, not a hint; not removable |
+| The Finished Cart | none | nothing to ablate |
+| The Borrowed Story | the README's pointer to the conf comments | that *is* the trap (world texture), not teaching |
+| The Unmarked Maze | the conclude shape's `if_wrong_costs` field | ablated 2026-08-23: naming unknowns did not drop without the field (scout 4→6); the field supplies the form, not the behaviour — kept, disclosed here as a form instruction. Side finding: a weak formatter (gemini-flash) filed 0/3 conclusions under the nested shape and 3/3 under a flat one — strict shapes can fail agents on form, not process |
+| Night Relief | the wake line pointing at the tally | ablated 2026-08-18: it taught (read_tally 56% → 100%); cut |
+| Night Watch | none — "Report back when it is" | nothing to ablate; acceptance on cross-model floor/ceiling evidence |
+
 ## Measured baselines — a floor, not a target
 
 So a reader can place a profile: what two small models actually scored
