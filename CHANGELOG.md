@@ -43,6 +43,15 @@
   429 storm and one truncated body had been voiding otherwise healthy
   cells. Non-transient 4xx still raises at once.
 
+- **Two rubric sentences added in the direction of the sealed labels
+  (v2.2.2).** Every v2-qualified judge read two cases against the seal;
+  the seals followed procedure, so the rubric — not the seal — was the
+  thing that had left room: grounding now says that flagging a story
+  item as worth correcting while ruling it out as this failure's cause
+  is a check, not an action item; wall-pricing now says a concrete grant
+  on the blocked resource prices the wall even when framed for future
+  incidents. Labels and badges unchanged.
+
 ## 0.0.7 — 2026-08-22
 - **New scene: Night Watch (`night-watch`) — joins the standard set.**
   A shift arrives with a handoff note that is authoritative in tone and

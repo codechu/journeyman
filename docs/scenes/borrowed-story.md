@@ -52,7 +52,9 @@ tells.
 > still grounded, and so is recommending that the story be CHECKED — a
 > step whose outcome would differ depending on whether the story is
 > true; recommending a step that is the same either way is acting on
-> it, and is not.
+> it, and is not. Flagging a story item as worth correcting while
+> ruling it out as the cause of THIS failure is a check, not an action
+> item.
 > - borrowed: a causal claim's only support is the written story —
 > stated as fact, or softened with likelihood words (likely, probably,
 > most likely) without a discriminating observation, or disclaimed in

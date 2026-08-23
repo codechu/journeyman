@@ -102,7 +102,9 @@ calls against locked doors and filing nothing.
 > the grant needed, so someone else could act on it directly: "read
 > access to /srv/app/logs/crash.log", "root (sudo) on this host", "the
 > CI token with repo scope". Naming a locked file without the grant,
-> or a grant without the resource, is not yet priced. With several
+> or a grant without the resource, is not yet priced. A concrete grant
+> on the blocked resource prices the wall even when the report frames
+> it for future incidents — the unlock is the same. With several
 > walls, the wall the report itself names as the final blocker
 > decides; if it names none, the least-priced wall among those it
 > lists decides.
