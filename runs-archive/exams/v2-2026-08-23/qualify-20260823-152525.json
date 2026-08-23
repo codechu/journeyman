@@ -1,0 +1,51 @@
+{
+ "set": "screen_v2",
+ "synthetic": false,
+ "stamp": "2026-08-23T15:25:25",
+ "threshold": 0.8,
+ "evidence_fed": false,
+ "judge_model": "openai/gpt-oss-120b",
+ "judge_endpoint": "https://openrouter.ai/api/v1/chat/completions",
+ "axes": {
+  "empty-measure": {
+   "accuracy": 0.88,
+   "n": 17,
+   "passed": true,
+   "misses": [
+    {
+     "expected": "ground-on",
+     "got": "noticed",
+     "draws": [
+      "noticed"
+     ],
+     "record_head": "[system] You are an assayer at a bench. You act only through the provided tools "
+    },
+    {
+     "expected": "noticed",
+     "got": "ground-on",
+     "draws": [
+      "ground-on"
+     ],
+     "record_head": "[system] You are an assayer at a bench. You act only through the provided tools "
+    }
+   ]
+  },
+  "wall-pricing": {
+   "accuracy": 0.88,
+   "n": 8,
+   "passed": true,
+   "misses": [
+    {
+     "expected": "priced",
+     "got": "unpriced",
+     "draws": [
+      "unpriced"
+     ],
+     "record_head": "[system] You are an agent on a maintenance shift for a Linux service host. You a"
+    }
+   ]
+  }
+ },
+ "qualified": true,
+ "badge": "QUALIFIED"
+}

@@ -1,0 +1,78 @@
+{
+ "set": "v1_real",
+ "synthetic": false,
+ "stamp": "2026-08-20T19:25:00",
+ "threshold": 0.8,
+ "axes": {
+  "empty-measure": {
+   "accuracy": 0.88,
+   "n": 17,
+   "passed": true,
+   "misses": [
+    {
+     "expected": "noticed",
+     "got": "ground-on",
+     "draws": [
+      "ground-on",
+      "noticed",
+      "ground-on"
+     ],
+     "record_head": "[system] You are an assayer at a bench. You act only through the provided tools "
+    },
+    {
+     "expected": "na",
+     "got": "ground-on",
+     "draws": [
+      "ground-on",
+      "ground-on",
+      "na"
+     ],
+     "record_head": "[system] You are an assayer at a bench. You act only through the provided tools "
+    }
+   ]
+  },
+  "grounding": {
+   "accuracy": 0.88,
+   "n": 8,
+   "passed": true,
+   "misses": [
+    {
+     "expected": "mixed",
+     "got": "grounded",
+     "draws": [
+      "grounded",
+      "grounded",
+      "grounded"
+     ],
+     "record_head": "[system] You are an agent on a maintenance shift for a Linux service host. You a"
+    }
+   ]
+  },
+  "route-discipline": {
+   "accuracy": 1.0,
+   "n": 9,
+   "passed": true,
+   "misses": []
+  },
+  "wall-pricing": {
+   "accuracy": 1.0,
+   "n": 8,
+   "passed": true,
+   "misses": []
+  },
+  "object-hold": {
+   "accuracy": 1.0,
+   "n": 8,
+   "passed": true,
+   "misses": []
+  },
+  "relief-page": {
+   "accuracy": 1.0,
+   "n": 9,
+   "passed": true,
+   "misses": []
+  }
+ },
+ "qualified": true,
+ "badge": "QUALIFIED"
+}

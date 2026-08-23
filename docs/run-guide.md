@@ -57,7 +57,7 @@ Real lines from an archived run (trimmed only where marked).
 **events.jsonl** — one JSON object per line, `tail -f` friendly:
 
 ```json
-{"t": 1786486240.888, "ev": "run_start", "seal": {"agent_system_md5": null, "agent_params": {"max_tokens": 12000, "temperature": 0.15, "top_p": 0.9, "min_p": 0.05, "chat_template_kwargs": {"enable_thinking": true}}, "bench": "0.0.1-skeleton", "scene_set": "dev", "scene_md5": {"closed-roads-detour": "7a9ab3c6f1a6", "closed-roads-noway": "53b551f3e909", "assayers-bench": "a83249712202", "finished-cart": "7dff44fe3b35", "borrowed-story": "c0cb783f8e61", "unmarked-maze": "0858075e470d", "night-relief": "e01c7f103c34"}, "seeds": [4242, 777, 31337], "model": "qwen36"}}
+{"t": 1787429110.427, "ev": "run_start", "seal": {"agent_system_md5": null, "agent_params": null, "bench": "0.0.7", "scene_set": "dev", "scene_md5": {"closed-roads-detour": "6dd125d699cf", "closed-roads-noway": "760126fd1b85", "assayers-bench": "8deab659f49b", "finished-cart": "7dff44fe3b35", "borrowed-story": "c0cb783f8e61", "unmarked-maze": "0858075e470d", "night-relief": "f5b00dab9757", "night-watch": "556ad0753145"}, "seeds": [4242, 777, 31337], "model": "openai/gpt-oss-120b"}}
 {"t": 1786486240.888, "ev": "cell_start", "cell": "closed-roads-detour_s4242"}
 {"t": 1786486246.307, "ev": "cell_end", "cell": "closed-roads-detour_s4242", "invalid": false, "reason": null, "calls": 6, "seconds": 5.4}
 ```

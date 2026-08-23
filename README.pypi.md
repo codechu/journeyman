@@ -5,8 +5,8 @@
 [![ci](https://github.com/codechu/journeyman/actions/workflows/ci.yml/badge.svg)](https://github.com/codechu/journeyman/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/journeyman-bench?color=blue)](https://pypi.org/project/journeyman-bench/)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://pypi.org/project/journeyman-bench/)
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
-[![Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](pyproject.toml)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](https://github.com/codechu/journeyman/blob/master/LICENSE)
+[![Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](https://github.com/codechu/journeyman/blob/master/pyproject.toml)
 
 *A process-quality benchmark for agents.*
 
@@ -89,7 +89,7 @@ moment. A `NOT COMPARABLE` stamp means the run was self-judged or
 non-standard — track your own progress with it, don't compare it to
 anyone. A full standard run takes 10-60 minutes depending on the model,
 with live progress the whole way. Full anatomy of a run and its files:
-[docs/run-guide.md](docs/run-guide.md).
+[docs/run-guide.md](https://github.com/codechu/journeyman/blob/master/docs/run-guide.md).
 
 ## The four commands
 
@@ -109,25 +109,25 @@ COMPARABLE, because self-judgment has been observed to be lenient
 self-judge called it grounded; a paired self-vs-qualified measurement is
 still owed). The public
 registry of badge holders — and the thirty-plus configurations examined
-across two labellings — is at [docs/judges.md](docs/judges.md).
+across two labellings — is at [docs/judges.md](https://github.com/codechu/journeyman/blob/master/docs/judges.md).
 
 ## The eight scenes
 
 Each puts pressure on ONE expensive, real failure family — and declares
 only its tools and budget, never what good behaviour looks like. Full pages (world, task, trap, counted events, the judge's question
-verbatim, signatures) under [docs/scenes.md](docs/scenes.md); the shared
-world-engines beneath them are documented under [docs/grounds/](docs/grounds/service-host.md).
+verbatim, signatures) under [docs/scenes.md](https://github.com/codechu/journeyman/blob/master/docs/scenes.md); the shared
+world-engines beneath them are documented under [docs/grounds/](https://github.com/codechu/journeyman/blob/master/docs/grounds/service-host.md).
 
 | scene | the failure it filters |
 |---|---|
-| [Closed Roads · detour](docs/scenes/closed-roads.md) | hammering a wall that already answered |
-| [Closed Roads · no way through](docs/scenes/closed-roads.md) | burning budget instead of an honest, priced stop |
-| [The Assayer's Bench](docs/scenes/assayers-bench.md) | measuring long after measurement stopped informing |
-| [The Finished Cart](docs/scenes/finished-cart.md) | polishing past the finish because budget remained |
-| [The Borrowed Story](docs/scenes/borrowed-story.md) | asserting a plausible story the evidence contradicts |
-| [The Unmarked Maze](docs/scenes/unmarked-maze.md) | wandering without coverage, claiming what the world denies |
-| [Night Relief](docs/scenes/night-relief.md) | leaving a handoff a stranger cannot continue |
-| [Night Watch](docs/scenes/night-watch.md) | repeating an authoritative note the world contradicts |
+| [Closed Roads · detour](https://github.com/codechu/journeyman/blob/master/docs/scenes/closed-roads.md) | hammering a wall that already answered |
+| [Closed Roads · no way through](https://github.com/codechu/journeyman/blob/master/docs/scenes/closed-roads.md) | burning budget instead of an honest, priced stop |
+| [The Assayer's Bench](https://github.com/codechu/journeyman/blob/master/docs/scenes/assayers-bench.md) | measuring long after measurement stopped informing |
+| [The Finished Cart](https://github.com/codechu/journeyman/blob/master/docs/scenes/finished-cart.md) | polishing past the finish because budget remained |
+| [The Borrowed Story](https://github.com/codechu/journeyman/blob/master/docs/scenes/borrowed-story.md) | asserting a plausible story the evidence contradicts |
+| [The Unmarked Maze](https://github.com/codechu/journeyman/blob/master/docs/scenes/unmarked-maze.md) | wandering without coverage, claiming what the world denies |
+| [Night Relief](https://github.com/codechu/journeyman/blob/master/docs/scenes/night-relief.md) | leaving a handoff a stranger cannot continue |
+| [Night Watch](https://github.com/codechu/journeyman/blob/master/docs/scenes/night-watch.md) | repeating an authoritative note the world contradicts |
 
 ## How it works
 
@@ -144,7 +144,7 @@ world-engines beneath them are documented under [docs/grounds/](docs/grounds/ser
   command. On local llama.cpp with the prompt cache off, reruns are
   bit-exact. Procedural worlds + seed sets resist contamination.
 
-More: [docs/leaderboard.md](docs/leaderboard.md) (cohort 1: eleven agents, judged under v2 by a v2-qualified judge) · [docs/faq.md](docs/faq.md) · [docs/methodology.md](docs/methodology.md).
+More: [docs/leaderboard.md](https://github.com/codechu/journeyman/blob/master/docs/leaderboard.md) (cohort 1: eleven agents, judged under v2 by a v2-qualified judge) · [docs/faq.md](https://github.com/codechu/journeyman/blob/master/docs/faq.md) · [docs/methodology.md](https://github.com/codechu/journeyman/blob/master/docs/methodology.md).
 
 ## Honest limitations (v0)
 
@@ -167,7 +167,7 @@ We would rather you read these here than discover them:
   judging skill. Under the v2 definition every judge screened passes it,
   including one that had scored 0.43. Most of that guillotine was our
   rubric. The v1.3 ledger stays published in
-  [docs/judges.md](docs/judges.md) as what we believed and why.
+  [docs/judges.md](https://github.com/codechu/journeyman/blob/master/docs/judges.md) as what we believed and why.
 - **Who holds a badge now.** GLM-5.2 and GPT-5.6-Luna (v2, 7/7 axes,
   no council ties) and Claude Sonnet 5 (v2, starred as a council
   member; it also passes on the 47 cases sealed without its family).
@@ -193,7 +193,7 @@ We would rather you read these here than discover them:
 
 **v1 engineering complete:** eight sealed scenes/modes on three grounds,
 two scoring layers, the judge qualification exam, sealed reports.
-Reference runs are archived under [runs-archive/](runs-archive/).
+Reference runs are archived under [runs-archive/](https://github.com/codechu/journeyman/blob/master/runs-archive/).
 **Shown since v0.0.5:** multi-model separation (a four-model panel under
 an independent judge — the strong model lifts every "floored" axis,
 proving those axes hard rather than broken); a real calibration set,
@@ -231,4 +231,4 @@ journeyman/
 
 <p align="center"><img src="https://raw.githubusercontent.com/codechu/journeyman/master/assets/icon.jpg" alt="Journeyman guild seal — a maze forming the letter J" width="96"></p>
 
-Contributing: [CONTRIBUTING.md](CONTRIBUTING.md) · Versioning: [docs/versioning.md](docs/versioning.md) · Changelog: [CHANGELOG.md](CHANGELOG.md) · Licensed under the [Apache License 2.0](LICENSE).
+Contributing: [CONTRIBUTING.md](https://github.com/codechu/journeyman/blob/master/CONTRIBUTING.md) · Versioning: [docs/versioning.md](https://github.com/codechu/journeyman/blob/master/docs/versioning.md) · Changelog: [CHANGELOG.md](https://github.com/codechu/journeyman/blob/master/CHANGELOG.md) · Licensed under the [Apache License 2.0](https://github.com/codechu/journeyman/blob/master/LICENSE).

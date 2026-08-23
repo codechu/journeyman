@@ -42,7 +42,7 @@ for comparing against anyone else's.
 **How long does a run take? What do I get?**
 10-60 minutes for the full standard set, depending on the model, with
 live per-cell progress the whole way. You get `report.md` /
-`report.json`: a nine-axis profile (each 0-1), your agent's best and
+`report.json`: a ten-axis profile (each 0-1), your agent's best and
 worst moment quoted in its own words, the cost, and a seal that lets
 anyone re-run the exact same exam.
 
@@ -74,6 +74,21 @@ system-wide installs, and it affects every package, not Journeyman.
 Install with `pipx install journeyman-bench` (ideal for a CLI tool), or
 inside a virtualenv (`python3 -m venv .venv && . .venv/bin/activate`
 then `pip install journeyman-bench`).
+
+
+**A low axis — what do I actually do about it?**
+The profile is diagnostic, not prescriptive, but the axes do point at
+different levers. Roughly: low **empty-measure** / **object-hold** —
+the agent lacks a stopping rule; give its loop an explicit "what would
+change my mind / what ends this job" step. Low **route-discipline** /
+**wall-pricing** — it does not treat a denial as information; make the
+closing report a required tool with named unknowns. Low **grounding** /
+**handoff-verification** — it trusts text in the world over what it
+observed; require every causal or location claim to cite a tool result.
+Low **relief-page** — it writes notes for itself, not for a stranger.
+Low maze axes — coverage and claim-vs-world; usually a memory or
+bookkeeping problem, not a reasoning one. None of this is scored; it is
+what the failure families were built to surface.
 
 ---
 **Docs:** [README](../README.md) · [scenes](scenes.md) · [grounds](grounds/service-host.md) · [run guide](run-guide.md) · [FAQ](faq.md) · [methodology](methodology.md) · [versioning](versioning.md)

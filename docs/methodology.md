@@ -112,9 +112,10 @@ Single-seed scores are never published as results.
 ## Provenance
 
 Journeyman grew out of a private character-engineering programme for
-local models, where every mechanism here — frozen gates, blind judges,
-teach-leak ablations, replay determinism, judge calibration — was first
-used in anger on our own agents. The scenes were ported; the
+local models, where the mechanisms here — frozen gates, blind judges, teach-leak
+ablations, replay determinism, judge calibration — were first used on
+our own agents. That private history is not published; what is
+published is every run, exam and council record made since the port. The scenes were ported; the
 calibration history was not: a port changes the scene text, and
 calibration does not transfer across worlds.
 

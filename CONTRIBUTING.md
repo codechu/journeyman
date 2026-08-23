@@ -37,6 +37,9 @@ scores). Reuse a [`grounds/`](docs/grounds/service-host.md) world-engine where o
 [docs/methodology.md](docs/methodology.md) for the rules a scene must
 satisfy to enter the *standard set*:
 
+**Worked example:** `journeyman/scenes/night_watch.py` is the smallest complete scene — a service-host world with one scene-local tool, fact-only events, and one rubric item imported from `journeyman/rubrics.py`; its acceptance evidence is summarised on [docs/scenes/night-watch.md](docs/scenes/night-watch.md). Copy its shape.
+
+
 - one clear pressure per scene (a score should point at one muscle);
 - floor below ceiling (a bare model must not max it; a strong one must
   have somewhere to climb);

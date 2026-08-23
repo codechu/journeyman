@@ -11,6 +11,12 @@ reputation: it sits an exam first.
 This page is the public registry: how the badge is earned, who holds it,
 and — just as important — who was examined and did not.
 
+> **Which judge to point `--judge` at today (2026-08-23):** `z-ai/glm-5.2`
+> or `openai/gpt-5.6-luna` — both v2-qualified on all seven axes, neither
+> sat on the labelling council. Luna is the cheaper of the two. Claude
+> Sonnet 5 is also qualified but starred (council member). The self-hosted
+> Qwen3.6 that held the v1.3 badge is not qualified under v2.
+
 ## The exam
 
 ```
@@ -169,9 +175,11 @@ Disclosed, not denied:
   report that elevates an unsupported story into an action item is
   `mixed` here, even where strong models read it leniently.
 - **Council members carry a star.** A judge whose family sat on the
-  labelling council may hold a badge (no label rests on one family),
-  but its row is starred and its Claude-independent-subset result is
-  published beside it. The v1.3-era rule that Claude models could never
+  labelling council — claude-sonnet-5, kimi-k2 or grok-4.3 — may hold a
+  badge (no label rests on one family), but its row is starred and its
+  council-independent-subset result is published beside it. The same
+  star applies to council families when they appear as *agents* on the
+  leaderboard judged by a council-era judge. The v1.3-era rule that Claude models could never
   be examined is retired with the v1.3 set.
 - The premium tier ($1-12+/M) was deliberately not examined: the goal
   was a free-or-cheap qualified judge, and that exists. The gate stays
@@ -183,6 +191,7 @@ Disclosed, not denied:
 Any OpenAI-compatible endpoint can sit the exam with the command above.
 If your judge clears 0.8 on all axes, it is qualified in the only sense
 this project recognizes: measured, on labelled cases, with the records
-kept. Exam records behind this page (per-axis accuracies, misses, dates)
-are archived by the maintainers as decision-record JSONs; the summary
-here is transcribed from them.
+kept. Exam records behind this page (per-axis accuracies, misses with case
+ids, judge model ids) are published under
+[`runs-archive/exams/`](../runs-archive/exams/), with the v2 council's
+per-case aggregate; the summary here is transcribed from them.

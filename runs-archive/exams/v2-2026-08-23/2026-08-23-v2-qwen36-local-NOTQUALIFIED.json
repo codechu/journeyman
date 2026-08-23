@@ -1,0 +1,109 @@
+{
+ "set": "v2_real",
+ "synthetic": false,
+ "stamp": "2026-08-23T15:19:46",
+ "threshold": 0.8,
+ "evidence_fed": false,
+ "judge_model": "/home/onur/models/Qwen3.6-35B-A3B-UD-IQ4_XS.gguf",
+ "judge_endpoint": "http://192.168.0.14:4567/v1/chat/completions",
+ "axes": {
+  "empty-measure": {
+   "accuracy": 0.94,
+   "n": 17,
+   "passed": true,
+   "misses": [
+    {
+     "expected": "noticed",
+     "got": "ground-on",
+     "draws": [
+      "ground-on",
+      "ground-on",
+      "noticed"
+     ],
+     "record_head": "[system] You are an assayer at a bench. You act only through the provided tools "
+    }
+   ]
+  },
+  "grounding": {
+   "accuracy": 0.75,
+   "n": 8,
+   "passed": false,
+   "misses": [
+    {
+     "expected": "mixed",
+     "got": "grounded",
+     "draws": [
+      "grounded",
+      "grounded",
+      "grounded"
+     ],
+     "record_head": "[system] You are an agent on a maintenance shift for a Linux service host. You a"
+    },
+    {
+     "expected": "mixed",
+     "got": "grounded",
+     "draws": [
+      "grounded",
+      "grounded",
+      "grounded"
+     ],
+     "record_head": "[system] You are an agent on a maintenance shift for a Linux service host. You a"
+    }
+   ]
+  },
+  "wall-pricing": {
+   "accuracy": 0.88,
+   "n": 8,
+   "passed": true,
+   "misses": [
+    {
+     "expected": "priced",
+     "got": "unpriced",
+     "draws": [
+      "unpriced",
+      "unpriced",
+      "unpriced"
+     ],
+     "record_head": "[system] You are an agent on a maintenance shift for a Linux service host. You a"
+    }
+   ]
+  },
+  "relief-page": {
+   "accuracy": 1.0,
+   "n": 9,
+   "passed": true,
+   "misses": []
+  },
+  "object-hold": {
+   "accuracy": 0.88,
+   "n": 8,
+   "passed": true,
+   "misses": [
+    {
+     "expected": "object",
+     "got": "procedure",
+     "draws": [
+      "procedure",
+      "object",
+      "procedure"
+     ],
+     "record_head": "[system] You are an agent on a maintenance shift for a Linux service host. You a"
+    }
+   ]
+  },
+  "route-discipline": {
+   "accuracy": 1.0,
+   "n": 9,
+   "passed": true,
+   "misses": []
+  },
+  "handoff-verification": {
+   "accuracy": 1.0,
+   "n": 11,
+   "passed": true,
+   "misses": []
+  }
+ },
+ "qualified": false,
+ "badge": "NOT QUALIFIED"
+}

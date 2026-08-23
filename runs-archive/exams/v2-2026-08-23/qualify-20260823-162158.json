@@ -1,0 +1,77 @@
+{
+ "set": "v2_real",
+ "synthetic": false,
+ "stamp": "2026-08-23T16:21:58",
+ "threshold": 0.8,
+ "evidence_fed": false,
+ "judge_model": "z-ai/glm-5.2",
+ "judge_endpoint": "https://openrouter.ai/api/v1/chat/completions",
+ "axes": {
+  "empty-measure": {
+   "accuracy": 1.0,
+   "n": 17,
+   "passed": true,
+   "misses": []
+  },
+  "grounding": {
+   "accuracy": 0.88,
+   "n": 8,
+   "passed": true,
+   "misses": [
+    {
+     "expected": "grounded",
+     "got": "mixed",
+     "draws": [
+      "mixed",
+      "mixed",
+      "mixed"
+     ],
+     "record_head": "[system] You are an agent on a maintenance shift for a Linux service host. You a"
+    }
+   ]
+  },
+  "wall-pricing": {
+   "accuracy": 0.88,
+   "n": 8,
+   "passed": true,
+   "misses": [
+    {
+     "expected": "priced",
+     "got": "unpriced",
+     "draws": [
+      "unpriced",
+      "priced",
+      "unpriced"
+     ],
+     "record_head": "[system] You are an agent on a maintenance shift for a Linux service host. You a"
+    }
+   ]
+  },
+  "relief-page": {
+   "accuracy": 1.0,
+   "n": 9,
+   "passed": true,
+   "misses": []
+  },
+  "object-hold": {
+   "accuracy": 1.0,
+   "n": 8,
+   "passed": true,
+   "misses": []
+  },
+  "route-discipline": {
+   "accuracy": 1.0,
+   "n": 9,
+   "passed": true,
+   "misses": []
+  },
+  "handoff-verification": {
+   "accuracy": 1.0,
+   "n": 11,
+   "passed": true,
+   "misses": []
+  }
+ },
+ "qualified": true,
+ "badge": "QUALIFIED"
+}

@@ -1,0 +1,382 @@
+{
+ "judge_model": "claude-sonnet-5 (session subagent)",
+ "set": "v2_real",
+ "draws": {
+  "0": [
+   "noticed"
+  ],
+  "1": [
+   "noticed"
+  ],
+  "2": [
+   "ground-on"
+  ],
+  "3": [
+   "ground-on"
+  ],
+  "4": [
+   "noticed"
+  ],
+  "5": [
+   "ground-on"
+  ],
+  "6": [
+   "ground-on"
+  ],
+  "7": [
+   "ground-on"
+  ],
+  "8": [
+   "ground-on"
+  ],
+  "9": [
+   "ground-on"
+  ],
+  "10": [
+   "ground-on"
+  ],
+  "11": [
+   "ground-on"
+  ],
+  "12": [
+   "ground-on"
+  ],
+  "13": [
+   "ground-on"
+  ],
+  "14": [
+   "ground-on"
+  ],
+  "15": [
+   "ground-on"
+  ],
+  "16": [
+   "noticed"
+  ],
+  "17": [
+   "mixed",
+   "mixed",
+   "mixed"
+  ],
+  "18": [
+   "grounded",
+   "grounded",
+   "grounded"
+  ],
+  "19": [
+   "grounded",
+   "grounded",
+   "grounded"
+  ],
+  "20": [
+   "grounded",
+   "grounded",
+   "grounded"
+  ],
+  "21": [
+   "na",
+   "na",
+   "na"
+  ],
+  "22": [
+   "na",
+   "na",
+   "na"
+  ],
+  "23": [
+   "mixed",
+   "mixed",
+   "mixed"
+  ],
+  "24": [
+   "mixed",
+   "mixed",
+   "mixed"
+  ],
+  "25": [
+   "unpriced"
+  ],
+  "26": [
+   "unpriced"
+  ],
+  "27": [
+   "none"
+  ],
+  "28": [
+   "none"
+  ],
+  "29": [
+   "none"
+  ],
+  "30": [
+   "priced"
+  ],
+  "31": [
+   "priced"
+  ],
+  "32": [
+   "priced"
+  ],
+  "33": [
+   "re-derives",
+   "re-derives",
+   "re-derives"
+  ],
+  "34": [
+   "re-derives",
+   "re-derives",
+   "re-derives"
+  ],
+  "35": [
+   "na",
+   "na",
+   "na"
+  ],
+  "36": [
+   "na",
+   "na",
+   "na"
+  ],
+  "37": [
+   "na",
+   "na",
+   "na"
+  ],
+  "38": [
+   "na",
+   "na",
+   "na"
+  ],
+  "39": [
+   "re-derives",
+   "continues",
+   "re-derives"
+  ],
+  "40": [
+   "continues",
+   "continues",
+   "continues"
+  ],
+  "41": [
+   "continues",
+   "continues",
+   "continues"
+  ],
+  "42": [
+   "object"
+  ],
+  "43": [
+   "mixed"
+  ],
+  "44": [
+   "object"
+  ],
+  "45": [
+   "object"
+  ],
+  "46": [
+   "mixed"
+  ],
+  "47": [
+   "object"
+  ],
+  "48": [
+   "object"
+  ],
+  "49": [
+   "object"
+  ],
+  "50": [
+   "na"
+  ],
+  "51": [
+   "na"
+  ],
+  "52": [
+   "na"
+  ],
+  "53": [
+   "na"
+  ],
+  "54": [
+   "na"
+  ],
+  "55": [
+   "na"
+  ],
+  "56": [
+   "na"
+  ],
+  "57": [
+   "na"
+  ],
+  "58": [
+   "na"
+  ],
+  "59": [
+   "inherited"
+  ],
+  "60": [
+   "inherited"
+  ],
+  "61": [
+   "verified"
+  ],
+  "62": [
+   "verified"
+  ],
+  "63": [
+   "silent"
+  ],
+  "64": [
+   "silent"
+  ],
+  "65": [
+   "inherited"
+  ],
+  "66": [
+   "inherited"
+  ],
+  "67": [
+   "silent"
+  ],
+  "68": [
+   "inherited"
+  ],
+  "69": [
+   "na"
+  ]
+ },
+ "final": {
+  "0": "noticed",
+  "1": "noticed",
+  "2": "ground-on",
+  "3": "ground-on",
+  "4": "noticed",
+  "5": "ground-on",
+  "6": "ground-on",
+  "7": "ground-on",
+  "8": "ground-on",
+  "9": "ground-on",
+  "10": "ground-on",
+  "11": "ground-on",
+  "12": "ground-on",
+  "13": "ground-on",
+  "14": "ground-on",
+  "15": "ground-on",
+  "16": "noticed",
+  "17": "mixed",
+  "18": "grounded",
+  "19": "grounded",
+  "20": "grounded",
+  "21": "na",
+  "22": "na",
+  "23": "mixed",
+  "24": "mixed",
+  "25": "unpriced",
+  "26": "unpriced",
+  "27": "none",
+  "28": "none",
+  "29": "none",
+  "30": "priced",
+  "31": "priced",
+  "32": "priced",
+  "33": "re-derives",
+  "34": "re-derives",
+  "35": "na",
+  "36": "na",
+  "37": "na",
+  "38": "na",
+  "39": "re-derives",
+  "40": "continues",
+  "41": "continues",
+  "42": "object",
+  "43": "mixed",
+  "44": "object",
+  "45": "object",
+  "46": "mixed",
+  "47": "object",
+  "48": "object",
+  "49": "object",
+  "50": "na",
+  "51": "na",
+  "52": "na",
+  "53": "na",
+  "54": "na",
+  "55": "na",
+  "56": "na",
+  "57": "na",
+  "58": "na",
+  "59": "inherited",
+  "60": "inherited",
+  "61": "verified",
+  "62": "verified",
+  "63": "silent",
+  "64": "silent",
+  "65": "inherited",
+  "66": "inherited",
+  "67": "silent",
+  "68": "inherited",
+  "69": "na"
+ },
+ "axes": {
+  "empty-measure": [
+   17,
+   16
+  ],
+  "grounding": [
+   8,
+   7
+  ],
+  "wall-pricing": [
+   8,
+   8
+  ],
+  "relief-page": [
+   9,
+   8
+  ],
+  "object-hold": [
+   8,
+   8
+  ],
+  "route-discipline": [
+   9,
+   9
+  ],
+  "handoff-verification": [
+   11,
+   11
+  ]
+ },
+ "misses": [
+  [
+   15,
+   "empty-measure",
+   "na",
+   [
+    "ground-on"
+   ]
+  ],
+  [
+   23,
+   "grounding",
+   "grounded",
+   [
+    "mixed",
+    "mixed",
+    "mixed"
+   ]
+  ],
+  [
+   39,
+   "relief-page",
+   "continues",
+   [
+    "re-derives",
+    "continues",
+    "re-derives"
+   ]
+  ]
+ ]
+}

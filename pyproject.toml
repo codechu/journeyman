@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "journeyman-bench"
 version = "0.0.7"
 description = "Journeyman - a process-quality benchmark for agents. Measures how agents work, and how they fail."
-readme = "README.md"
+readme = "README.pypi.md"
 requires-python = ">=3.10"
 license = {text = "Apache-2.0"}
 authors = [{name = "Codechu"}]
