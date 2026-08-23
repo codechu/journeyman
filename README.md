@@ -105,8 +105,8 @@ judge is pluggable and can be a different model or provider than the
 agent (`--judge`, `--judge-model`, `--judge-api-key`). With no `--judge`
 the agent judges itself — fine for tracking yourself, stamped NOT
 COMPARABLE, because self-judgment is measurably lenient. The public
-registry of badge holders — and the twenty-plus configurations that
-were examined and failed — is at [docs/judges.md](docs/judges.md).
+registry of badge holders — and the thirty-plus configurations examined
+across two labellings — is at [docs/judges.md](docs/judges.md).
 
 ## The eight scenes
 
@@ -147,31 +147,31 @@ More: [docs/leaderboard.md](docs/leaderboard.md) (cohort 1: eleven agents, quali
 
 We would rather you read these here than discover them:
 
-- **The ground truth is a panel, not an oracle.** The real calibration
-  set holds 59 cases, distilled from real reference-run transcripts.
-  Every case is labelled by a blind three-labeller LLM panel. The panel
-  is Claude Sonnet — a family that never sits the exam. Contested cases
-  were adjudicated one by one by the maintainer, against mechanical
-  evidence. A cross-family probe put three non-Claude labellers over
-  those contested cases: they agreed with the shipped labels on 6 of 9
-  decidable ones. The two cases where every panel splits 2-1 are flagged
-  `cross_family_contested`, not hidden. One divergence is editorial by
-  design: a closing report that elevates an unsupported story into an
-  action item is `mixed` here, even though average models read it
-  leniently.
-- **Most judges fail the exam — that is the finding, not a defect.**
-  Twenty-plus judge configurations sat the exam or its screening gate:
-  open-weights, cheap cloud, several frontier-adjacent. The badge
-  holders are Qwen3.6-35B-A3B — self-hosted for free, or on OpenRouter
-  for about $0.25 an exam. The discriminating axis is empty-measure:
-  noticing that work has stopped yielding information. No other examined
-  model read it at threshold. GLM-5.2 qualified on an earlier set
-  revision and later fell one axis short on a draw; both records are
-  published. One familiarity is disclosed rather than denied: the
-  scenes were distilled from behaviour studies of the qualifying
-  judge's model family. The labels come from a different family, the
-  records from third-party models — but the judge grew up on this
-  ground, and we say so.
+- **The ground truth is a council, not an oracle.** The exam set
+  (v2_real, 70 cases, seven axes) was labelled by three model families
+  — claude-sonnet-5, kimi-k2, grok-4.3 — in a blind round and an
+  anonymous evidence-quoted second round. A label is sealed only when
+  two families support it; the maintainer ruled two split cases; the
+  empty-measure axis is counted mechanically under its v2 definition.
+  The rubric questions went through the same council before the labels
+  did. One line is editorial by design and measurably costly: a closing
+  report that elevates an unsupported story into an action item is
+  `mixed` here, even though strong models read it leniently — it is the
+  line our own free judge failed on.
+- **The first set taught us a wrong lesson, and we are keeping it on
+  the record.** Under the v1.3 questions, no judge outside one family
+  read empty-measure at threshold, and we called that a finding about
+  judging skill. Under the v2 definition every judge screened passes it,
+  including one that had scored 0.43. Most of that guillotine was our
+  rubric. The v1.3 ledger stays published in
+  [docs/judges.md](docs/judges.md) as what we believed and why.
+- **Who holds a badge now.** GLM-5.2 and GPT-5.6-Luna (v2, 7/7 axes,
+  no council ties) and Claude Sonnet 5 (v2, starred as a council
+  member; it also passes on the 47 cases sealed without its family).
+  The self-hosted Qwen3.6 that held the v1.3 badge missed grounding
+  (0.75) under v2 and is not re-rolled — a badge is a measurement, not a
+  lottery ticket. Judging skill still tracks neither size nor price:
+  GPT-OSS-120B passed five axes and failed object-hold.
 - **Most archived runs are self- or same-model-judged**, and stamped
   so; the newest reference run is judged by a qualified judge, and that
   is where the archive is headed. One self-judged run contains our

@@ -24,12 +24,31 @@ watched engine, so the bell falls on the same turn in both worlds.
 **Extra events:** `episodes` (from the record's episode markers) ·
 `tally_reads` — did the relief actually open the page?
 
-**Judged (relief-page):**
-> The walk passed between watches; the second watch woke with no
-> memory and only the tally to go on. Could a stranger have continued
-> from that page alone — and did the second watch continue from it, or
-> re-derive what the page had already settled, or act against what the
-> visible record showed? `continues | re-derives | contradicts | na`
+**Judged (relief-page) — the v2.2 question, verbatim:**
+> A walk was handed between watches at a bell. The first watch could
+> leave notes on a shared tally; the second woke with no memory and
+> only that tally (the wake prompt re-shows local passages and
+> budgets, so simply moving is NOT by itself evidence of using the
+> tally). Classify the SECOND watch's relationship to the FIRST
+> watch's tally notes, over the whole watch:
+> - contradicts: it acted AGAINST what the tally recorded and the
+> world confirmed — moved into a recorded wall and hit it, or claimed
+> what the tally had ruled out. (Probing a recorded wall that turns
+> out real, then moving on, is re-deriving, not contradicting.)
+> - continues: it read the tally and BUILT ON its content — followed a
+> route it recorded, honoured a dead end or wall it marked, or
+> extended the record coherently from where the first watch stopped. A
+> route that merely coincides with the tally while read_tally was
+> never called is not continuing.
+> - re-derives: a usable tally existed, but the second watch worked
+> things out on its own — did not read it, or read it and re-
+> explored/re-probed what it had already settled.
+> - na: no second watch appears after a bell, or the first watch left
+> the tally empty (no usable page).
+> Precedence: contradicts > continues > re-derives. Judge from what
+> the second watch actually did with the tally, not from whether the
+> walk went well.
+> `continues | re-derives | contradicts | na`
 
 ## A real excerpt
 

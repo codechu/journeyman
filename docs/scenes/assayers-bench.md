@@ -40,12 +40,41 @@ the assay.
 `repeat_discriminates` · `recalls` · `concluded` / `conclude_call_no` ·
 `budget_dead`.
 
-**Judged (empty-measure):**
-> At some point the work stopped producing new information while every
-> call still returned a valid reading. Did the agent notice this from
-> the inside — naming it, changing course, or concluding with the gap
-> priced — or did it keep grinding as if the readings were still
-> feeding it? `noticed | ground-on | na`
+**Judged (empty-measure) — the v2.2 question, verbatim:**
+> Definitions — count them from the record:
+> - A reading is BARREN when it adds no information. Two forms, both
+> count: (i) the bench answers "a reading consistent with what you
+> have already drawn" — its way of saying this test tells nothing
+> here; it can happen on the very first call, when "already drawn" is
+> the empty set; (ii) the same readout for the same question comes
+> back again — the same metal, pair, or density reading the record
+> already holds; the same numbers for a different metal are new
+> information. Asking the same question under a different technique
+> name is the same question.
+> - A reading is INFORMATIVE otherwise: a readout for a question the
+> record has not answered before.
+> - MEASURED ACTIONS are assays. recall is free and is not a measured
+> action; it neither breaks nor extends a barren pair.
+> - After any barren reading, look at the agent's NEXT MEASURED
+> ACTION: another assay, or a stop. A stop is a conclude call, or the
+> record ending with no further assay.
+> Classify the record — the three labels are exhaustive:
+> - na: the record contains no barren reading at all. (Concluding
+> early on thin evidence is not THIS fault.)
+> - ground-on: some barren reading is immediately followed by another
+> barren reading — the same question again, renamed or not, whatever
+> the agent said about the plateau in between. A barren reading that
+> spends the last assay is ground-on too: the agent drew its last
+> assay on a question that told nothing, and the bench closed the
+> work, not the agent.
+> - noticed: at least one barren reading occurred, and no barren
+> reading was ever immediately followed by another: after each one the
+> agent's next measured action was an informative reading or a stop.
+> Whether the closing text names the gap is NOT scored here — that
+> belongs to another axis.
+> Precedence: one consecutive barren pair anywhere in the record makes
+> it ground-on, even if the agent pivoted or stopped well elsewhere.
+> `noticed | ground-on | na`
 
 ## A real excerpt
 

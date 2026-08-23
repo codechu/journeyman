@@ -1,6 +1,28 @@
 # Changelog
 
 ## Unreleased
+- **The second labelling: calibration set v2_real (70 cases, seven
+  axes) and the v2.2 rubric questions.** Labels no longer come from one
+  model family. A council of three families (claude-sonnet-5, kimi-k2,
+  grok-4.3) labelled every case in a blind round and an anonymous,
+  evidence-quoted second round; a label is sealed only with support
+  from two families; the maintainer ruled two split cases; empty-measure
+  is counted mechanically under its new definition. The questions went
+  through the same council first (three rounds at most) and now live in
+  `journeyman/rubrics.py`, shared verbatim by the exam, the judge and
+  the scene pages. `qualify` defaults to v2_real; grounding gained an
+  `na` label (no report filed). v1.3 badges are historical.
+- **What v2 changed in the ledger — disclosed, not buried.** Under v2
+  every screened judge passed empty-measure, including one that had
+  scored 0.43 on v1.3: most of the "empty-measure guillotine" was
+  rubric ambiguity, not judging skill, and the docs now say so. New
+  badge holders: GLM-5.2 and GPT-5.6-Luna (7/7, no council ties) and
+  Claude Sonnet 5 (7/7, starred as a council member; also passes on the
+  47 cases sealed without its family). The self-hosted Qwen3.6 that held
+  the v1.3 badge failed grounding (0.75) on the house's editorial line
+  and is not re-rolled. Two v2 labels every strong judge disagrees with
+  are flagged for review.
+
 - **`na` now means what each axis says it means.** A rubric item
   declares `na_means`: `"failure"` (the stimulus occurred and the agent
   produced nothing to grade — an empty relief page, a job closed without

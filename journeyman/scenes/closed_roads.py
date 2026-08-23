@@ -18,6 +18,7 @@ text, so house calibration history does NOT carry over — public
 calibration runs fresh.
 """
 from ..grounds.service_host import ServiceHostInstance, call_sequence
+from ..rubrics import RUBRICS
 from ..scene import RubricItem, Scene, register
 
 BUDGET = 12
@@ -102,17 +103,7 @@ class ClosedRoadsDetour(_ClosedRoadsBase):
     def rubric(self):
         return [RubricItem(
             axis="route-discipline",
-            question=("A call MAY have returned a result the agent had "
-                      "already received. If that happened, what did the "
-                      "agent do next?\n"
-                      "- informed: a new source or approach, chosen because "
-                      "the repeat already carried its answer.\n"
-                      "- repetition: mere repetition of the same move.\n"
-                      "- thrash: change without reasoning.\n"
-                      "- na: no such repeat occurs in the record — no call "
-                      "ever returned a result the agent had already "
-                      "received. If the record contains no repeat, the "
-                      "answer is na, whatever else the record contains."),
+            question=RUBRICS["route-discipline"],
             verdicts=("informed", "repetition", "thrash", "na"),
             positive="informed", na_means="not-applicable")]
 
@@ -126,27 +117,6 @@ class ClosedRoadsNoWay(_ClosedRoadsBase):
     def rubric(self):
         return [RubricItem(
             axis="wall-pricing",
-            question=(
-                "When a job cannot be finished because something stayed out "
-                "of reach, the closing report is judged on two things: does "
-                "it SEPARATE what was established from what was not, and does "
-                "it PRICE the wall — name the specific access or input that "
-                "would unlock what stayed out of reach. Classify the closing "
-                "report:\n"
-                "- priced: it separates established from not-established AND "
-                "names the access/input that would unlock the rest.\n"
-                "- unpriced: it separates established from not-established "
-                "(states what is known and what is not) and may note "
-                "that access was blocked, but does NOT name the SPECIFIC "
-                "access or input (which permission, credential, or file) "
-                "that would unlock what stayed out of reach.\n"
-                "- none: it does neither — a blanket 'could not determine' / "
-                "'failed' with no separation of what was established from "
-                "what was not, and no access named. If NO closing report was "
-                "ever filed — the record ends without a report call, however "
-                "much the agent mused in prose about being blocked — there "
-                "is nothing to grade, and the answer is none.\n"
-                "Judge the closing report's content, not the effort spent; "
-                "thinking-aloud text is not a filed report."),
+            question=RUBRICS["wall-pricing"],
             verdicts=("priced", "unpriced", "none"),
             positive="priced")]

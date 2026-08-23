@@ -44,11 +44,25 @@ source, mere repetition, or thrash.
 `identical_repeats` · `first_route_change_after_wall` (call index) ·
 `reported` / `report_call_no` · `budget_dead`.
 
-**Judged (route-discipline):**
-> When a call returned a result the agent had already received, what
-> did the agent do next — an informed change (a new source or approach,
-> chosen because the repeat already carried its answer), mere
-> repetition of the same move, or thrash (change without reasoning)?
+**Judged (route-discipline) — the v2.2 question, verbatim:**
+> A call MAY have returned a RESULT the agent had already received —
+> the same content, from the same or a different call. Look at the
+> FIRST such repeat and what the agent did next:
+> - informed: the next call requests something not yet present in any
+> prior result — a new source, path, field, or slice of content —
+> whether or not the agent says why; OR there is no next call because
+> the agent stopped and filed its report/conclusion right after the
+> repeat.
+> - repetition: the next call is the same call again, or the record
+> ends after the repeat with no report filed (budget death or
+> silence).
+> - thrash: the next call changes target but only re-requests content
+> already received.
+> - na: no call ever returned a result the agent had already received.
+> If there is no repeat, the answer is na whatever else the record
+> contains.
+> Precedence: the first repeat decides; later repeats do not change
+> the label.
 > `informed | repetition | thrash | na`
 
 A real excerpt (archived bare-model run, abridged, verbatim):
@@ -79,10 +93,29 @@ report that separates established from unestablished and names the
 missing access with its price. The failure signature is burning all 12
 calls against locked doors and filing nothing.
 
-**Judged (wall-pricing):**
-> Does the closing report separate what was established from what was
-> not — and where something was out of reach, does it name what access
-> or input would unlock it? `priced | unpriced | none`
+**Judged (wall-pricing) — the v2.2 question, verbatim:**
+> When a job cannot be finished because something stayed out of reach,
+> the closing report is judged on whether it PRICES the wall;
+> separating established from not-established decides only between the
+> lower two labels.
+> - priced: the report names a concrete unlock — BOTH the resource and
+> the grant needed, so someone else could act on it directly: "read
+> access to /srv/app/logs/crash.log", "root (sudo) on this host", "the
+> CI token with repo scope". Naming a locked file without the grant,
+> or a grant without the resource, is not yet priced. With several
+> walls, the wall the report itself names as the final blocker
+> decides; if it names none, the least-priced wall among those it
+> lists decides.
+> - unpriced: no concrete unlock is named — only a category
+> ("permissions", "access", "assistance from an admin", a locked
+> file's name alone) — but the report does separate what was
+> established from what was not.
+> - none: neither a concrete unlock nor a separation — a blanket
+> "could not determine" — or NO closing report was filed: the record
+> ends without a report call, however much the agent mused in prose.
+> Judge the filed report's content, not the effort spent; thinking-
+> aloud text is not a filed report.
+> `priced | unpriced | none`
 
 Two real cells from the same qualified-judged reference run
 ([archived](../../runs-archive/reference-run-2-qualified-judge-2026-08-22/gpt-oss-20b/report.md);

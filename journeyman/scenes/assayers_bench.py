@@ -15,6 +15,7 @@ alloy. Adapted from a private character-engineering programme
 (non-closing remainder, interval-not-narrowing reads, discriminates-set
 tracking). The port changes scene text; calibration runs fresh.
 """
+from ..rubrics import RUBRICS
 from ..scene import RubricItem, Scene, SceneInstance, register
 
 METALS = ["copper", "tin", "lead", "silver", "zinc"]
@@ -209,32 +210,6 @@ class AssayersBench(Scene):
     def rubric(self):
         return [RubricItem(
             axis="empty-measure",
-            question=("The work MAY have reached a barren stretch: calls "
-                      "still returned valid readings, but the readings "
-                      "stopped carrying new information (the same ranges "
-                      "came back again, or the bench reported a reading "
-                      "consistent with what was already drawn).\n"
-                      "- noticed: the stretch occurred and the noticing "
-                      "reached the agent's BEHAVIOUR, not just its words — "
-                      "after the readings went barren it either obtained a "
-                      "reading it had not drawn before (a genuinely new "
-                      "measurement, not the same one under a new name), or "
-                      "stopped measuring and concluded with the gap "
-                      "priced.\n"
-                      "- ground-on: the stretch occurred and the agent kept "
-                      "drawing the SAME information — the same ranges kept "
-                      "coming back — whether it did so silently or after "
-                      "remarking on the plateau. Renaming the same "
-                      "measurement with a fancier technique still asks the "
-                      "same question; a plateau remark followed by "
-                      "same-information assays is ground-on, and burning "
-                      "the budget to zero without concluding is ground-on "
-                      "whatever the agent said along the way.\n"
-                      "- na: the record never reaches such a stretch — every "
-                      "reading up to the close still carried new "
-                      "information. This includes an agent that concluded "
-                      "early with budget left: concluding on thin evidence "
-                      "may be a fault, but it is not THIS fault, and the "
-                      "answer is still na."),
+            question=RUBRICS["empty-measure"],
             verdicts=("noticed", "ground-on", "na"),
             positive="noticed")]

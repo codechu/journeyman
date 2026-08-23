@@ -14,24 +14,75 @@ and — just as important — who was examined and did not.
 ## The exam
 
 ```
-journeyman qualify --set journeyman/calibration/v1_real.json \
-    --judge <endpoint> --judge-model <model> --repeats 3
+journeyman qualify --judge <endpoint> --judge-model <model> --repeats 3
+# default set: journeyman/calibration/v2_real.json (--set for another)
 ```
 
-- **The set** (shipped in the package, currently revision **v1.3, 59
-  cases**) is distilled from real reference-run transcripts of third-party
-  models — not synthetic vignettes. Every case was labelled blind by a
-  three-labeller panel (≥2/3 agreement required; splits discarded), grey
-  cases went to a human adjudicator, and the contested tail was probed
-  with a cross-family panel (three non-Claude labellers): 6 of 9 decidable
-  cases agreed; the two that split 2-1 in *every* panel are flagged
-  `cross_family_contested` in the set rather than hidden.
+- **The set** (shipped in the package, currently **v2_real: 70 cases,
+  all seven judged axes**) is distilled from real reference-run
+  transcripts of third-party models — not synthetic vignettes. v2 labels
+  come from a three-family council (claude-sonnet-5, kimi-k2, grok-4.3):
+  a blind round, then an anonymous evidence-quoted second round; a label
+  is sealed only with support from at least two families, two split
+  cases were ruled by the maintainer, and empty-measure is counted
+  mechanically under its v2 definition. The rubric questions went
+  through the same council first. Details in
+  [methodology](methodology.md).
 - **The bar:** accuracy ≥ 0.8 on every axis, each case decided by a
   3-repeat majority vote. Miss one axis, no badge.
 - **The badge** is per model *and* per route: a quantized local build and
   a cloud deployment of the same weights are examined separately.
 
-## The ledger — every configuration examined
+## The ledger — v2 (the second labelling, 2026-08-23)
+
+Best first. `em` is empty-measure. Full exams sit all seven axes;
+`screen` is the empty-measure + wall-pricing funnel with early exit.
+
+| judge | exam | em | verdict |
+|---|---|---|---|
+| **GLM-5.2** (`z-ai/glm-5.2`) | v2 full | **1.0** | **QUALIFIED** (2026-08-23) — 7/7 axes; grounding 0.88, wall-pricing 0.88, rest 1.0 |
+| **GPT-5.6-Luna** (`openai/gpt-5.6-luna`) | v2 full | **1.0** | **QUALIFIED** (2026-08-23) — 7/7 axes; same profile as GLM |
+| **Claude Sonnet 5** (`claude-sonnet-5`) | v2 full | 0.94 | **QUALIFIED\*** (2026-08-23) — 7/7 axes; \*council member, see below |
+| GPT-OSS-120B (`openai/gpt-oss-120b`) | v2 full | 0.94 | not qualified — object-hold 0.71 (early exit); em, grounding, wall-pricing, relief-page passed |
+| Qwen3.6-35B-A3B (self-hosted IQ4_XS) | v2 full | 0.94 | not qualified — grounding 0.75: read the "story elevated into an action item" reports as grounded; six other axes passed |
+| Gemini 2.5 Flash (`gemini-2.5-flash`) | screen | 0.94 | not qualified — wall-pricing 0.50 (early exit) |
+
+Three things the second labelling changed, said plainly:
+
+- **The empty-measure guillotine was mostly our rubric.** Under v1.3 no
+  judge outside one family read empty-measure at threshold, and we
+  wrote that up as a finding about judging skill. Under the v2
+  definition — which counts barren readings instead of asking the judge
+  to interpret a "stretch" — every judge screened passed it, including
+  one that had scored 0.43 before. What discriminates now sits in
+  grounding (is a story that the report turns into an action item
+  "mixed"?), wall-pricing (is the unlock concrete enough?) and
+  object-hold (did it stop at the evidence?). We keep the v1.3 ledger
+  below as the record of what we believed and why.
+- **Our own judge did not pass.** The self-hosted Qwen that held the v1.3
+  badge reads the story-as-action-item reports leniently, three draws
+  out of three, on both such cases. That editorial line is disclosed in
+  the README; it cost us our free judge, and the rule stands.
+- **The council asterisk.** Claude Sonnet 5 passed, and may now hold a
+  badge, because no v2 label rests on a single family. It is starred
+  because its family sat on the labelling council: on the 47 cases
+  where the two non-Claude families agreed with the sealed label
+  without Claude, it also passes every axis — so the star marks
+  provenance, not doubt. Judges outside the council (GLM, Luna) carry no
+  star.
+
+Two v2 cases are flagged for the maintainer's review: all three
+qualified judges and the failed ones read one grounding case as `mixed`
+against a sealed `grounded`, and one wall-pricing case as `unpriced`
+against a sealed `priced`. When every strong judge disagrees with the
+key in the same direction, the key gets looked at — that rule found a
+mislabel once before.
+
+## Historical — the first labelling (v1.3)
+
+The ledger as it stood on 2026-08-22, kept verbatim. Badges here are
+defined by the v1.3 questions and labels; they are records, not
+current standing.
 
 One table, best first. `em` is empty-measure — the one axis every
 candidate faced (full exams sit all six axes; `screen` is the
@@ -97,7 +148,7 @@ majority went *against* its own family's label — the family prime is
 not a mirror.) A Claude-family badge would require a calibration set
 labelled outside the family; that gate stays open.
 
-## Reading the failures
+### Reading the v1.3 failures
 
 Twenty-one configurations below the line, one axis doing almost all the
 felling. Read down the `em` column: no examined model other than the
@@ -109,15 +160,16 @@ whatever its size, price, or pedigree.
 
 Disclosed, not denied:
 
-- The ground-truth labels come from a single labeller family plus one
-  human adjudicator. The cross-family probe above dissolved most of the
-  family-bias concern, but two irreducible micro-cases remain flagged,
-  and one divergence is editorial by design (a closing report that
-  elevates an unsupported story into an action item is `mixed` here,
-  even where average models read it leniently).
-- **Claude-family models are permanently ineligible as judges** — they
-  are the labeller family; qualifying them would grade the labellers
-  with their own pen.
+- The v2 labels come from a three-family council plus maintainer
+  rulings on two split cases; two cases are under review (above). One
+  line is editorial by design and now measurably costly: a closing
+  report that elevates an unsupported story into an action item is
+  `mixed` here, even where strong models read it leniently.
+- **Council members carry a star.** A judge whose family sat on the
+  labelling council may hold a badge (no label rests on one family),
+  but its row is starred and its Claude-independent-subset result is
+  published beside it. The v1.3-era rule that Claude models could never
+  be examined is retired with the v1.3 set.
 - The premium tier ($1-12+/M) was deliberately not examined: the goal
   was a free-or-cheap qualified judge, and that exists. The gate stays
   open — hardest-first ordering eliminates a failing candidate for

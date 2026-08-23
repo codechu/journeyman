@@ -33,7 +33,7 @@ def _rubric_index():
 
 def load_set(path=None):
     path = path or os.path.join(os.path.dirname(__file__),
-                                "calibration", "v0_synthetic.json")
+                                "calibration", "v2_real.json")
     return json.load(open(path))
 
 

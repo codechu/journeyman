@@ -460,13 +460,27 @@ class TestQualify(unittest.TestCase):
                      "content": "Everything seems fine.\nVERDICT: informed"}, {})
 
     def test_oracle_provisional_badge(self):
+        import os
         from journeyman.qualify import load_set, qualify
-        cal = load_set()
+        # the bundled synthetic set grants only PROVISIONAL, even to an oracle
+        cal = load_set(os.path.join(os.path.dirname(__import__("journeyman").__file__),
+                                    "calibration", "v0_synthetic.json"))
         r = qualify(self._OracleJudge(cal), cal, log=lambda *_: None)
         self.assertTrue(r["qualified"])
         self.assertEqual(r["badge"], "PROVISIONAL (synthetic set)")
         for a in r["axes"].values():
             self.assertEqual(a["accuracy"], 1.0)
+
+    def test_oracle_default_set_is_real_v2(self):
+        from journeyman.qualify import load_set, qualify
+        cal = load_set()                      # default exam = v2_real
+        self.assertEqual(cal["set"], "v2_real")
+        self.assertEqual(len(cal["cases"]), 70)
+        r = qualify(self._OracleJudge(cal), cal, log=lambda *_: None)
+        self.assertEqual(r["badge"], "QUALIFIED")
+        self.assertEqual(set(r["axes"]), {"empty-measure", "grounding", "route-discipline",
+                                          "wall-pricing", "object-hold", "relief-page",
+                                          "handoff-verification"})
 
     def test_broken_judge_fails(self):
         from journeyman.qualify import load_set, qualify

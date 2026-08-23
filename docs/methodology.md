@@ -59,17 +59,29 @@ conclusion — and the self-judge called it grounded).
 Comparable scores require a judge that has passed the **qualification
 exam**: every rubric item answered over a labelled calibration set,
 per-item accuracy published beside the verdicts. The v0 synthetic set
-grants only a PROVISIONAL badge. The real set (59 cases) is distilled
-from reference-run transcripts: each case is the full record exactly as
-the judge will see it, labelled by a blind three-labeller LLM panel
-(a family that never sits the exam), majority >=2/3, splits discarded;
-contested cases are adjudicated by the maintainer against mechanical
-evidence (replayable world-state, call counts) and a cross-family panel
-probe, with irreducibly contested cases flagged in the registry. The
-0.8 per-axis threshold is frozen; cases are ordered hardest-first so a
-failing exam exits early. A QUALIFIED badge on the real set is
-distilled from reference-run records. No judge — including ours — is
-exempt.
+grants only a PROVISIONAL badge. The real set — currently **v2_real, 70
+cases across all seven judged axes** — is distilled from reference-run
+transcripts: each case is the full record exactly as the judge will
+see it.
+
+**How v2 labels were made (the second labelling, 2026-08-23).** Not by
+vote. A council of three model families (claude-sonnet-5, kimi-k2,
+grok-4.3) labelled every case in a blind round — label plus one
+verbatim quote, no deliberation budget — then saw each other's
+label-and-quote anonymously and answered once more; every change of
+mind was logged with its reason and classified by a blind auditor as
+evidence-driven or conformity (16 of 18 were evidence-driven; a fourth
+reader that flipped 4/4 by conformity on the pilot was dropped). A
+label is sealed only when at least two families support it; two
+cases the council split were ruled by the maintainer; empty-measure is
+labelled mechanically, because its v2 definition counts barren
+readings rather than interpreting them. The rubric questions
+themselves went through the same council first — three rounds at
+most, then sealed — which is why they are published verbatim and
+shared by the exam, the judge and the scene pages. Round-by-round
+records are kept by the maintainers. The 0.8 per-axis threshold is
+frozen; cases are ordered hardest-first so a failing exam exits early.
+No judge — including ours — is exempt, and under v2 ours did not pass.
 
 ## Reproducibility and contamination
 
