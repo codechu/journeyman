@@ -76,7 +76,7 @@ def judge_cell(judge_endpoint, scene, record, log=print):
         if label not in item.verdicts:
             label = "__unparsed__"
         verdicts[item.axis] = {"verdict": label, "positive": item.positive,
-                               "raw": text[-800:]}
+                               "na_means": item.na_means, "raw": text[-800:]}
         colour = "green" if label == item.positive else (
             "dim" if label == "__unparsed__" else "amber")
         log(f"[judge] {record['cell_id']} · {item.axis} → "

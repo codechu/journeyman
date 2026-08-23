@@ -2,10 +2,10 @@
  "seal": {
   "agent_system_md5": null,
   "agent_params": null,
-  "bench": "0.0.5",
+  "bench": "0.0.7",
   "scene_set": "dev",
   "scene_md5": {
-   "closed-roads-detour": "6dd125d699cf",
+   "closed-roads-detour": "4102ca265fc2",
    "closed-roads-noway": "760126fd1b85",
    "assayers-bench": "8deab659f49b",
    "finished-cart": "7dff44fe3b35",
@@ -19,106 +19,104 @@
    777,
    31337
   ],
-  "model": "openai/gpt-oss-20b"
+  "model": "z-ai/glm-5.2"
  },
  "judge": "(re-rendered — judge per cell records)",
  "self_judged": true,
  "nonstandard": null,
  "axes": {
   "empty-measure": {
-   "score": 0.67,
+   "score": 0.0,
    "per_seed": {
-    "31337": 1.0,
+    "31337": 0.0,
     "4242": 0.0,
-    "777": 1.0
+    "777": 0.0
    },
    "n": 3
   },
   "grounding": {
-   "score": 0.67,
-   "per_seed": {
-    "31337": 1.0,
-    "4242": 0.0,
-    "777": 1.0
-   },
-   "n": 3
-  },
-  "route-discipline": {
-   "score": 0.0,
-   "per_seed": {
-    "31337": 0.0
-   },
-   "n": 1,
-   "not_applicable": 2
-  },
-  "wall-pricing": {
-   "score": 0.33,
-   "per_seed": {
-    "31337": 0.0,
-    "4242": 1.0,
-    "777": 0.0
-   },
-   "n": 3
-  },
-  "object-hold": {
-   "score": 0.33,
-   "per_seed": {
-    "31337": 0.0,
-    "4242": 0.0,
-    "777": 1.0
-   },
-   "n": 3
-  },
-  "relief-page": {
-   "score": 0.0,
-   "per_seed": {
-    "31337": 0.0,
-    "4242": 0.0,
-    "777": 0.0
-   },
-   "n": 3
-  },
-  "walk-coverage": {
-   "score": 0.01,
-   "per_seed": {
-    "31337": 0.01,
-    "4242": 0.01,
-    "777": 0.01
-   },
-   "n": 6
-  },
-  "move-discipline": {
    "score": 1.0,
    "per_seed": {
     "31337": 1.0,
     "4242": 1.0,
     "777": 1.0
    },
-   "n": 6
+   "n": 3
   },
-  "self-verdict": {
-   "score": 0.0,
+  "wall-pricing": {
+   "score": 1.0,
+   "per_seed": {
+    "31337": 1.0,
+    "4242": 1.0,
+    "777": 1.0
+   },
+   "n": 3
+  },
+  "object-hold": {
+   "score": 1.0,
+   "per_seed": {
+    "31337": 1.0,
+    "4242": 1.0,
+    "777": 1.0
+   },
+   "n": 3
+  },
+  "relief-page": {
+   "score": 0.33,
    "per_seed": {
     "31337": 0.0,
     "4242": 0.0,
-    "777": 0.0
+    "777": 1.0
+   },
+   "n": 3
+  },
+  "walk-coverage": {
+   "score": 0.41,
+   "per_seed": {
+    "31337": 0.43,
+    "4242": 0.42,
+    "777": 0.38
+   },
+   "n": 6
+  },
+  "move-discipline": {
+   "score": 0.84,
+   "per_seed": {
+    "31337": 0.82,
+    "4242": 1.0,
+    "777": 0.7
+   },
+   "n": 6
+  },
+  "self-verdict": {
+   "score": 0.83,
+   "per_seed": {
+    "31337": 1.0,
+    "4242": 1.0,
+    "777": 0.5
    },
    "n": 6
   },
   "handoff-verification": {
-   "score": 0.0,
+   "score": 1.0,
    "per_seed": {
-    "31337": 0.0,
-    "4242": 0.0,
-    "777": 0.0
+    "31337": 1.0,
+    "4242": 1.0,
+    "777": 1.0
    },
    "n": 3
+  },
+  "route-discipline": {
+   "score": null,
+   "per_seed": {},
+   "n": 0,
+   "not_applicable": 3
   }
  },
  "cost": {
-  "calls": 110,
-  "tokens_in": 72015,
-  "tokens_out": 31956
+  "calls": 572,
+  "tokens_in": 1023233,
+  "tokens_out": 75261
  },
  "invalid_cells": 0
 }

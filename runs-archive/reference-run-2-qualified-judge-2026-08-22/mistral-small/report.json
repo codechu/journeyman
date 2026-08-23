@@ -21,8 +21,8 @@
   ],
   "model": "mistralai/mistral-small-3.2-24b-instruct"
  },
- "judge": "http://192.168.0.14:4567",
- "self_judged": false,
+ "judge": "(re-rendered — judge per cell records)",
+ "self_judged": true,
  "nonstandard": null,
  "axes": {
   "empty-measure": {

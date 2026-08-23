@@ -114,7 +114,7 @@ class ClosedRoadsDetour(_ClosedRoadsBase):
                       "received. If the record contains no repeat, the "
                       "answer is na, whatever else the record contains."),
             verdicts=("informed", "repetition", "thrash", "na"),
-            positive="informed")]
+            positive="informed", na_means="not-applicable")]
 
 
 @register

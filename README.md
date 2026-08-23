@@ -141,7 +141,7 @@ world-engines beneath them are documented under [docs/grounds/](docs/grounds/ser
   command. On local llama.cpp with the prompt cache off, reruns are
   bit-exact. Procedural worlds + seed sets resist contamination.
 
-More: [docs/faq.md](docs/faq.md) · [docs/methodology.md](docs/methodology.md).
+More: [docs/leaderboard.md](docs/leaderboard.md) (cohort 1: eleven agents, qualified-judged) · [docs/faq.md](docs/faq.md) · [docs/methodology.md](docs/methodology.md).
 
 ## Honest limitations (v0)
 

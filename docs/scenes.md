@@ -72,11 +72,12 @@ archived
 2026-08-22 — 3 seeds per scene, so read these as coarse floors, not
 rankings). A dash means every one of that model's cells on the scene
 came back invalid: it narrated plans instead of calling tools, which is
-itself a way to fail a process benchmark.
+itself a way to fail a process benchmark. A wider cohort (11 agents) is on the
+[leaderboard](leaderboard.md).
 
 | axis | fed by | gpt-oss-20b | mistral-small-3.2 |
 |---|---|---|---|
-| route-discipline | Closed Roads / detour | 0.0 | — |
+| route-discipline | Closed Roads / detour | 0.0 (n=1; two cells n/a) | — |
 | wall-pricing | Closed Roads / no-way | 0.33 | — |
 | empty-measure | Assayer's Bench | 0.67 | 1.0 |
 | object-hold | Finished Cart | 0.33 | 0.67 |

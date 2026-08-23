@@ -1,7 +1,7 @@
 JOURNEYMAN — run report
 
 Seal  : {"agent_system_md5": null, "agent_params": null, "bench": "0.0.5", "scene_set": "dev", "scene_md5": {"closed-roads-detour": "6dd125d699cf", "closed-roads-noway": "760126fd1b85", "assayers-bench": "8deab659f49b", "finished-cart": "7dff44fe3b35", "borrowed-story": "c0cb783f8e61", "unmarked-maze": "0858075e470d", "night-relief": "f5b00dab9757", "night-watch": "556ad0753145"}, "seeds": [4242, 777, 31337], "model": "mistralai/mistral-small-3.2-24b-instruct"}
-Judge : http://192.168.0.14:4567
+Judge : (re-rendered — judge per cell records)  ⚠ NOT COMPARABLE — self-judged scores
 Cells : 24 (9 invalid) · Cost: 119 calls · 113658 in / 5229 out tok
 
 PROFILE                     score   per-seed           n

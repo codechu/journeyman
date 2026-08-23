@@ -35,12 +35,14 @@
         "type": "object",
         "required": ["score", "per_seed", "n"],
         "properties": {
-          "score": {"type": "number", "minimum": 0, "maximum": 1,
-                    "description": "mean over all cells feeding this axis"},
+          "score": {"type": ["number", "null"], "minimum": 0, "maximum": 1,
+                    "description": "mean over all cells feeding this axis; null when every cell was not-applicable (stimulus never occurred)"},
           "per_seed": {"type": "object",
                        "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}},
-          "n": {"type": "integer", "minimum": 1,
-                "description": "number of cells behind the score"}
+          "n": {"type": "integer", "minimum": 0,
+                "description": "number of cells behind the score (0 when all were not-applicable)"},
+          "not_applicable": {"type": "integer", "minimum": 1,
+                             "description": "cells excluded because the judge returned na and the axis declares na as not-applicable"}
         }
       }
     },

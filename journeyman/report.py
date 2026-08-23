@@ -14,10 +14,17 @@ def axis_scores(cells):
     event-layer metrics: judged axes plus pure-event axes."""
     per = {}
     positives = {}
+    na_means = _na_means_index()
+    skipped = {}
     for c in cells:
         if c["invalid"]:
             continue
         for axis, v in (c.get("verdicts") or {}).items():
+            meaning = v.get("na_means") or na_means.get(axis, "failure")
+            if v["verdict"] == "na" and meaning == "not-applicable":
+                # stimulus never occurred: no evidence either way
+                skipped[axis] = skipped.get(axis, 0) + 1
+                continue
             per.setdefault(axis, []).append((c["seed"], v["verdict"]))
             positives.setdefault(axis, v.get("positive"))
         for axis, val in (c.get("event_axes") or {}).items():
@@ -36,7 +43,22 @@ def axis_scores(cells):
         allv = [x for v in seeds.values() for x in v]
         out[axis] = {"score": round(sum(allv) / len(allv), 2),
                      "per_seed": per_seed, "n": len(allv)}
+    for axis, k in skipped.items():
+        if axis not in out:          # every cell was not-applicable
+            out[axis] = {"score": None, "per_seed": {}, "n": 0,
+                         "not_applicable": k}
+        else:
+            out[axis]["not_applicable"] = k
     return out
+
+
+def _na_means_index():
+    from .scene import REGISTRY
+    idx = {}
+    for cls in REGISTRY.values():
+        for item in cls().rubric():
+            idx[item.axis] = getattr(item, "na_means", "failure")
+    return idx
 
 
 def _closing_text(cell):
@@ -97,6 +119,10 @@ def render(run_dir, seal, judge_label, self_judged, nonstandard=None):
               "PROFILE                     score   per-seed           n"]
     for axis, a in sorted(axes.items()):
         seeds = " ".join(f"{v:.2f}" for _, v in sorted(a["per_seed"].items()))
+        if a["score"] is None:
+            lines.append(f"  {axis:<26}{'n/a':<8}{'stimulus never occurred':<19}"
+                         f" {a['n']}  (na ×{a['not_applicable']})")
+            continue
         lines.append(f"  {axis:<26}{a['score']:<8}{seeds:<19}{a['n']}")
     if held:
         lines += ["", f"WHERE IT HELD   {held}"]

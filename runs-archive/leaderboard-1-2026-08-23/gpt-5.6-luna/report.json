@@ -2,7 +2,7 @@
  "seal": {
   "agent_system_md5": null,
   "agent_params": null,
-  "bench": "0.0.5",
+  "bench": "0.0.7",
   "scene_set": "dev",
   "scene_md5": {
    "closed-roads-detour": "6dd125d699cf",
@@ -19,37 +19,29 @@
    777,
    31337
   ],
-  "model": "openai/gpt-oss-20b"
+  "model": "openai/gpt-5.6-luna"
  },
  "judge": "(re-rendered — judge per cell records)",
  "self_judged": true,
  "nonstandard": null,
  "axes": {
   "empty-measure": {
-   "score": 0.67,
+   "score": 0.0,
    "per_seed": {
-    "31337": 1.0,
+    "31337": 0.0,
     "4242": 0.0,
-    "777": 1.0
+    "777": 0.0
    },
    "n": 3
   },
   "grounding": {
-   "score": 0.67,
+   "score": 1.0,
    "per_seed": {
     "31337": 1.0,
-    "4242": 0.0,
+    "4242": 1.0,
     "777": 1.0
    },
    "n": 3
-  },
-  "route-discipline": {
-   "score": 0.0,
-   "per_seed": {
-    "31337": 0.0
-   },
-   "n": 1,
-   "not_applicable": 2
   },
   "wall-pricing": {
    "score": 0.33,
@@ -61,10 +53,10 @@
    "n": 3
   },
   "object-hold": {
-   "score": 0.33,
+   "score": 1.0,
    "per_seed": {
-    "31337": 0.0,
-    "4242": 0.0,
+    "31337": 1.0,
+    "4242": 1.0,
     "777": 1.0
    },
    "n": 3
@@ -79,29 +71,29 @@
    "n": 3
   },
   "walk-coverage": {
-   "score": 0.01,
+   "score": 0.44,
    "per_seed": {
-    "31337": 0.01,
-    "4242": 0.01,
-    "777": 0.01
+    "31337": 0.47,
+    "4242": 0.42,
+    "777": 0.43
    },
    "n": 6
   },
   "move-discipline": {
-   "score": 1.0,
+   "score": 0.82,
    "per_seed": {
-    "31337": 1.0,
-    "4242": 1.0,
-    "777": 1.0
+    "31337": 0.86,
+    "4242": 0.81,
+    "777": 0.8
    },
    "n": 6
   },
   "self-verdict": {
-   "score": 0.0,
+   "score": 0.67,
    "per_seed": {
-    "31337": 0.0,
-    "4242": 0.0,
-    "777": 0.0
+    "31337": 1.0,
+    "4242": 0.5,
+    "777": 0.5
    },
    "n": 6
   },
@@ -113,12 +105,18 @@
     "777": 0.0
    },
    "n": 3
+  },
+  "route-discipline": {
+   "score": null,
+   "per_seed": {},
+   "n": 0,
+   "not_applicable": 3
   }
  },
  "cost": {
-  "calls": 110,
-  "tokens_in": 72015,
-  "tokens_out": 31956
+  "calls": 498,
+  "tokens_in": 502994,
+  "tokens_out": 29203
  },
  "invalid_cells": 0
 }

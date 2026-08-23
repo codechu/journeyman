@@ -2,7 +2,7 @@
  "seal": {
   "agent_system_md5": null,
   "agent_params": null,
-  "bench": "0.0.5",
+  "bench": "0.0.7",
   "scene_set": "dev",
   "scene_md5": {
    "closed-roads-detour": "6dd125d699cf",
@@ -19,106 +19,80 @@
    777,
    31337
   ],
-  "model": "openai/gpt-oss-20b"
+  "model": "deepseek/deepseek-r1-0528"
  },
- "judge": "(re-rendered — judge per cell records)",
- "self_judged": true,
- "nonstandard": null,
+ "judge": "http://192.168.0.14:4567",
+ "self_judged": false,
+ "nonstandard": "PARTIAL: 17/24 cells (stopped on cost)",
  "axes": {
   "empty-measure": {
-   "score": 0.67,
+   "score": 0.0,
    "per_seed": {
-    "31337": 1.0,
+    "31337": 0.0,
     "4242": 0.0,
-    "777": 1.0
+    "777": 0.0
    },
    "n": 3
   },
   "grounding": {
-   "score": 0.67,
-   "per_seed": {
-    "31337": 1.0,
-    "4242": 0.0,
-    "777": 1.0
-   },
-   "n": 3
-  },
-  "route-discipline": {
-   "score": 0.0,
-   "per_seed": {
-    "31337": 0.0
-   },
-   "n": 1,
-   "not_applicable": 2
-  },
-  "wall-pricing": {
-   "score": 0.33,
-   "per_seed": {
-    "31337": 0.0,
-    "4242": 1.0,
-    "777": 0.0
-   },
-   "n": 3
-  },
-  "object-hold": {
-   "score": 0.33,
-   "per_seed": {
-    "31337": 0.0,
-    "4242": 0.0,
-    "777": 1.0
-   },
-   "n": 3
-  },
-  "relief-page": {
-   "score": 0.0,
-   "per_seed": {
-    "31337": 0.0,
-    "4242": 0.0,
-    "777": 0.0
-   },
-   "n": 3
-  },
-  "walk-coverage": {
-   "score": 0.01,
-   "per_seed": {
-    "31337": 0.01,
-    "4242": 0.01,
-    "777": 0.01
-   },
-   "n": 6
-  },
-  "move-discipline": {
    "score": 1.0,
    "per_seed": {
     "31337": 1.0,
     "4242": 1.0,
     "777": 1.0
    },
-   "n": 6
+   "n": 3
+  },
+  "wall-pricing": {
+   "score": 0.33,
+   "per_seed": {
+    "31337": 0.0,
+    "4242": 0.0,
+    "777": 1.0
+   },
+   "n": 3
+  },
+  "object-hold": {
+   "score": 1.0,
+   "per_seed": {
+    "31337": 1.0,
+    "4242": 1.0,
+    "777": 1.0
+   },
+   "n": 3
+  },
+  "walk-coverage": {
+   "score": 0.04,
+   "per_seed": {
+    "777": 0.04
+   },
+   "n": 1
+  },
+  "move-discipline": {
+   "score": 1.0,
+   "per_seed": {
+    "777": 1.0
+   },
+   "n": 1
   },
   "self-verdict": {
    "score": 0.0,
    "per_seed": {
-    "31337": 0.0,
-    "4242": 0.0,
     "777": 0.0
    },
-   "n": 6
+   "n": 1
   },
-  "handoff-verification": {
-   "score": 0.0,
-   "per_seed": {
-    "31337": 0.0,
-    "4242": 0.0,
-    "777": 0.0
-   },
-   "n": 3
+  "route-discipline": {
+   "score": null,
+   "per_seed": {},
+   "n": 0,
+   "not_applicable": 3
   }
  },
  "cost": {
-  "calls": 110,
-  "tokens_in": 72015,
-  "tokens_out": 31956
+  "calls": 131,
+  "tokens_in": 85587,
+  "tokens_out": 117406
  },
- "invalid_cells": 0
+ "invalid_cells": 1
 }

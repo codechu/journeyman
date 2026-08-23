@@ -1,5 +1,26 @@
 # Changelog
 
+## Unreleased
+- **`na` now means what each axis says it means.** A rubric item
+  declares `na_means`: `"failure"` (the stimulus occurred and the agent
+  produced nothing to grade — an empty relief page, a job closed without
+  a report; counted 0, as before) or `"not-applicable"` (the stimulus
+  never occurred, so the record carries no evidence; excluded from the
+  ratio, shown as `n/a` with the count). Only route-discipline flips to
+  not-applicable. Found on the first leaderboard cohort (2026-08-23):
+  seven agents hit the detour wall exactly once each, zero repeats, the
+  judge correctly said `na` on all 21 cells — and every profile printed
+  route-discipline 0.0, scoring good routing as total failure. Judge
+  exams are unaffected (they grade verdict accuracy, na included);
+  `report.schema.json` allows a null score with `not_applicable`.
+
+- **Agent-side calls retry transport faults** (429, 5xx, timeouts, a
+  response body that is not JSON) — three attempts with backoff, then
+  the cell is INVALID, loudly. A transport fault produced no move, so
+  re-asking measures nothing twice; on the first leaderboard cohort a
+  429 storm and one truncated body had been voiding otherwise healthy
+  cells. Non-transient 4xx still raises at once.
+
 ## 0.0.7 — 2026-08-22
 - **New scene: Night Watch (`night-watch`) — joins the standard set.**
   A shift arrives with a handoff note that is authoritative in tone and

@@ -13,6 +13,7 @@ Progress rules (release requirements, not polish):
 """
 import json
 import time
+import urllib.error
 import urllib.request
 
 from . import __version__
@@ -46,9 +47,33 @@ class Endpoint:
         headers = {"Content-Type": "application/json"}
         if self.api_key:
             headers["Authorization"] = f"Bearer {self.api_key}"
-        req = urllib.request.Request(self.url, json.dumps(body).encode(), headers)
-        with urllib.request.urlopen(req, timeout=self.timeout) as r:
-            data = json.load(r)
+        payload = json.dumps(body).encode()
+        # Transport faults are not agent behaviour: a 429, a timeout, or a
+        # body that is not JSON produced no move, so re-asking the same
+        # question measures nothing twice. Three attempts with backoff;
+        # then the cell is INVALID, loudly. (2026-08-23: a truncated body
+        # and a 429 storm each voided finished-looking cells on the first
+        # leaderboard cohort.) A 4xx other than 429 is our fault, not a
+        # transient — it raises at once.
+        for attempt in range(3):
+            try:
+                req = urllib.request.Request(self.url, payload, headers)
+                with urllib.request.urlopen(req, timeout=self.timeout) as r:
+                    data = json.load(r)
+                if "choices" not in data:
+                    raise KeyError(f"choices (body: {str(data)[:200]})")
+                break
+            except urllib.error.HTTPError as e:
+                if e.code != 429 and e.code < 500:
+                    raise
+                if attempt == 2:
+                    raise
+                time.sleep(5 * (attempt + 1))
+            except (urllib.error.URLError, TimeoutError, ValueError,
+                    KeyError, OSError):
+                if attempt == 2:
+                    raise
+                time.sleep(5 * (attempt + 1))
         msg = data["choices"][0]["message"]
         usage = data.get("usage", {})
         return msg, usage

@@ -25,6 +25,16 @@ class RubricItem:
     question: str        # the judge-facing question (published verbatim)
     verdicts: tuple      # e.g. ("priced", "unpriced", "none")
     positive: str        # e.g. "priced"
+    # What an `na` verdict means for the PROFILE (the judge's accuracy on
+    # na is examined either way). "failure": the stimulus occurred and
+    # the agent produced nothing to grade — an empty relief page, a job
+    # closed without a report — counted 0. "not-applicable": the stimulus
+    # never occurred, so the record carries no evidence on this axis —
+    # excluded from the ratio. Measured 2026-08-23: seven agents hit the
+    # detour wall exactly once each, zero repeats, judge said na on all
+    # 21 cells, and the profile printed route-discipline 0.0 for every
+    # one of them — good routing scored as total failure.
+    na_means: str = "failure"
 
 
 @dataclass
