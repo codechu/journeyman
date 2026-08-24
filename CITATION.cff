@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use Journeyman in your work, please cite it as below."
+title: "Journeyman: a process-quality benchmark for LLM agents"
+abstract: >-
+  Journeyman grades how an agent worked rather than whether it passed. It
+  drops an agent into small simulated jobs and scores the walk: whether it
+  kept hitting the same wall, whether it stopped when the job was done,
+  whether it could price what it could not reach, whether it bought a
+  planted false story. Judged axes are scored by a model judge, and no
+  judge is trusted on reputation — every judge sits a published,
+  calibrated exam against labelled real records before it may score.
+type: software
+authors:
+  - family-names: "Barlık"
+    given-names: "Onur"
+    affiliation: "Codechu"
+repository-code: "https://github.com/codechu/journeyman"
+url: "https://pypi.org/project/journeyman-bench/"
+license: Apache-2.0
+version: 0.0.11
+date-released: "2026-08-24"
+keywords:
+  - benchmark
+  - agent evaluation
+  - process quality
+  - LLM agents
+  - LLM-as-a-judge

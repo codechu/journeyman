@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.0.11 — 2026-08-24
+- **Citable.** `CITATION.cff` (so GitHub offers "Cite this repository") and
+  `.zenodo.json` (so an archived release carries our own title, abstract,
+  author and license instead of guessed ones). The repository is linked to
+  Zenodo from this release on, which mints a DOI per release.
+- **A guard against stale citations.** Both files carry a version, and a
+  citation record naming the wrong release is worse than none — the export
+  now compares them against `pyproject.toml` and stops if they disagree.
+
 ## 0.0.10 — 2026-08-24
 - **Package metadata, given its due.** The PyPI page was thin because we had
   declared little, not because anything was broken: one project URL, a legacy
