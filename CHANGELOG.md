@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.0.9 — 2026-08-24 — "what the rubric was not saying"
 - **Fixed: calls the driver refused were counted as if they had happened.**
   A call past the declared budget is answered with "budget exhausted" and
   never reaches the scene — but the events layer replayed the whole call
@@ -19,6 +19,65 @@
   the deterministic evidence block, and the maintainers' mechanical
   empty-measure counter. Measured impact of these three: no archived cell
   and no shipped label changes — they were latent, not active.
+- **Calibration set v2_real grew to 82 cases and had its key corrected
+  twice.** Revision 2.1: the four cases whose only closing report the
+  scene refused were relabelled to the unfiled branches (grounding `na`
+  x2, wall-pricing `none` x2) — they were the calibration half of the
+  refused-call bug above, and every earlier exam score on those two axes
+  is superseded. Revision 2.2: with those four relabelled, unfiled-report
+  cases made up 25% of grounding and wall-pricing against about 8% in
+  real records, so twelve fresh cases with FILED closing reports were
+  harvested from cohort-1 records and labelled by the same three-family
+  council (11 of 12 unanimous); both axes now hold 14 cases, 14% unfiled.
+  Revision 2.3: one harvested case was relabelled `unpriced` -> `none`
+  after all four examined judges read it the same way against the key —
+  the house rule is that when every strong judge disagrees in the same
+  direction, the key gets examined, not the judges.
+- **Rubric v2.4: the sentence we had not written.** The refused-call
+  clause described only the negative ("a call answered with 'budget
+  exhausted' was refused") and never said what a *filed* report looks
+  like, so a judge reading a complete-looking report text had nothing to
+  check it against. Three axes (grounding, wall-pricing,
+  handoff-verification) now also state the positive marker: the scene
+  answers a filed report with "(report filed — job closed)". No label
+  changed; only the question text. The prediction was frozen before the
+  re-run and held: a judge that had been failing grounding at 0.71 went
+  to 0.86 and a badge, the control judge went from 0.93/0.92 to 1.00 on
+  every axis, and the self-hosted judge went from failing both axes to
+  0.93/0.93. What we had written up as "two hard axes" was a quiet rubric.
+- **Four qualified judges, two of them local and free.** Under v2.4 the
+  ledger holds GLM-5.2 (1.00 on all seven axes), GPT-5.6-Luna, and the
+  self-hosted Qwen3.6-35B-A3B in two forms — the stock open-weights build
+  and the same weights behind a sealed character prompt. Both local rows
+  qualify; the badge was earned by the missing sentence, not by the
+  persona, which holds a steady +0.06/+0.07 on the three axes that need a
+  call and loses nothing elsewhere (one run each, noise band unmeasured).
+- **The sentence did not reach every judge.** Claude Sonnet 5 sat the
+  same set as a control (hors concours — it sat on the labelling council,
+  so it holds no badge whatever it scores) and did not qualify: grounding
+  0.79, wall-pricing 0.79. Three of its six decisive misses are records
+  whose only closing report the scene refused, and it read all three as
+  filed, one of them identically in all three draws; the other three run
+  the opposite way (filed reports read as unfiled or underpriced). So the
+  quiet-rubric finding stands for three judges and stops at the fourth:
+  what is left there is a real difference between judges, not our text.
+- **The leaderboard re-judged under v2.4 by a local, free judge.** The
+  same eleven agents' cell records — nothing re-run — scored by the
+  self-hosted Qwen3.6-35B-A3B IQ4_XS build now that it holds the badge
+  again. Rank correlation with the v2.2/luna board is 0.72. Two axes
+  moved and they moved opposite ways (grounding +0.24 mean across
+  agents, wall-pricing −0.23), while handoff-verification — also edited
+  by v2.4 — did not move on a single agent. Judge and questions had
+  changed together, so the cells were judged a third time (same judge,
+  v2.2 questions restored from git) to fill the 2×2, with predictions
+  frozen first: **the wall-pricing collapse is the rubric** (−0.40 from
+  the questions under a fixed judge, 7 of 10 agents; +0.17 from the judge
+  under fixed questions) and **the grounding rise is the judge** (+0.31
+  from the judge, −0.06 from the questions). handoff-verification moved on
+  no agent in either comparison — the null control held — while object-hold
+  changed on 6 of 11 with a mean of zero, i.e. real single-draw noise on
+  that axis; noise here is axis-dependent and no per-axis band is measured.
+  Earlier boards are superseded, not deleted.
 - **Regression tests for the class, not just the bug**: a refused report
   is not filed; a refused conclude is not a conclusion; `call_sequence`
   skips only refused calls; stored events must equal events recomputed

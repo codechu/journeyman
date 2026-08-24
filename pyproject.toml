@@ -1,20 +1,20 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "journeyman-bench"
-version = "0.0.8"
+version = "0.0.9"
 description = "Journeyman - a process-quality benchmark for agents. Measures how agents work, and how they fail."
 readme = "README.pypi.md"
 requires-python = ">=3.10"
-license = {text = "Apache-2.0"}
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 authors = [{name = "Codechu"}]
 keywords = ["benchmark", "llm", "agents", "evaluation", "process-quality"]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: Apache Software License",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
@@ -25,7 +25,13 @@ classifiers = [
 ]
 
 [project.urls]
+Homepage = "https://github.com/codechu/journeyman"
 Repository = "https://github.com/codechu/journeyman"
+Documentation = "https://github.com/codechu/journeyman/blob/master/docs/methodology.md"
+Changelog = "https://github.com/codechu/journeyman/blob/master/CHANGELOG.md"
+"Judge registry" = "https://github.com/codechu/journeyman/blob/master/docs/judges.md"
+Leaderboard = "https://github.com/codechu/journeyman/blob/master/docs/leaderboard.md"
+Issues = "https://github.com/codechu/journeyman/issues"
 
 [project.scripts]
 journeyman = "journeyman.__main__:main"

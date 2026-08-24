@@ -49,6 +49,21 @@ def _run(scene_name, script):
         return list(rd.read_cells())[0]
 
 
+def _answered_closers(record_text):
+    """report/conclude calls the scene actually answered, from a rendered
+    record (FIFO: a [tool] line answers the oldest unanswered [CALL])."""
+    from journeyman.record import BUDGET_REFUSED
+    queue, answered = [], []
+    for ln in record_text.split("\n"):
+        if ln.startswith("[CALL] "):
+            queue.append(ln[7:].split("(")[0])
+        elif ln.startswith("[tool] ") and queue:
+            name, result = queue.pop(0), ln[7:]
+            if name in ("report", "conclude") and not result.startswith(BUDGET_REFUSED):
+                answered.append(name)
+    return answered
+
+
 class TestClosedRoadsDetour(unittest.TestCase):
     def test_detour_solver(self):
         # hit wall twice, detour to side source, report
@@ -475,7 +490,7 @@ class TestQualify(unittest.TestCase):
         from journeyman.qualify import load_set, qualify
         cal = load_set()                      # default exam = v2_real
         self.assertEqual(cal["set"], "v2_real")
-        self.assertEqual(len(cal["cases"]), 70)
+        self.assertGreaterEqual(len(cal["cases"]), 70)   # grows by harvest
         r = qualify(self._OracleJudge(cal), cal, log=lambda *_: None)
         self.assertEqual(r["badge"], "QUALIFIED")
         self.assertEqual(set(r["axes"]), {"empty-measure", "grounding", "route-discipline",
@@ -568,7 +583,7 @@ class TestCalibrationHygiene(unittest.TestCase):
     """Guards on the shipped exam set itself. A key that mis-states what
     the record shows teaches every judge the same error."""
 
-    KNOWN_REFUSED = {17, 24, 30, 31, 33}   # v2_real, pending owner review
+    KNOWN_REFUSED = {17, 24, 30, 31, 33}   # v2_real cases with a refused call
 
     def _v2(self):
         import journeyman
@@ -577,14 +592,30 @@ class TestCalibrationHygiene(unittest.TestCase):
         return json.load(open(p))
 
     def test_no_new_refused_closing_calls(self):
-        """Cases whose closing report/conclude was refused by the driver
-        are labelled as if it had been filed. Five are known and under
-        review; a sixth must not appear unnoticed."""
-        from journeyman.driver import BUDGET_REFUSED
+        from journeyman.record import BUDGET_REFUSED
         found = {i for i, c in enumerate(self._v2()["cases"])
                  if BUDGET_REFUSED in c["record"]}
         self.assertEqual(found, self.KNOWN_REFUSED,
                          "calibration set gained/lost a refused-call case")
+
+    def test_refused_closing_call_is_labelled_unfiled(self):
+        """A case whose ONLY closing call was refused has no filed report,
+        so its label must be the axis's unfiled branch. Four cases were
+        labelled as if filed through two labellings (fixed 2026-08-24);
+        the guard keeps a fifth from slipping in."""
+        from journeyman.record import BUDGET_REFUSED
+        unfiled = {"grounding": "na", "wall-pricing": "none",
+                   "handoff-verification": "na"}
+        for i, c in enumerate(self._v2()["cases"]):
+            if c["axis"] not in unfiled or BUDGET_REFUSED not in c["record"]:
+                continue
+            closers = [ln for ln in c["record"].split("\n")
+                       if ln.startswith("[CALL] report")]
+            answered = _answered_closers(c["record"])
+            if closers and not answered:
+                self.assertEqual(c["true_label"], unfiled[c["axis"]],
+                                 f"case {i}: closing call refused, label "
+                                 f"says {c['true_label']}")
 
     def test_labels_are_declared_verdicts(self):
         rub = {}

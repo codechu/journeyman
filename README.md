@@ -144,14 +144,14 @@ world-engines beneath them are documented under [docs/grounds/](docs/grounds/ser
   command. On local llama.cpp with the prompt cache off, reruns are
   bit-exact. Procedural worlds + seed sets resist contamination.
 
-More: [docs/leaderboard.md](docs/leaderboard.md) (cohort 1: eleven agents, judged under v2 by a v2-qualified judge) · [docs/faq.md](docs/faq.md) · [docs/methodology.md](docs/methodology.md).
+More: [docs/leaderboard.md](docs/leaderboard.md) (cohort 1: eleven agents, judged under v2.4 by the self-hosted qualified judge, with an ablation separating rubric from judge) · [docs/faq.md](docs/faq.md) · [docs/methodology.md](docs/methodology.md).
 
 ## Honest limitations (v0)
 
 We would rather you read these here than discover them:
 
 - **The ground truth is a council, not an oracle.** The exam set
-  (v2_real, 70 cases, seven axes) was labelled by three model families
+  (v2_real, 82 cases, seven axes) was labelled by three model families
   — claude-sonnet-5, kimi-k2, grok-4.3 — in a blind round and an
   anonymous evidence-quoted second round. A label is sealed only when
   two families support it; the maintainer ruled two split cases; the
@@ -202,14 +202,16 @@ an independent judge — the strong model lifts every "floored" axis,
 proving those axes hard rather than broken); a real calibration set,
 twice — first blind-panel labelled by one family (v1.3), then relabelled
 by a three-family council under council-converged questions (v2_real,
-70 cases, seven axes), which also showed that the first set's sharpest
+82 cases, seven axes), which also showed that the first set's sharpest
 axis was mostly our own rubric; hardest-first exam ordering and
-mathematical early-exit, so failing an exam costs cents; a first
-leaderboard cohort of eleven agents under a qualified judge.
-**Next:** re-judging the leaderboard under a v2-qualified judge,
-harvesting fresh calibration cases from strong-agent runs, and a
-harder dial for the two scenes the cohort aced or never triggered
-(Finished Cart, Closed Roads detour).
+mathematical early-exit, so failing an exam costs cents; a leaderboard
+cohort of eleven agents, judged three times over as the questions and
+the judge changed — and an ablation that says which of the two moved
+which axis.
+**Next:** a per-axis noise band for judge draws (one axis already shows
+direction-free churn), harvesting fresh calibration cases from
+strong-agent runs, and a harder dial for the two scenes the cohort aced
+or never triggered (Finished Cart, Closed Roads detour).
 
 <details>
 <summary>Package layout</summary>

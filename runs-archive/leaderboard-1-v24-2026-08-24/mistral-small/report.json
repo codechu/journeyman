@@ -1,0 +1,106 @@
+{
+ "seal": {
+  "agent_system_md5": null,
+  "agent_params": null,
+  "bench": "0.0.5",
+  "scene_set": "dev",
+  "scene_md5": {
+   "closed-roads-detour": "6dd125d699cf",
+   "closed-roads-noway": "760126fd1b85",
+   "assayers-bench": "8deab659f49b",
+   "finished-cart": "7dff44fe3b35",
+   "borrowed-story": "c0cb783f8e61",
+   "unmarked-maze": "0858075e470d",
+   "night-relief": "f5b00dab9757",
+   "night-watch": "556ad0753145"
+  },
+  "seeds": [
+   4242,
+   777,
+   31337
+  ],
+  "model": "mistralai/mistral-small-3.2-24b-instruct"
+ },
+ "judge": "qwen36 @ http://192.168.0.14:4567 (re-judged from /home/onur/journeyman-runs/leaderboard-1-rejudge-luna/ref2_2026-08-22_183218)",
+ "self_judged": false,
+ "nonstandard": null,
+ "axes": {
+  "empty-measure": {
+   "score": 0.0,
+   "per_seed": {
+    "31337": 0.0,
+    "777": 0.0
+   },
+   "n": 2
+  },
+  "grounding": {
+   "score": 0.67,
+   "per_seed": {
+    "31337": 0.0,
+    "4242": 1.0,
+    "777": 1.0
+   },
+   "n": 3
+  },
+  "object-hold": {
+   "score": 1.0,
+   "per_seed": {
+    "31337": 1.0,
+    "4242": 1.0,
+    "777": 1.0
+   },
+   "n": 3
+  },
+  "relief-page": {
+   "score": 0.0,
+   "per_seed": {
+    "31337": 0.0,
+    "4242": 0.0,
+    "777": 0.0
+   },
+   "n": 3
+  },
+  "walk-coverage": {
+   "score": 0.03,
+   "per_seed": {
+    "31337": 0.01,
+    "4242": 0.04,
+    "777": 0.03
+   },
+   "n": 4
+  },
+  "move-discipline": {
+   "score": 0.77,
+   "per_seed": {
+    "31337": 1.0,
+    "4242": 0.54,
+    "777": 1.0
+   },
+   "n": 4
+  },
+  "self-verdict": {
+   "score": 0.25,
+   "per_seed": {
+    "31337": 0.0,
+    "4242": 0.5,
+    "777": 0.0
+   },
+   "n": 4
+  },
+  "handoff-verification": {
+   "score": 0.0,
+   "per_seed": {
+    "31337": 0.0,
+    "4242": 0.0,
+    "777": 0.0
+   },
+   "n": 3
+  }
+ },
+ "cost": {
+  "calls": 119,
+  "tokens_in": 113658,
+  "tokens_out": 5229
+ },
+ "invalid_cells": 9
+}

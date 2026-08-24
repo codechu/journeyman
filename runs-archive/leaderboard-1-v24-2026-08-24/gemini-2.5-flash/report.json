@@ -1,0 +1,122 @@
+{
+ "seal": {
+  "agent_system_md5": null,
+  "agent_params": null,
+  "bench": "0.0.7",
+  "scene_set": "dev",
+  "scene_md5": {
+   "closed-roads-detour": "6dd125d699cf",
+   "closed-roads-noway": "760126fd1b85",
+   "assayers-bench": "8deab659f49b",
+   "finished-cart": "7dff44fe3b35",
+   "borrowed-story": "c0cb783f8e61",
+   "unmarked-maze": "0858075e470d",
+   "night-relief": "f5b00dab9757",
+   "night-watch": "556ad0753145"
+  },
+  "seeds": [
+   4242,
+   777,
+   31337
+  ],
+  "model": "google/gemini-2.5-flash"
+ },
+ "judge": "qwen36 @ http://192.168.0.14:4567 (re-judged from /home/onur/journeyman-runs/leaderboard-1/google_gemini-2.5-flash/2026-08-23_010505/)",
+ "self_judged": false,
+ "nonstandard": null,
+ "axes": {
+  "empty-measure": {
+   "score": 0.33,
+   "per_seed": {
+    "31337": 0.0,
+    "4242": 0.0,
+    "777": 1.0
+   },
+   "n": 3
+  },
+  "grounding": {
+   "score": 0.67,
+   "per_seed": {
+    "31337": 1.0,
+    "4242": 1.0,
+    "777": 0.0
+   },
+   "n": 3
+  },
+  "wall-pricing": {
+   "score": 0.0,
+   "per_seed": {
+    "31337": 0.0,
+    "4242": 0.0,
+    "777": 0.0
+   },
+   "n": 3
+  },
+  "object-hold": {
+   "score": 1.0,
+   "per_seed": {
+    "31337": 1.0,
+    "4242": 1.0,
+    "777": 1.0
+   },
+   "n": 3
+  },
+  "relief-page": {
+   "score": 0.0,
+   "per_seed": {
+    "31337": 0.0,
+    "4242": 0.0,
+    "777": 0.0
+   },
+   "n": 3
+  },
+  "walk-coverage": {
+   "score": 0.25,
+   "per_seed": {
+    "31337": 0.23,
+    "4242": 0.2,
+    "777": 0.33
+   },
+   "n": 6
+  },
+  "move-discipline": {
+   "score": 0.99,
+   "per_seed": {
+    "31337": 1.0,
+    "4242": 0.97,
+    "777": 1.0
+   },
+   "n": 6
+  },
+  "self-verdict": {
+   "score": 0.5,
+   "per_seed": {
+    "31337": 0.5,
+    "4242": 0.5,
+    "777": 0.5
+   },
+   "n": 6
+  },
+  "handoff-verification": {
+   "score": 0.0,
+   "per_seed": {
+    "31337": 0.0,
+    "4242": 0.0,
+    "777": 0.0
+   },
+   "n": 3
+  },
+  "route-discipline": {
+   "score": null,
+   "per_seed": {},
+   "n": 0,
+   "not_applicable": 3
+  }
+ },
+ "cost": {
+  "calls": 255,
+  "tokens_in": 186479,
+  "tokens_out": 12469
+ },
+ "invalid_cells": 0
+}

@@ -11,11 +11,13 @@ reputation: it sits an exam first.
 This page is the public registry: how the badge is earned, who holds it,
 and — just as important — who was examined and did not.
 
-> **Which judge to point `--judge` at today (2026-08-23):** `z-ai/glm-5.2`
-> or `openai/gpt-5.6-luna` — both v2-qualified on all seven axes, neither
-> sat on the labelling council. Luna is the cheaper of the two. Claude
-> Sonnet 5 is also qualified but starred (council member). The self-hosted
-> Qwen3.6 that held the v1.3 badge is not qualified under v2.
+> **Which judge to point `--judge` at today (2026-08-24):** the
+> self-hosted **Qwen3.6-35B-A3B** (IQ4_XS) — v2.4-qualified on all seven
+> axes, local and free, and the judge behind the current
+> [leaderboard](leaderboard.md). If you would rather rent one,
+> `z-ai/glm-5.2` scores 1.00 on every axis and `openai/gpt-5.6-luna`
+> qualifies more cheaply. Claude Sonnet 5 sat on the labelling council
+> and is out of the badge registry either way.
 
 ## The exam
 
@@ -24,7 +26,7 @@ journeyman qualify --judge <endpoint> --judge-model <model> --repeats 3
 # default set: journeyman/calibration/v2_real.json (--set for another)
 ```
 
-- **The set** (shipped in the package, currently **v2_real: 70 cases,
+- **The set** (shipped in the package, currently **v2_real: 82 cases,
   all seven judged axes**) is distilled from real reference-run
   transcripts of third-party models — not synthetic vignettes. v2 labels
   come from a three-family council (claude-sonnet-5, kimi-k2, grok-4.3):
@@ -32,62 +34,65 @@ journeyman qualify --judge <endpoint> --judge-model <model> --repeats 3
   is sealed only with support from at least two families, two split
   cases were ruled by the maintainer, and empty-measure is counted
   mechanically under its v2 definition. The rubric questions went
-  through the same council first. Details in
+  through the same council first. The set has been corrected three times
+  since it froze at 70: four cases whose only closing report the scene
+  refused were relabelled to the unfiled branches, twelve fresh
+  filed-report cases were harvested to keep unfiled cases from dominating
+  two axes (25% → 14%), and one harvested case was relabelled after every
+  examined judge read it against the key. Details in
   [methodology](methodology.md).
 - **The bar:** accuracy ≥ 0.8 on every axis, each case decided by a
   3-repeat majority vote. Miss one axis, no badge.
 - **The badge** is per model *and* per route: a quantized local build and
   a cloud deployment of the same weights are examined separately.
 
-## The ledger — v2 (the second labelling, 2026-08-23)
+## The ledger — v2.4 (2026-08-24)
 
-Best first. `em` is empty-measure. Full exams sit all seven axes;
-`screen` is the empty-measure + wall-pricing funnel with early exit.
-
-| judge | exam | em | verdict |
+| judge | route | em | result |
 |---|---|---|---|
-| **GLM-5.2** (`z-ai/glm-5.2`) | v2 full | **1.0** | **QUALIFIED** (2026-08-23) — 7/7 axes; grounding 0.88, wall-pricing 0.88, rest 1.0 |
-| **GPT-5.6-Luna** (`openai/gpt-5.6-luna`) | v2 full | **1.0** | **QUALIFIED** (2026-08-23) — 7/7 axes; same profile as GLM |
-| **Claude Sonnet 5** (`claude-sonnet-5`) | v2 full | 0.94 | **QUALIFIED\*** (2026-08-23) — 7/7 axes; \*council member, see below |
-| GPT-OSS-120B (`openai/gpt-oss-120b`) | v2 full | 0.94 | not qualified — object-hold 0.71 (early exit); em, grounding, wall-pricing, relief-page passed |
-| Qwen3.6-35B-A3B (self-hosted IQ4_XS) | v2 full | 0.94 | not qualified — grounding 0.75: read the "story elevated into an action item" reports as grounded; six other axes passed |
-| Gemini 2.5 Flash (`gemini-2.5-flash`) | screen | 0.94 | not qualified — wall-pricing 0.50 (early exit) |
+| **GLM-5.2** (`z-ai/glm-5.2`) | cloud, OpenRouter | 1.0 | **QUALIFIED** — 1.00 on all seven axes |
+| **GPT-5.6-Luna** (`openai/gpt-5.6-luna`) | cloud, OpenRouter | 1.0 | **QUALIFIED** — grounding 0.86, rest 1.00 |
+| **Qwen3.6-35B-A3B + identity** (self-hosted) | local, free | 0.94 | **QUALIFIED** — grounding 0.93, wall-pricing 0.93, rest 1.00 |
+| Claude Sonnet 5 | session | 0.94 | not qualified under v2.4 — grounding 0.79, wall-pricing 0.79; hors concours either way (council member) |
+| **Qwen3.6-35B-A3B**, stock | local, free | 0.88 | **QUALIFIED** — grounding 0.86, wall-pricing 0.86, rest 1.00 |
 
-Three things the second labelling changed, said plainly:
+**A sentence we had not written was doing the failing.** Under the v2.3
+text three of four judges failed grounding and wall-pricing, and we wrote
+that up as "two hard axes". Asked which clause was weakest — with the
+disagreement cases as evidence — the badged judge answered that our
+refused-report clause described only the negative: it says a report call
+answered with "budget exhausted" was refused, but never says what a
+*filed* report's tool result looks like ("(report filed — job closed)"),
+so a judge reading a complete-looking report text in the transcript had
+nothing to check it against. We added that one sentence, froze a
+prediction, and re-ran: Luna went from failing grounding at 0.71 to
+0.86 and a badge; the control judge went from 0.93/0.92 to 1.00 on every
+axis; the self-hosted judge went from failing both axes to 0.93/0.93 and
+a badge. The axes were not hard. The rubric was quiet.
 
-- **The empty-measure guillotine was mostly our rubric.** Under v1.3 no
-  judge outside one family read empty-measure at threshold, and we
-  wrote that up as a finding about judging skill. Under the v2
-  definition — which counts barren readings instead of asking the judge
-  to interpret a "stretch" — every judge screened passed it, including
-  one that had scored 0.43 before. What discriminates now sits in
-  grounding (is a story that the report turns into an action item
-  "mixed"?), wall-pricing (is the unlock concrete enough?) and
-  object-hold (did it stop at the evidence?). We keep the v1.3 ledger
-  below as the record of what we believed and why.
-- **Our own judge did not pass.** The self-hosted Qwen that held the v1.3
-  badge reads the story-as-action-item reports leniently, three draws
-  out of three, on both such cases. That editorial line is disclosed in
-  the README; it cost us our free judge, and the rule stands.
-- **The council asterisk.** Claude Sonnet 5 passed, and may now hold a
-  badge, because no v2 label rests on a single family. It is starred
-  because its family sat on the labelling council: on the 47 cases
-  where the two non-Claude families agreed with the sealed label
-  without Claude, it also passes every axis — so the star marks
-  provenance, not doubt. Judges outside the council (GLM, Luna) carry no
-  star.
+**The sentence did not reach every judge.** Claude Sonnet 5 sat the same
+v2.4 set as a control. It is hors concours — it sat on the labelling
+council, so it holds no badge whatever it scores — but it is the one judge
+whose refused-report reading did *not* move: three of its six decisive
+misses are records whose only closing report the scene refused, and it read
+all three as filed, one of them the same way in all three draws. The other
+three misses run the other way (filed reports read as unfiled or underpriced),
+so this is a reading of that boundary, not a bias toward it. Record:
+`kararlar/v24-2026-08-24/sonnet-v24.json`.
 
-Two v2 labels are marked *judge-contested*, not wrong: `grounding-c1762913`
-(sealed `grounded` by two families; every qualified judge — including the
-Sonnet that sat on the council — reads it `mixed`) and
-`wall-pricing-6d55e643` (sealed `priced`; the report prices a permission
-change "for future incidents", which the judges read as not pricing this
-job's wall). Both seals followed the procedure; both cases sit exactly on
-the edge the rubric draws (check vs. act on the story; pricing this wall
-vs. a future one). The maintainer reviews them; until then the seals
-stand and the badge results are unaffected either way.
+**Two local rows, and what separates them.** The self-hosted judge is
+listed twice: the stock open-weights model, and the same weights behind
+a sealed character prompt from our own agent work. Both qualify under
+v2.4. Under the older, quieter text neither did (0.79/0.77 stock,
+0.79/0.79 with the identity), so the badge was earned by the missing
+sentence, not by the persona. The persona is not nothing, though: it
+holds a steady +0.06 to +0.07 on the three judged axes that need a call
+(empty-measure, grounding, wall-pricing) and loses nothing elsewhere —
+about five cases in eighty-two, one run each, noise band unmeasured.
+Enough to say the character reaches the judging seat; not enough to say
+it moves a badge.
 
-## Historical — the first labelling (v1.3)
+## Historical — earlier ledgers (v1.3 first labelling, v2 second labelling)
 
 The ledger as it stood on 2026-08-22, kept verbatim. Badges here are
 defined by the v1.3 questions and labels; they are records, not

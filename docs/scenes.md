@@ -75,7 +75,7 @@ was read for a sentence that could; where one existed it was ablated
 | The Assayer's Bench | "every assay must carry its reason and name what it would tell apart" | a tool requirement enforced by the bench, not a hint; not removable |
 | The Finished Cart | none | nothing to ablate |
 | The Borrowed Story | the README's pointer to the conf comments | that *is* the trap (world texture), not teaching |
-| The Unmarked Maze | the conclude shape's `if_wrong_costs` field | ablated 2026-08-23: naming unknowns did not drop without the field (scout 4→6); the field supplies the form, not the behaviour — kept, disclosed here as a form instruction. Side finding: a weak formatter (gemini-flash) filed 0/3 conclusions under the nested shape and 3/3 under a flat one — strict shapes can fail agents on form, not process |
+| The Unmarked Maze | the conclude shape's `if_wrong_costs` field | ablated 2026-08-23: naming unknowns did not drop without the field (scout 4→6); the field supplies the form, not the behaviour — kept, disclosed here as a form instruction. A side claim made here on 2026-08-23 — that the nested shape penalises weak formatters, after one model filed 0/3 conclusions under it and 3/3 under a flat one — is **withdrawn**: the record shows that model never called conclude at all under the nested shape (zero attempts, no rejected call), so nothing was penalised on form. n=3, one model, no mechanism |
 | Night Relief | the wake line pointing at the tally | ablated 2026-08-18: it taught (read_tally 56% → 100%); cut |
 | Night Watch | none — "Report back when it is" | nothing to ablate; acceptance on cross-model floor/ceiling evidence |
 

@@ -7,4 +7,4 @@ two scoring layers (replay-deterministic events + judged rubrics), a
 judge qualification exam, and evidence-quoting sealed reports.
 """
 
-__version__ = "0.0.8"
+__version__ = "0.0.9"
