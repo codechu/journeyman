@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.0.10 — 2026-08-24
+- **Package metadata, given its due.** The PyPI page was thin because we had
+  declared little, not because anything was broken: one project URL, a legacy
+  license table, five keywords. The summary now says what the thing is in the
+  words people search (LLM agents, process quality, LLM-as-a-judge), the
+  keyword list matches the repository's own topics, and the classifiers add
+  Python 3.14, OS Independent, Quality Assurance and a research audience.
+  Nothing about the code changed.
+- **A claim the CI now backs.** Declaring Python 3.14 support means testing
+  it: 3.14 joins the CI matrix (3.10–3.14).
+
 ## 0.0.9 — 2026-08-24 — "what the rubric was not saying"
 - **Fixed: calls the driver refused were counted as if they had happened.**
   A call past the declared budget is answered with "budget exhausted" and
