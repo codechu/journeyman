@@ -14,6 +14,7 @@ authors:
   - family-names: "Barlık"
     given-names: "Onur"
     affiliation: "Codechu"
+doi: 10.5281/zenodo.22085820
 repository-code: "https://github.com/codechu/journeyman"
 url: "https://pypi.org/project/journeyman-bench/"
 license: Apache-2.0

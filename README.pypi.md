@@ -7,6 +7,7 @@
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://pypi.org/project/journeyman-bench/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](https://github.com/codechu/journeyman/blob/master/LICENSE)
 [![Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](https://github.com/codechu/journeyman/blob/master/pyproject.toml)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22085820.svg)](https://doi.org/10.5281/zenodo.22085820)
 
 *A process-quality benchmark for agents.*
 
