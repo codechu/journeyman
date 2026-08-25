@@ -26,6 +26,18 @@ simulated, so there is nothing to set up or sandbox.
 You get back a **profile**: ten axes, each 0-1. Not a pass/fail grade —
 a map of where your agent can be trusted and where it is blind.
 
+**What is unusual here is not the grading — it is who is allowed to grade.**
+Calibrating an LLM judge before trusting it is standard advice; almost nobody
+ships the labels to do it with. Journeyman does three things about that:
+
+- **the calibration set is in the package** — 82 labelled cases across seven
+  axes, distilled from real agent records, not synthetic vignettes;
+- **a judge that has not passed it cannot score** — `journeyman qualify` grants
+  or refuses a badge, and an unqualified run is stamped `NOT COMPARABLE`;
+- **the judges that failed are published by name** — the
+  [registry](https://github.com/codechu/journeyman/blob/master/docs/judges.md) lists the twenty-odd configurations that did not
+  qualify next to the four that did.
+
 <p align="center"><img src="https://raw.githubusercontent.com/codechu/journeyman/master/assets/terminal.svg" alt="A live journeyman run: banner, per-cell progress lines with measured ETA, judging phase, and the final profile." width="760"></p>
 
 ## Install & try
