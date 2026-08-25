@@ -80,6 +80,15 @@ Archived releases carry a DOI: [10.5281/zenodo.22085820](https://doi.org/10.5281
 journeyman qualify --judge <endpoint> --judge-model <model> --repeats 3
 ```
 
+## Looking for an arXiv endorser (cs.AI / cs.LG)
+
+The write-up describing this set is in progress. arXiv requires an endorsement
+for a first submission in a category and we have no institutional affiliation
+to bypass it. If you publish in this area and think the work is worth
+endorsing, please open an issue on
+[the repository](https://github.com/codechu/journeyman/issues) — and if you
+read it and think it is not, that is useful to hear too.
+
 Generated from the set itself by `scripts/journeyman_hf_sync.py`.
 """
 
