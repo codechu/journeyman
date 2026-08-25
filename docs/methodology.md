@@ -142,6 +142,47 @@ If a community standard for agent process-reports emerges, mapping onto
 it is a converter, not a rewrite: the measurements are the asset, the
 serialization is replaceable.
 
+## Related work, and what is and is not new here
+
+None of the ideas underneath this benchmark are ours, and it is better to say
+so here than to let a reader discover it.
+
+**Judges need calibrating.** That LLM judges must be meta-evaluated before
+they are trusted is established practice, not a finding — see the
+[LLMs-as-Judges survey](https://arxiv.org/pdf/2412.05579) and
+[meta-judge frameworks](https://arxiv.org/html/2504.17087). "Build a small
+expert-labelled calibration set and measure agreement before deploying" is
+standard advice.
+
+**Scores decompose into rater and instrument effects.** Our own ablation —
+holding the judge fixed while rolling the rubric back, then the reverse — is
+a special case of generalizability theory, which has been decomposing
+measurement variance across raters, items and occasions for decades, and has
+already been applied to LLM evaluation:
+[Hidden Measurement Error in LLM Pipelines](https://arxiv.org/pdf/2604.11581)
+attributes error to controllable and systemic facets, and
+[Quantifying the Statistical Effect of Rubric Modifications](https://arxiv.org/pdf/2605.06283)
+treats generally the thing we hit specifically — that editing a rubric moves
+judge agreement. We derived our version without knowing this literature. That
+is a reason to trust the result, not a claim of priority.
+
+**Even the qualification gate has a neighbour.**
+[Who judges the judges?](https://arxiv.org/pdf/2605.24737) builds a runtime
+gate with quarantine on score drops, in a compliance-monitoring setting.
+
+**What we did not find** — in a light search, so read this as a negative
+result rather than a proof — is one runnable system that puts these together:
+qualification enforced as a precondition rather than recommended, the
+calibration set shipped inside the package, and the judges that *failed*
+published as prominently as the ones that passed. Papers report the judge
+they chose; our [registry](judges.md) lists the twenty-odd configurations that
+did not qualify, by name.
+
+So the contribution here is not a finding. It is that the practice is
+enforced, the artefacts are public and sealed, and the record of how the tool
+reached its present shape — including the retractions — is published with it.
+Take the theory from the papers above; take the running apparatus from here.
+
 ## Looking for an arXiv endorser (cs.AI / cs.LG)
 
 The write-up is in progress. What it will describe is already public and
