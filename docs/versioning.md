@@ -31,6 +31,31 @@ Deeper validation — multi-model separation, a real calibration set, a
 pinned reference judge, full teach-leak passes — keeps improving across
 1.x. It is roadmap, not a 1.0 gate.
 
+## What you can lean on today (pre-1.0)
+
+Asked by an integrator, so it belongs here rather than in an issue thread.
+
+- **`report.json` and its [JSON Schema](../journeyman/schema/report.schema.json)** —
+  the closest thing we have to an API. There is no universal standard for agent
+  process reports, so this schema *is* the contract. It has changed before
+  (`na_means`, null scores and `not_applicable` arrived together) and it will
+  change again, but always with a changelog entry, never silently.
+- **Rubric question text (`rubrics.py`) is deliberately unstable.** It has been
+  rewritten five times, three of those inside one week, and it will keep moving:
+  the questions are a calibration artefact tied to a set version, not an API.
+  One single-sentence edit moved a judge from failing an axis at 0.71 to 0.86 and
+  a badge — that is how load-bearing this text is. Pass the question through as
+  data; never key behaviour off its wording.
+- **The cell record (`record.py`) is internal.** Readable, and you may map it,
+  but it is our working format: treat a field's absence as possible.
+- **The calibration set is versioned separately** (`version` inside
+  `v2_real.json`, currently 2.3). Exam scores do not transfer across revisions,
+  so anything that surfaces a qualification result should surface the set
+  version beside it — the same reason a score travels with its judge's identity.
+
+If you depend on one of these, say so in an issue and we will warn before
+changing it rather than after.
+
 ## Standing rules (every version)
 
 - **Zero runtime dependencies.**

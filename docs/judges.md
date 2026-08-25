@@ -26,7 +26,9 @@ journeyman qualify --judge <endpoint> --judge-model <model> --repeats 3
 # default set: journeyman/calibration/v2_real.json (--set for another)
 ```
 
-- **The set** (shipped in the package, currently **v2_real: 82 cases,
+- **The set** (shipped in the package, and on the Hub as
+  [`codechu/journeyman-calibration`](https://huggingface.co/datasets/codechu/journeyman-calibration)
+  if you would rather read it than install it, currently **v2_real: 82 cases,
   all seven judged axes**) is distilled from real reference-run
   transcripts of third-party models — not synthetic vignettes. v2 labels
   come from a three-family council (claude-sonnet-5, kimi-k2, grok-4.3):
