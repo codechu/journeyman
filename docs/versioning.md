@@ -79,6 +79,29 @@ Asked by an integrator, so it belongs here rather than in an issue thread.
 If you depend on one of these, say so in an issue and we will warn before
 changing it rather than after.
 
+## Cutting a release
+
+Written down because it used to live in a script that no longer exists, and
+knowledge that survives only in tooling dies with the tooling.
+
+1. **Bump the version in all four files** — `pyproject.toml`,
+   `journeyman/__init__.py`, `CITATION.cff`, `.zenodo.json`. They are checked
+   against each other by a test, so a mismatch fails CI rather than shipping.
+   `__init__.py` is the one that matters most quietly: it is what every seal
+   records, and a run sealed with the wrong version cannot be reproduced.
+2. **Write the changelog entry.** It is the release note. A breaking change
+   says so on its first line, since pre-1.0 the version number alone cannot
+   tell a reader whether something broke.
+3. **Push to `master` and let CI pass** (offline selftest + test suite,
+   stdlib-only, five Python versions).
+4. **Cut the tag** — `gh release create vX.Y.Z --notes-file …`. The tag is the
+   human release signature: pushing `v*` is what triggers publication, nothing
+   else does. The workflow builds, runs the selftest again, publishes to PyPI
+   through a trusted publisher (no token in the repo), and then syncs the
+   calibration dataset to the Hub.
+5. **Check it landed** — the package on PyPI and the dataset card, not just a
+   green workflow.
+
 ## Standing rules (every version)
 
 - **Zero runtime dependencies.**

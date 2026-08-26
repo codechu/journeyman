@@ -603,6 +603,59 @@ class UpgradesOldReports(unittest.TestCase):
         self.assertEqual(rep["axes"]["grounding"]["kind"], "counted")
 
 
+class VersionDoesNotDrift(unittest.TestCase):
+    """Four files carry the version; a release where they disagree ships a
+    wrong citation and — worse — seals every run with a version it was not
+    built from, which makes those runs unreproducible. This check used to
+    live in the mirror-export script; it moved here when this repo became
+    canonical, because the guard has to sit where releases are cut."""
+
+    FILES = ("pyproject.toml", "journeyman/__init__.py",
+             "CITATION.cff", ".zenodo.json")
+
+    def _root(self):
+        return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+    def test_all_four_agree(self):
+        import re
+        root = self._root()
+        missing = [f for f in self.FILES
+                   if not os.path.exists(os.path.join(root, f))]
+        if missing:                      # installed copy, not a checkout
+            self.skipTest("not a repo checkout: " + ", ".join(missing))
+        read = lambda f: open(os.path.join(root, f)).read()
+        found = {
+            "pyproject.toml":
+                re.search(r'^version = "([^"]+)"', read("pyproject.toml"),
+                          re.M).group(1),
+            "journeyman/__init__.py":
+                re.search(r'^__version__ = "([^"]+)"',
+                          read("journeyman/__init__.py"), re.M).group(1),
+            "CITATION.cff":
+                re.search(r'^version: (\S+)', read("CITATION.cff"),
+                          re.M).group(1),
+            ".zenodo.json":
+                json.loads(read(".zenodo.json"))["version"],
+        }
+        self.assertEqual(len(set(found.values())), 1,
+                         "version drift: " + " ".join(f"{k}={v}" for k, v
+                                                      in found.items()))
+
+    def test_changelog_names_the_current_version(self):
+        root = self._root()
+        for f in ("pyproject.toml", "CHANGELOG.md"):
+            if not os.path.exists(os.path.join(root, f)):
+                self.skipTest("not a repo checkout")
+        import re
+        v = re.search(r'^version = "([^"]+)"',
+                      open(os.path.join(root, "pyproject.toml")).read(),
+                      re.M).group(1)
+        head = open(os.path.join(root, "CHANGELOG.md")).read()[:400]
+        self.assertIn(v, head,
+                      f"CHANGELOG.md does not mention {v} near the top — a "
+                      f"release without its entry is a release nobody can read")
+
+
 if __name__ == "__main__":
     unittest.main()
 
