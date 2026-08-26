@@ -4,6 +4,7 @@ Commands:
   run       drive the grid, judge, report
   selftest  run the whole pipeline offline against a scripted fake
             endpoint — proves the bones without any model
+  upgrade   backfill `kind` into a pre-0.1.0 report.json
 
 """
 import argparse
@@ -124,6 +125,12 @@ def main(argv=None):
                         "existing run directory (e.g. after re-judging)")
     rp.add_argument("run_dir")
 
+    up = sub.add_parser("upgrade", help="backfill `kind` into a report.json "
+                        "written before the field existed (0.1.0)")
+    up.add_argument("report_json")
+    up.add_argument("--write", action="store_true",
+                    help="edit the file in place (default: print to stdout)")
+
     sub.add_parser("selftest", help="offline end-to-end pipeline check")
 
     from . import scenes  # noqa: F401 — official scenes register on import
@@ -138,6 +145,25 @@ def main(argv=None):
     if args.cmd == "selftest":
         from .selftest import selftest
         sys.exit(selftest())
+    if args.cmd == "upgrade":
+        import json as _json
+        from .report import upgrade_axes
+        with open(args.report_json) as fh:
+            rep = _json.load(fh)
+        rep, unclassified = upgrade_axes(rep)
+        text = _json.dumps(rep, indent=1, ensure_ascii=False)
+        if args.write:
+            with open(args.report_json, "w") as fh:
+                fh.write(text + "\n")
+            print(f"upgraded {args.report_json}", file=sys.stderr)
+        else:
+            print(text)
+        if unclassified:
+            print("could not classify (custom scenes? re-render from the run "
+                  "dir instead): " + ", ".join(sorted(unclassified)),
+                  file=sys.stderr)
+            sys.exit(2)
+        sys.exit(0)
     if args.cmd == "report":
         rd = RunDir.attach(args.run_dir)
         first = next(iter(rd.read_cells()), None)

@@ -91,29 +91,34 @@ came back invalid: it narrated plans instead of calling tools, which is
 itself a way to fail a process benchmark. A wider cohort (11 agents) is on the
 [leaderboard](leaderboard.md).
 
-| axis | fed by | gpt-oss-20b | mistral-small-3.2 |
-|---|---|---|---|
-| route-discipline | Closed Roads / detour | 0.0 (n=1; two cells n/a) | — |
-| wall-pricing | Closed Roads / no-way | 0.33 | — |
-| empty-measure | Assayer's Bench | 0.67 | 1.0 |
-| object-hold | Finished Cart | 0.33 | 0.67 |
-| grounding | Borrowed Story | 0.67 | 0.67 |
-| walk-coverage | maze family | 0.01 | 0.03 |
-| move-discipline | maze family | 1.0 | 0.77 |
-| self-verdict | maze family | 0.0 | 0.25 |
-| relief-page | Night Relief | 0.0 | 0.0 |
-| handoff-verification | Night Watch | 0.0 | 0.0 |
+| axis | kind | fed by | gpt-oss-20b | mistral-small-3.2 |
+|---|---|---|---|---|
+| route-discipline | judged | Closed Roads / detour | 0.0 (n=1; two cells n/a) | — |
+| wall-pricing | judged | Closed Roads / no-way | 0.33 | — |
+| empty-measure | judged | Assayer's Bench | 0.67 | 1.0 |
+| object-hold | judged | Finished Cart | 0.33 | 0.67 |
+| grounding | judged | Borrowed Story | 0.67 | 0.67 |
+| walk-coverage | counted | maze family | 0.01 | 0.03 |
+| move-discipline | counted | maze family | 1.0 | 0.77 |
+| self-verdict | counted | maze family | 0.0 | 0.25 |
+| relief-page | judged | Night Relief | 0.0 | 0.0 |
+| handoff-verification | judged | Night Watch | 0.0 | 0.0 |
 
 Two things worth noticing. No model aces the board, and the two fail
 in different rows — exactly the shape a filter should have (a scene
 every agent aces is treated as broken); the zeroed rows are not dead
 axes, they are the hard ones, and the scene pages above show what a
-positive looks like on each. And the mechanical axes (move-discipline)
+positive looks like on each. And the counted axes (move-discipline)
 sit far above the judged ones (relief-page, handoff-verification) for
 the same models: walking correctly is cheap; verifying and handing off
 are not. Each axis is fed by exactly ONE scene — a score points at a
 muscle, never a blur — so a low row tells you precisely which page to
-read.
+read. The `kind` column is not decoration: a **counted** row is a fact
+computed from replayed events, a **judged** row is a model's verdict on
+a rubric question. `report.json` carries the same label per axis, so
+anything exporting a score can keep the two apart. The table above is
+this scene set; a run with custom scenes declares its own axes, which
+is why the label travels in the report rather than living only here.
 
 ---
 **Docs:** [README](../README.md) · [scenes](scenes.md) · [grounds](grounds/service-host.md) · [run guide](run-guide.md) · [FAQ](faq.md) · [methodology](methodology.md) · [versioning](versioning.md)

@@ -507,6 +507,102 @@ class TestQualify(unittest.TestCase):
         self.assertEqual(r["axes"]["wall-pricing"]["accuracy"], 0.0)
 
 
+class ReportMatchesSchema(unittest.TestCase):
+    """The schema is the published contract (docs/versioning.md). CI is
+    stdlib-only, so this is a targeted conformance check, not a full
+    JSON-Schema validator: required keys, declared types, enums."""
+
+    def _report(self):
+        from journeyman.report import axis_scores
+        return axis_scores([
+            {"invalid": False, "seed": 1, "event_axes": {},
+             "verdicts": {"grounding": {"verdict": "grounded",
+                                        "positive": "grounded"}}},
+            {"invalid": False, "seed": 1, "verdicts": {},
+             "event_axes": {"walk-coverage": 0.5}},
+            {"invalid": False, "seed": 1, "event_axes": {},
+             "verdicts": {"object-hold": {"verdict": "na", "positive": "held",
+                                          "na_means": "not-applicable"}}},
+        ])
+
+    def _schema(self):
+        import json, os, journeyman
+        p = os.path.join(os.path.dirname(journeyman.__file__),
+                         "schema", "report.schema.json")
+        return json.load(open(p))["properties"]["axes"]["additionalProperties"]
+
+    def test_every_axis_carries_the_required_keys(self):
+        sch = self._schema()
+        for axis, body in self._report().items():
+            for key in sch["required"]:
+                self.assertIn(key, body, f"{axis} is missing {key}")
+
+    def test_kind_is_a_declared_enum_value(self):
+        allowed = self._schema()["properties"]["kind"]["enum"]
+        for axis, body in self._report().items():
+            self.assertIn(body["kind"], allowed, axis)
+
+    def test_counted_and_judged_are_told_apart(self):
+        r = self._report()
+        self.assertEqual(r["walk-coverage"]["kind"], "counted")
+        self.assertEqual(r["grounding"]["kind"], "judged")
+        # every cell not-applicable: no row survives, but a judge was there
+        self.assertEqual(r["object-hold"]["kind"], "judged")
+        self.assertIsNone(r["object-hold"]["score"])
+
+
+class UpgradesOldReports(unittest.TestCase):
+    """`kind` arrived in 0.1.0; a report written before it must be
+    fillable without a model, a run, or a guess."""
+
+    def test_kind_is_derivable_without_running_anything(self):
+        from journeyman.report import axis_kinds_from_registry
+        idx = axis_kinds_from_registry()
+        for axis in ("walk-coverage", "move-discipline", "self-verdict"):
+            self.assertEqual(idx[axis], "counted", axis)
+        for axis in ("grounding", "relief-page", "handoff-verification",
+                     "wall-pricing", "route-discipline", "object-hold",
+                     "empty-measure"):
+            self.assertEqual(idx[axis], "judged", axis)
+
+    def test_old_report_is_backfilled(self):
+        from journeyman.report import upgrade_axes
+        old = {"axes": {"grounding": {"score": 1.0, "per_seed": {}, "n": 1},
+                        "walk-coverage": {"score": 0.5, "per_seed": {}, "n": 1}}}
+        rep, unclassified = upgrade_axes(old)
+        self.assertEqual(unclassified, [])
+        self.assertEqual(rep["axes"]["grounding"]["kind"], "judged")
+        self.assertEqual(rep["axes"]["walk-coverage"]["kind"], "counted")
+
+    def test_unknown_axis_is_named_not_guessed(self):
+        from journeyman.report import upgrade_axes
+        rep, unclassified = upgrade_axes(
+            {"axes": {"a-custom-scene-axis": {"score": 1.0, "per_seed": {}, "n": 1}}})
+        self.assertEqual(unclassified, ["a-custom-scene-axis"])
+        self.assertNotIn("kind", rep["axes"]["a-custom-scene-axis"])
+
+
+    def test_upgrade_stamps_the_contract_version_when_complete(self):
+        from journeyman.report import upgrade_axes, SCHEMA_VERSION
+        rep, unclassified = upgrade_axes(
+            {"axes": {"grounding": {"score": 1.0, "per_seed": {}, "n": 1}}})
+        self.assertEqual(unclassified, [])
+        self.assertEqual(rep["schema_version"], SCHEMA_VERSION)
+
+    def test_upgrade_does_not_stamp_an_incomplete_report(self):
+        from journeyman.report import upgrade_axes
+        rep, unclassified = upgrade_axes(
+            {"axes": {"mystery-axis": {"score": 1.0, "per_seed": {}, "n": 1}}})
+        self.assertTrue(unclassified)
+        self.assertNotIn("schema_version", rep)
+
+    def test_existing_kind_is_left_alone(self):
+        from journeyman.report import upgrade_axes
+        rep, _ = upgrade_axes({"axes": {"grounding": {
+            "score": 1.0, "per_seed": {}, "n": 1, "kind": "counted"}}})
+        self.assertEqual(rep["axes"]["grounding"]["kind"], "counted")
+
+
 if __name__ == "__main__":
     unittest.main()
 

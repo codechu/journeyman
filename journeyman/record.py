@@ -6,8 +6,16 @@ rendered FROM the records written here.
 
 Cell record (cells/<cell_id>.json):
   {"cell_id", "scene", "seed", "seal", "messages", "final_text",
-   "budget", "invalid", "invalid_reason", "events", "verdicts",
-   "calls", "tokens_in", "tokens_out", "seconds"}
+   "budget", "invalid", "invalid_reason", "events", "event_axes",
+   "verdicts", "calls", "tokens_in", "tokens_out", "seconds"}
+
+  The two scoring layers arrive under SEPARATE keys, and the difference
+  is load-bearing: "verdicts" holds judged axes (a model answered a
+  rubric question; each entry carries the `positive` label it is scored
+  against), "event_axes" holds counted axes (computed from replayed
+  events by Scene.event_axes, no judge involved). Anything carrying a
+  score elsewhere must keep them apart — a counted fact presented as a
+  model's opinion, or the reverse, misstates what was measured.
 
 The seal makes a run reproducible or it is not a run:
   bench version + scene-set id + scene md5s + seeds + endpoint model.

@@ -4,8 +4,10 @@
   "title": "Journeyman report.json",
   "description": "The machine-readable result of a `journeyman run`. There is no universal standard for agent process-benchmark reports; this schema IS the contract, versioned with the tool.",
   "type": "object",
-  "required": ["seal", "judge", "self_judged", "axes", "cost"],
+  "required": ["schema_version", "seal", "judge", "self_judged", "axes", "cost"],
   "properties": {
+    "schema_version": {"type": "integer", "minimum": 1,
+      "description": "Contract version of this document, bumped only when the schema changes in a way that can break a reader — not on every release. Pin on this rather than on the package version, and stop rather than guess on an unknown value. 1 = the shape published with 0.1.0."},
     "seal": {
       "type": "object",
       "description": "The run's identity — change any field and it is a different run.",
@@ -33,7 +35,7 @@
       "description": "the profile: one entry per measured axis",
       "additionalProperties": {
         "type": "object",
-        "required": ["score", "per_seed", "n"],
+        "required": ["score", "per_seed", "n", "kind"],
         "properties": {
           "score": {"type": ["number", "null"], "minimum": 0, "maximum": 1,
                     "description": "mean over all cells feeding this axis; null when every cell was not-applicable (stimulus never occurred)"},
@@ -41,6 +43,8 @@
                        "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}},
           "n": {"type": "integer", "minimum": 0,
                 "description": "number of cells behind the score (0 when all were not-applicable)"},
+          "kind": {"type": "string", "enum": ["counted", "judged"],
+                   "description": "how the axis was scored. counted: computed programmatically from replayed events (Scene.event_axes), no judge involved \u2014 the score is a fact. judged: a model answered the rubric question and its verdict was matched against the positive label. Anything carrying a score into another system must keep this apart: a counted fact presented as a model's opinion, or the reverse, misstates what was measured."},
           "not_applicable": {"type": "integer", "minimum": 1,
                              "description": "cells excluded because the judge returned na and the axis declares na as not-applicable"}
         }

@@ -105,6 +105,24 @@ as `none`. Events say what happened; verdicts say what it was worth.)
 [`journeyman/schema/report.schema.json`](../journeyman/schema/report.schema.json)
 (JSON Schema, shipped in the package, validated in CI).
 
+## Upgrading a report written before 0.1.0
+
+`kind` (counted vs judged, per axis) became required in 0.1.0, so an older
+`report.json` does not validate against the current schema. Two ways back,
+in order of preference:
+
+    journeyman report runs/<dir>            # authoritative: re-renders from
+                                            # the cells, where the two layers
+                                            # were always separate keys
+    journeyman upgrade report.json --write  # for a bare report with no run dir
+
+The second derives the label statically from the registered scenes: an axis a
+scene declares but its rubric never asks about is computed from events, so it
+is counted. It does not guess — an axis it cannot place (a `nonstandard` run
+carrying custom scenes) is named on stderr, left without a `kind`, and the
+command exits non-zero. A guessed label is worse than a missing one: it is
+exactly the flattening the field was added to prevent.
+
 ## Reading a cell record
 
 The interesting fields of `cells/<id>.json`:
@@ -114,8 +132,12 @@ The interesting fields of `cells/<id>.json`:
   the endpoint returns it).
 - `events` — the facts: calls, wall hits, budget death, which sources
   were read, replay-derived walk metrics…
-- `verdicts` — per axis: the judge's verdict, the positive label it is
-  scored against, and the judge's raw reasoning text.
+- `verdicts` — the JUDGED axes: per axis, the judge's verdict, the
+  positive label it is scored against, and the raw reasoning text.
+- `event_axes` — the COUNTED axes: per axis, a value computed from the
+  replayed events, no judge involved. Judged and counted axes live
+  under separate keys on purpose; `report.json` labels each axis with
+  `kind` so the distinction survives export.
 - `invalid` / `invalid_reason` — a cell that failed to run (timeout,
   endpoint error) is INVALID with its reason and excluded from scores;
   it is never silently retried.

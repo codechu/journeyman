@@ -1,5 +1,56 @@
 # Changelog
 
+## 0.1.0 — 2026-08-26
+
+**Breaking:** `kind` is required in every axis entry of `report.json`, so a
+report written by an earlier version does not validate against the current
+schema. Pre-1.0 the minor digit is where a break goes (see
+[versioning](docs/versioning.md#semantic-versioning)) — the major digit is
+reserved for the 1.0 stability promise, which this is not. The bump is the
+warning; `journeyman upgrade` is the fix.
+- **`report.json` now says how each axis was scored.** Every axis carries
+  `kind: "counted" | "judged"` — counted means computed from replayed events
+  with no judge involved, judged means a model answered the rubric question.
+  Schema change: `kind` is required in each axis entry, so reports produced
+  before this release do not validate against the current schema.
+  *Why:* the distinction existed in the data (a cell keeps counted axes under
+  `event_axes` and judged ones under `verdicts`) but did not survive into the
+  report, and the report is the surface we ask integrators to build against.
+  Measured before shipping (13 sampled runs per arm, local model, gate frozen
+  first): asked to classify the three counted axes from today's report, the
+  reader scored 0/3 in 8 runs, 2/3 in 5, and 3/3 in none; with `kind` present
+  it was 3/3 in all 13. The second half of that is close to tautological — the
+  field names the answer — so the load-bearing half is the first: today's
+  report does not let a careful reader get this right.
+- **`report.json` carries `schema_version` (integer, now 1).** An integrator
+  cannot branch on the release number — the package moves for reasons that
+  never touch the report — so the contract now names its own version, bumped
+  only when the shape changes in a way that can break a reader. `upgrade`
+  stamps it too, but only when it could finish: a report with axes it could
+  not classify is left unstamped rather than declared conformant.
+- **The version-drift guard covers `journeyman/__init__.py`.** It watched
+  `pyproject.toml`, `CITATION.cff` and `.zenodo.json` but not the module that
+  `--version` prints and that every seal records — this release's bump missed
+  it, and the package would have sealed runs as 0.0.11.
+- **A way back for old reports.** `journeyman upgrade <report.json>` backfills
+  `kind` without a model, a run, or a network call: an axis a scene declares
+  but its rubric never asks about is computed from events, so it is counted.
+  Axes it cannot place — a `nonstandard` run with custom scenes — are named
+  and left alone, and the command exits non-zero rather than guessing; a guess
+  is exactly the flattening the field exists to prevent. When the run
+  directory still exists, prefer `journeyman report <run_dir>`: it re-renders
+  from the cells, where the two layers were always separate.
+- **Docs follow the same split.** The cell-record field list (`record.py`,
+  `docs/run-guide.md`) was stale and omitted `event_axes` entirely; the axis
+  table in `docs/scenes.md` gained a `kind` column; `docs/methodology.md`
+  states that `report.json` is an aggregate profile and points per-case
+  consumers at `cells/<id>.json`.
+- **The schema claim is now true.** `docs/methodology.md` said the schema was
+  "validated against real runs in CI"; nothing validated it. CI is stdlib-only,
+  so a targeted conformance test now checks required keys, the `kind` enum,
+  and that counted and judged axes come out labelled correctly — and the
+  sentence was rewritten to describe exactly that, not more.
+
 ## 0.0.11 — 2026-08-24
 - **Citable.** `CITATION.cff` (so GitHub offers "Cite this repository") and
   `.zenodo.json` (so an archived release carries our own title, abstract,

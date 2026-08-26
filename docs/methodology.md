@@ -48,6 +48,14 @@ cohort.
    go to a judge, one small call per rubric item, verdict echoed from a
    published label set. Unparsed verdicts are never silently kept.
 
+The two layers stay distinguishable after the run: in a cell record they
+arrive under separate keys (`event_axes` counted, `verdicts` judged), and
+in `report.json` every axis carries `kind: "counted" | "judged"`. This is
+not bookkeeping. A counted axis is a fact recomputed from the replay; a
+judged axis is a model's verdict that a qualified judge produced. Exporting
+one as the other misstates what was measured, so the label travels with the
+score rather than living in a table that a custom scene set would falsify.
+
 ## Judges take the exam too
 
 The judge is pluggable. The default is the endpoint itself — zero
@@ -129,14 +137,22 @@ else. So Journeyman's `report.json` is its own format — but a
 **specified, versioned one**, not an ad-hoc dump:
 
 - The contract is published as JSON Schema at
-  `journeyman/schema/report.schema.json` (shipped in the package) and
-  validated against real runs in CI.
+  `journeyman/schema/report.schema.json` (shipped in the package). CI is
+  stdlib-only by policy, so what runs there is a targeted conformance
+  check against a rendered report — required keys, declared enums, and
+  that counted and judged axes come out labelled correctly — not a full
+  JSON-Schema validator.
 - Every field carries provenance: the `seal` alone reproduces the run;
   `self_judged` / `nonstandard` make an un-comparable score
   self-declaring; `cost` is always present (or explicitly UNREPORTED).
 - Because the shape is stable and flat, converting a report into an
   MLflow/W&B run or a leaderboard row is a few lines — the axes are
-  already `{score, per_seed, n}` per metric.
+  already `{score, per_seed, n, kind}` per metric.
+- `report.json` is a **profile**, not a per-case dump: it aggregates over
+  cells. Anything needing per-case rows (one `TestCase` per scene × seed,
+  its transcript, its events, its duration) reads `cells/<id>.json` in the
+  run directory — see [versioning](versioning.md) for what that surface
+  promises.
 
 If a community standard for agent process-reports emerges, mapping onto
 it is a converter, not a rewrite: the measurements are the asset, the

@@ -112,6 +112,7 @@ with live progress the whole way. Full anatomy of a run and its files:
 | `journeyman qualify` | **the examiner's exam** — before you trust a model as `--judge`, runs it over labelled cases with known answers and grants (or refuses) a badge |
 | `journeyman selftest` | plumbing check: no model, no network — proves the pipeline end to end |
 | `journeyman report runs/<dir>` | re-render a finished run's report (e.g. after re-judging) |
+| `journeyman upgrade report.json` | backfill `kind` into a report written before 0.1.0 — no model, no network, and it refuses to guess |
 
 In `run` the student sits the exam; in `qualify` the teacher does. The
 judge is pluggable and can be a different model or provider than the
