@@ -9,3 +9,4 @@ venv/
 runs/
 .pytest_cache/
 .DS_Store
+.house-notes

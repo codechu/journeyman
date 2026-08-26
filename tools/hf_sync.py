@@ -9,8 +9,8 @@ release workflow, on the same tag that ships the package.
 The card is generated from the set's own metadata, so its case counts and its
 provenance note cannot disagree with the file next to it.
 
-  scripts/journeyman_hf_sync.py --dry-run        # render the card, upload nothing
-  scripts/journeyman_hf_sync.py                  # needs HF_TOKEN
+  tools/hf_sync.py --dry-run        # render the card, upload nothing
+  tools/hf_sync.py                  # needs HF_TOKEN
 
 Without HF_TOKEN it exits 0 after saying so: a repository that has not been
 given the secret should not fail its release.
@@ -89,7 +89,7 @@ endorsing, please open an issue on
 [the repository](https://github.com/codechu/journeyman/issues) — and if you
 read it and think it is not, that is useful to hear too.
 
-Generated from the set itself by `scripts/journeyman_hf_sync.py`.
+Generated from the set itself by `tools/hf_sync.py`.
 """
 
 
