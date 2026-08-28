@@ -13,6 +13,17 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: "3.12"}
+      # The four version records are checked against each other by the test
+      # suite, but nothing checked them against the tag being released. A tag
+      # can therefore ship a package whose version is something else entirely —
+      # the same silent mismatch that made 0.1.1 stamp its reports 0.1.0.
+      - name: tag matches the packaged version
+        run: |
+          v=$(python -c "import tomllib;print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")
+          [ "v$v" = "$GITHUB_REF_NAME" ] || {
+            echo "tag $GITHUB_REF_NAME does not match packaged version $v"; exit 1; }
+          echo "tag and package agree: $v"
+
       - run: python -m pip install build && python -m build
       # The suite runs HERE, not only in ci.yml. A tag triggers this workflow
       # directly, so a red CI run on the same commit does not stop a release:
