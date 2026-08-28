@@ -24,6 +24,23 @@ from .scene import REGISTRY
 HEARTBEAT_S = 60
 
 
+def chat_url(url):
+    """The chat/completions URL for a base that may already carry a suffix.
+
+    `list_models` has always accepted a bare host, a `/v1`, or a full
+    `/v1/chat/completions`; this did not, and appended blindly. An endpoint
+    given as `.../v1` therefore passed the model listing and 404'd on every
+    actual call — a run that completes, reports nothing, and looks like a
+    model that said nothing rather than a URL that was never reached.
+    """
+    base = url.rstrip("/")
+    if base.endswith("/chat/completions"):
+        return base
+    if base.endswith("/v1"):
+        return base + "/chat/completions"
+    return base + "/v1/chat/completions"
+
+
 class Endpoint:
     """Minimal OpenAI-compatible chat/completions client (stdlib only).
 
@@ -32,7 +49,7 @@ class Endpoint:
     """
 
     def __init__(self, url, model, api_key=None, timeout=300, params=None):
-        self.url = url.rstrip("/") + "/v1/chat/completions"
+        self.url = chat_url(url)
         self.model, self.api_key, self.timeout = model, api_key, timeout
         # sampling params are part of the AGENT definition (temperature,
         # top_p, max_tokens, ...). They merge into the body but can NEVER
