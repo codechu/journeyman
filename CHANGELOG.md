@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- **API keys can come from the environment.** `--api-key` and
+  `--judge-api-key` now default to `$JOURNEYMAN_API_KEY` and
+  `$JOURNEYMAN_JUDGE_API_KEY`. A key passed as an argument is readable by
+  every user on the machine through `ps` and stays in shell history
+  afterwards; this was noticed the direct way, with a key sitting in a
+  process listing.
+
 ## 0.1.2 — 2026-08-28
 
 - **Version stamp corrected.** 0.1.1 shipped with `pyproject.toml` bumped and

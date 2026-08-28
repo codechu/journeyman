@@ -8,6 +8,7 @@ Commands:
 
 """
 import argparse
+import os
 import sys
 
 from .driver import Endpoint, run_grid
@@ -15,6 +16,20 @@ from .judge import judge_cell
 from .record import RunDir
 from .report import render
 from . import scene as scene_mod
+
+
+def _env_key(*names):
+    """A key from the environment, so it need not be typed on a command line.
+
+    An `--api-key` argument is readable by every user on the machine through
+    `ps`, and it stays in shell history afterwards. Accepting the variable
+    costs one line and removes the most common way a key escapes.
+    """
+    for n in names:
+        v = os.environ.get(n)
+        if v:
+            return v.strip()
+    return None
 
 
 def resolve_model(endpoint, api_key):
@@ -72,12 +87,15 @@ def main(argv=None):
     r.add_argument("--model", default=None,
                    help="model id; if omitted, the endpoint is asked for its "
                         "models — the only one is used, or you pick from a list")
-    r.add_argument("--api-key", default=None)
+    r.add_argument("--api-key", default=_env_key("JOURNEYMAN_API_KEY"),
+                   help="agent endpoint key; defaults to $JOURNEYMAN_API_KEY. "
+                        "Prefer the variable: an argument is visible in `ps` "
+                        "to every user on the machine and lands in shell history")
     r.add_argument("--judge", default=None,
                    help="judge endpoint URL (default: the endpoint itself — "
                         "dev mode, scores marked NOT COMPARABLE)")
     r.add_argument("--judge-model", default=None)
-    r.add_argument("--judge-api-key", default=None,
+    r.add_argument("--judge-api-key", default=_env_key("JOURNEYMAN_JUDGE_API_KEY"),
                    help="api key for the judge endpoint (it may be a "
                         "different provider than the agent)")
     r.add_argument("--judge-params-file", default=None,
@@ -101,7 +119,11 @@ def main(argv=None):
                        "qualification exam (labelled calibration set)")
     q.add_argument("--judge", required=True)
     q.add_argument("--judge-model", required=True)
-    q.add_argument("--api-key", default=None)
+    q.add_argument("--api-key",
+                   default=_env_key("JOURNEYMAN_JUDGE_API_KEY", "JOURNEYMAN_API_KEY"),
+                   help="judge key; defaults to $JOURNEYMAN_JUDGE_API_KEY, then "
+                        "$JOURNEYMAN_API_KEY. Prefer the variable — an argument "
+                        "is visible in `ps` and in shell history")
     q.add_argument("--params-file", default=None)
     q.add_argument("--runs-dir", default="runs")
     q.add_argument("--repeats", type=int, default=3,
