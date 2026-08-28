@@ -112,7 +112,8 @@ def held_and_broke(cells):
     return held, broke
 
 
-def render(run_dir, seal, judge_label, self_judged, nonstandard=None):
+def render(run_dir, seal, judge_label, self_judged, nonstandard=None,
+           judge_meter=None):
     cells = list(run_dir.read_cells())
     axes = axis_scores(cells)
     held, broke = held_and_broke(cells)
@@ -152,7 +153,8 @@ def render(run_dir, seal, judge_label, self_judged, nonstandard=None):
     json.dump({"schema_version": SCHEMA_VERSION,
                "seal": seal, "judge": judge_label, "self_judged": self_judged,
                "nonstandard": nonstandard,
-               "axes": axes, "cost": {"calls": calls, "tokens_in": tin,
+               "axes": axes, "judge_cost": judge_meter or {},
+               "cost": {"calls": calls, "tokens_in": tin,
                                       "tokens_out": tout},
                "invalid_cells": invalid},
               open(os.path.join(run_dir.path, "report.json"), "w"),

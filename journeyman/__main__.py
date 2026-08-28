@@ -240,17 +240,23 @@ def main(argv=None):
                     agent_system=agent_system)
 
     print("--- judging phase ---")
+    judge_meter = {}
     run_dir.event("judging_start", judge=judge_label)
     for cell in list(run_dir.read_cells()):
         if cell["invalid"]:
             continue
         cls = scene_mod.REGISTRY[cell["scene"]]
-        cell["verdicts"] = judge_cell(judge_ep, cls(), cell)
+        cell["verdicts"] = judge_cell(judge_ep, cls(), cell, meter=judge_meter)
         run_dir.write_cell(cell["cell_id"], cell)
         run_dir.event("cell_judged", cell=cell["cell_id"],
                       verdicts={a: v["verdict"]
                                 for a, v in cell["verdicts"].items()})
-    run_dir.event("judging_end")
+    run_dir.event("judging_end", **judge_meter)
+    if judge_meter:
+        spent = (f" · charged {judge_meter['cost']}" if "cost" in judge_meter else "")
+        print(f"judge: {judge_meter.get('calls', 0)} calls · "
+              f"{judge_meter.get('tokens_in', 0)} in / "
+              f"{judge_meter.get('tokens_out', 0)} out tok{spent}")
     # NOTE: no composite score yet, deliberately — its weights are not
     # grounded in any measurement; an invented weight is a fabricated
     # number. Composite lands with the reference runs (TODO).
@@ -258,7 +264,8 @@ def main(argv=None):
     devs = [f"{key}={getattr(args, key)}" for key, std in STANDARD.items()
             if getattr(args, key) != std]
     print(render(run_dir, seal, judge_label, self_judged,
-                 nonstandard=", ".join(devs) if devs else None))
+                 nonstandard=", ".join(devs) if devs else None,
+                 judge_meter=judge_meter))
     print(f"report: {run_dir.path}/report.md")
 
 

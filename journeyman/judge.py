@@ -49,7 +49,15 @@ def _record_text(record, limit=60000):
     return text[-limit:]
 
 
-def judge_cell(judge_endpoint, scene, record, log=print):
+def judge_cell(judge_endpoint, scene, record, log=print, meter=None):
+    """Judge one cell. `meter`, if given, accumulates what the judging cost.
+
+    The agent side has always been metered per cell; the judge side was not,
+    which is backwards — the agent may be a local model that costs nothing to
+    call, while the judge is usually the paid half. Without this, the only way
+    to learn what a run spent is to diff an account balance afterwards and
+    hope nothing else was running.
+    """
     verdicts = {}
     for item in scene.rubric():
         prompt = JUDGE_PREAMBLE.format(
@@ -61,8 +69,20 @@ def judge_cell(judge_endpoint, scene, record, log=print):
         # (local judge timeout mid-phase discarded 24 completed cells).
         for attempt in range(3):
             try:
-                msg, _ = judge_endpoint.chat(
+                msg, usage = judge_endpoint.chat(
                     [{"role": "user", "content": prompt}], tools=[])
+                if meter is not None:
+                    meter["calls"] = meter.get("calls", 0) + 1
+                    meter["tokens_in"] = (meter.get("tokens_in", 0)
+                                          + usage.get("prompt_tokens", 0))
+                    meter["tokens_out"] = (meter.get("tokens_out", 0)
+                                           + usage.get("completion_tokens", 0))
+                    # some providers report the charge itself; keep it when
+                    # offered rather than inferring from a price list that
+                    # changes without notice
+                    if usage.get("cost") is not None:
+                        meter["cost"] = round(meter.get("cost", 0.0)
+                                              + float(usage["cost"]), 6)
                 break
             except Exception as e:
                 if attempt == 2:
