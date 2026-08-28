@@ -2,20 +2,9 @@
 
 ## Unreleased
 
-- **The judge side is metered.** Calls, tokens and — where the provider
-  reports it — the charge itself are accumulated during the judging phase,
-  printed at the end of a run and written to `report.json` as `judge_cost`.
-  Until now only the agent was counted, which is backwards: the agent may be
-  a local model that costs nothing to call, while the judge is the half that
-  is billed. Without this the only way to learn what a run spent was to diff
-  an account balance afterwards and hope nothing else was running.
-
-- **API keys can come from the environment.** `--api-key` and
-  `--judge-api-key` now default to `$JOURNEYMAN_API_KEY` and
-  `$JOURNEYMAN_JUDGE_API_KEY`. A key passed as an argument is readable by
-  every user on the machine through `ps` and stays in shell history
-  afterwards; this was noticed the direct way, with a key sitting in a
-  process listing.
+- Judging phase metered: calls, tokens and the provider's charge land in
+  `report.json` as `judge_cost`.
+- Keys read from `$JOURNEYMAN_API_KEY` / `$JOURNEYMAN_JUDGE_API_KEY`.
 
 ## 0.1.2 — 2026-08-28
 
