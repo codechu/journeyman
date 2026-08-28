@@ -14,6 +14,14 @@ jobs:
       - uses: actions/setup-python@v5
         with: {python-version: "3.12"}
       - run: python -m pip install build && python -m build
+      # The suite runs HERE, not only in ci.yml. A tag triggers this workflow
+      # directly, so a red CI run on the same commit does not stop a release:
+      # on 2026-08-28 ci failed at 19:29:49 and the release for that commit
+      # started at 19:29:52 and published. What it caught was the version
+      # drift guard — the package went out stamping its reports with a version
+      # that did not produce them. A release proves itself; it does not
+      # inherit a sibling workflow's word for it.
+      - run: python -m unittest discover -s tests
       - run: python -m journeyman selftest
       - uses: pypa/gh-action-pypi-publish@release/v1
 
