@@ -25,6 +25,27 @@ jobs:
       - run: python -m journeyman selftest
       - uses: pypa/gh-action-pypi-publish@release/v1
 
+      # The package going out is not the same as the release being visible.
+      # v0.1.1 and v0.1.2 shipped to PyPI while the Releases page still read
+      # v0.1.0, because every earlier release object had been made by hand and
+      # nothing here made one. Notes come from the tag's CHANGELOG section, so
+      # a release cannot appear without the entry that explains it.
+      - name: github release
+        env: {GH_TOKEN: "${{ github.token }}"}
+        run: |
+          v="${GITHUB_REF_NAME#v}"
+          python - "$v" > /tmp/notes.md <<'PY'
+          import re, sys
+          v = sys.argv[1]
+          text = open("CHANGELOG.md").read()
+          m = re.search(rf"^## {re.escape(v)}[^\n]*\n(.*?)(?=^## )", text, re.M | re.S)
+          sys.stdout.write((m.group(1).strip() if m else
+                            f"No CHANGELOG section for {v}.") + "\n")
+          PY
+          gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" \
+            --notes-file /tmp/notes.md || \
+          gh release edit "$GITHUB_REF_NAME" --notes-file /tmp/notes.md
+
   # The calibration set is the one artifact an outside reader wants to look at
   # without installing anything, so it goes to a dataset repo on the same tag
   # that ships the package — a card that lags the set is worse than no card.
