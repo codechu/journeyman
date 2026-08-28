@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.1 — 2026-08-28
+
+- **An endpoint given as `.../v1` now reaches the model.** `list_models` had
+  always accepted a bare host, a `/v1`, or a full `/v1/chat/completions`;
+  `Endpoint` appended the path blindly, so `--endpoint https://host/api/v1`
+  passed the model listing and then 404'd on every call. Because a cell that
+  404s is invalid rather than fatal, the run completed and reported nothing —
+  which reads as a model that said nothing, not as a URL never reached. Same
+  normalisation as `list_models`, with a test for each of the three shapes.
+
 ## 0.1.0 — 2026-08-26
 
 **Breaking:** `kind` is required in every axis entry of `report.json`, so a
