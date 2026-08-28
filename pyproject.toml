@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "journeyman-bench"
-version = "0.1.1"
+version = "0.1.2"
 description = "A process-quality benchmark for LLM agents: it grades how an agent worked, not whether it passed — and every LLM-as-a-judge sits a calibrated exam before it may score."
 readme = "README.pypi.md"
 requires-python = ">=3.10"

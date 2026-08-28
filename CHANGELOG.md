@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.2 — 2026-08-28
+
+- **Version stamp corrected.** 0.1.1 shipped with `pyproject.toml` bumped and
+  the other three version records left at 0.1.0, so a report produced by that
+  release carried `bench: "0.1.0"` in its seal — a run stamped with a version
+  that did not produce it. The repository's own drift guard catches this; it
+  was run after the tag rather than before, which is the whole reason the
+  guard exists. 0.1.1 should not be used for anything whose provenance
+  matters. No behaviour change beyond the stamp.
+
 ## 0.1.1 — 2026-08-28
 
 - **An endpoint given as `.../v1` now reaches the model.** `list_models` had
