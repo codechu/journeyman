@@ -8,7 +8,11 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     environment: pypi
-    permissions: {id-token: write, contents: read}
+    # contents: write — the last step creates the GitHub release from the
+    # tag. With contents: read it 403s AFTER the package is already on PyPI,
+    # which is the worst place to fail: the release half-happened, and the
+    # dataset job behind it never ran. (v0.2.0, 2026-08-29.)
+    permissions: {id-token: write, contents: write}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
