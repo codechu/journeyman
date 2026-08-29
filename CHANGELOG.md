@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.3 — 2026-08-30
 
 - **An empty closing turn is no longer scored as a silent agent.** A
   reasoning model spends a fixed budget thinking before it writes; when the
