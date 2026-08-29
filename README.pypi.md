@@ -38,6 +38,10 @@ ships the labels to do it with. Journeyman does three things about that:
   [registry](https://github.com/codechu/journeyman/blob/master/docs/judges.md) lists the twenty-odd configurations that did not
   qualify next to the four that did.
 
+**Where it stands:** eleven agents scored under a qualified judge, 82
+labelled cases behind the badge that let it score — and one axis whose
+noise band is still unmeasured. [Status](#status).
+
 <p align="center"><img src="https://raw.githubusercontent.com/codechu/journeyman/master/assets/terminal.svg" alt="A live journeyman run: banner, per-cell progress lines with measured ETA, judging phase, and the final profile." width="760"></p>
 
 ## Install & try
@@ -46,10 +50,10 @@ Journeyman is a CLI tool, so **pipx** is the cleanest install (isolated,
 puts `journeyman` on your PATH, and works on the externally-managed
 Python of Debian/Ubuntu/Homebrew):
 
-```
-pipx install journeyman-bench           # or: python3 -m pip install pipx
-journeyman selftest                     # offline proof, no model needed
-journeyman run --endpoint http://localhost:8080 --model my-agent
+```bash
+pipx install journeyman-bench   # or: pip install pipx
+journeyman selftest             # offline, no model
+journeyman run --endpoint http://localhost:8080
 ```
 
 `--model` is optional: leave it off and Journeyman asks the endpoint for
@@ -57,9 +61,9 @@ its models — using the only one, or listing them for you to pick.
 
 Plain `pip` works too, inside a virtualenv:
 
-```
+```bash
 python3 -m venv .venv && . .venv/bin/activate
-pip install journeyman-bench            # zero dependencies, stdlib only
+pip install journeyman-bench   # zero deps, stdlib only
 ```
 
 > If system `pip` says **`externally-managed-environment`**, that is
