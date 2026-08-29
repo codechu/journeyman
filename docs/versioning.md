@@ -111,7 +111,7 @@ What follows is this repository's shape of them.
    ships a description one revision behind), `python -m unittest discover
    -s tests`, and `python -m journeyman selftest`.
 
-4. **Commit and push to `master`**, and let CI pass — offline selftest and
+4. **Commit and push to the default branch**, and let CI pass — offline selftest and
    suite, stdlib-only, five Python versions.
 
 5. **Tag and push the tag** — `git tag vX.Y.Z && git push origin vX.Y.Z`.

@@ -44,7 +44,7 @@ This is the exam a judge sits before it is allowed to score anything in
 benchmark for LLM agents. Each case is a real agent record plus the label a
 judge should return for one axis. A judge that misses any axis does not get
 the badge; the ones that failed are published too, in the
-[judge registry](https://github.com/codechu/journeyman/blob/master/docs/judges.md).
+[judge registry](https://github.com/codechu/journeyman/blob/HEAD/docs/judges.md).
 
 ## What is in it
 

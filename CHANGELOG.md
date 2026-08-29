@@ -6,6 +6,14 @@
   It had drifted both ways at once: `tools/bump.py` came back and the guide
   never mentioned it, while a step still instructed `gh release create`
   months after the workflow began making the release from the tag.
+- **The published description no longer names a branch.** README.md is now
+  fully relative — images included — and `tools/pypi_readme.py` absolutises
+  both links and `src` attributes to the **tag** being released, so each
+  PyPI page points at the exact tree that produced its package. A published
+  description cannot be edited, so a branch named in one is load-bearing
+  forever: renaming it would break every past release page with no way to
+  repair them. Project URLs use `/blob/HEAD/`, which names no branch. A
+  test refuses any branch reference in the generated file.
 - The release notes step fails on a missing or empty changelog section
   instead of publishing "No CHANGELOG section for X." as the body; matches
   the newest section when it is the only one (the pattern required a

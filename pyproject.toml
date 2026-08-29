@@ -37,10 +37,10 @@ classifiers = [
 [project.urls]
 Homepage = "https://github.com/codechu/journeyman"
 Repository = "https://github.com/codechu/journeyman"
-Documentation = "https://github.com/codechu/journeyman/blob/master/docs/methodology.md"
-Changelog = "https://github.com/codechu/journeyman/blob/master/CHANGELOG.md"
-"Judge registry" = "https://github.com/codechu/journeyman/blob/master/docs/judges.md"
-Leaderboard = "https://github.com/codechu/journeyman/blob/master/docs/leaderboard.md"
+Documentation = "https://github.com/codechu/journeyman/blob/HEAD/docs/methodology.md"
+Changelog = "https://github.com/codechu/journeyman/blob/HEAD/CHANGELOG.md"
+"Judge registry" = "https://github.com/codechu/journeyman/blob/HEAD/docs/judges.md"
+Leaderboard = "https://github.com/codechu/journeyman/blob/HEAD/docs/leaderboard.md"
 Issues = "https://github.com/codechu/journeyman/issues"
 
 [project.scripts]

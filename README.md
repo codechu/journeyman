@@ -1,4 +1,4 @@
-<p align="center"><img src="https://raw.githubusercontent.com/codechu/journeyman/master/assets/banner.jpg" alt="A journeyman raises a lantern over a stone labyrinth — ledger, sounding-stones and a maze-sealed tally on the bench." width="100%"></p>
+<p align="center"><img src="assets/banner.jpg" alt="A journeyman raises a lantern over a stone labyrinth — ledger, sounding-stones and a maze-sealed tally on the bench." width="100%"></p>
 
 # Journeyman
 
@@ -42,7 +42,7 @@ ships the labels to do it with. Journeyman does three things about that:
 labelled cases behind the badge that let it score — and one axis whose
 noise band is still unmeasured. [Status](#status).
 
-<p align="center"><img src="https://raw.githubusercontent.com/codechu/journeyman/master/assets/terminal.svg" alt="A live journeyman run: banner, per-cell progress lines with measured ETA, judging phase, and the final profile." width="760"></p>
+<p align="center"><img src="assets/terminal.svg" alt="A live journeyman run: banner, per-cell progress lines with measured ETA, judging phase, and the final profile." width="760"></p>
 
 ## Install & try
 
@@ -274,7 +274,7 @@ journeyman/
 
 ---
 
-<p align="center"><img src="https://raw.githubusercontent.com/codechu/journeyman/master/assets/icon.jpg" alt="Journeyman guild seal — a maze forming the letter J" width="96"></p>
+<p align="center"><img src="assets/icon.jpg" alt="Journeyman guild seal — a maze forming the letter J" width="96"></p>
 
 Contributing: [CONTRIBUTING.md](CONTRIBUTING.md) · Versioning: [docs/versioning.md](docs/versioning.md) · Changelog: [CHANGELOG.md](CHANGELOG.md) · Licensed under the [Apache License 2.0](LICENSE).
 

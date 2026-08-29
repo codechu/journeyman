@@ -12,28 +12,54 @@ PyPI page one revision behind, and only a reader would notice.
     tools/pypi_readme.py           # rewrite README.pypi.md
     tools/pypi_readme.py --check   # exit 1 if it is out of date
 
-The transformation is the whole contract: a link target that is not a
-URL and not a bare fragment is a repository path, and gets BLOB in
-front of it. tests/test_readme_pypi.py runs --check.
+The transformation is the whole contract: a target that is not a URL and
+not a bare fragment is a repository path, and gets an absolute prefix at
+**the tag being released** — never a branch. A branch name inside a
+published description makes the branch load-bearing forever, because the
+description cannot be edited afterwards.
 """
 import pathlib
 import re
 import sys
 
-BLOB = "https://github.com/codechu/journeyman/blob/master/"
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SRC = ROOT / "README.md"
 DST = ROOT / "README.pypi.md"
 
 
-def render(text):
-    def absolute(m):
-        target = m.group(1)
-        if target.startswith(("http://", "https://", "mailto:", "#")):
-            return m.group(0)
-        return "](" + BLOB + target + ")"
+def ref():
+    """The tag this version will be released under.
 
-    return re.sub(r"\]\(([^)]+)\)", absolute, text)
+    Not a branch. A published description cannot be edited, so a branch
+    name in it makes the branch load-bearing forever: rename it and every
+    image on every past release page breaks, with no way to repair them.
+    A tag is immutable, and it also makes each description point at the
+    exact tree that produced the package.
+    """
+    version = re.search(r'(?m)^version = "([^"]+)"',
+                        (ROOT / "pyproject.toml").read_text()).group(1)
+    return "v" + version
+
+
+def render(text, ref_=None):
+    r = ref_ or ref()
+    blob = f"https://github.com/codechu/journeyman/blob/{r}/"
+    raw = f"https://raw.githubusercontent.com/codechu/journeyman/{r}/"
+
+    def local(target):
+        return not target.startswith(("http://", "https://", "mailto:", "#"))
+
+    def link(m):
+        return m.group(0) if not local(m.group(1)) else "](" + blob + m.group(1) + ")"
+
+    def src(m):
+        # Images are HTML here (centred), so they never matched the markdown
+        # rewrite and were absolute in the source instead — which is how the
+        # branch name got into the published description in the first place.
+        return m.group(0) if not local(m.group(2)) else f'{m.group(1)}="{raw}{m.group(2)}"'
+
+    text = re.sub(r"\]\(([^)]+)\)", link, text)
+    return re.sub(r'\b(src|href)="([^"]+)"', src, text)
 
 
 def main(argv):
