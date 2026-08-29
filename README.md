@@ -277,3 +277,5 @@ journeyman/
 <p align="center"><img src="https://raw.githubusercontent.com/codechu/journeyman/master/assets/icon.jpg" alt="Journeyman guild seal — a maze forming the letter J" width="96"></p>
 
 Contributing: [CONTRIBUTING.md](CONTRIBUTING.md) · Versioning: [docs/versioning.md](docs/versioning.md) · Changelog: [CHANGELOG.md](CHANGELOG.md) · Licensed under the [Apache License 2.0](LICENSE).
+
+Part of [Codechu](https://github.com/codechu).
