@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Same Cells, Three Verdicts</title>
+<meta name="description" content="One recording of eleven agents, graded three times: how much of a benchmark score comes from the judge reading it, and how much from the questions asked.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Same Cells, Three Verdicts">
+<meta property="og:description" content="One recording of eleven agents, graded three times: how much of a benchmark score comes from the judge reading it, and how much from the questions asked.">
+<meta property="og:url" content="https://codechu.github.io/journeyman/">
+<meta property="og:image" content="https://codechu.github.io/journeyman/ablation.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --paper:#F3F4F2; --panel:#FBFCFB; --ink:#101418; --ink-2:#48565F; --ink-3:#79868F;
+    --rule:#DCE0DD; --rule-strong:#B9C1BD;
+    --judge:#1B6FA8; --rubric:#C06014; --judge-soft:#1B6FA81f; --rubric-soft:#C060141f;
+    --shadow:0 1px 2px rgba(16,20,24,.05), 0 8px 24px rgba(16,20,24,.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#14171A; --panel:#1B1F23; --ink:#E7EBEC; --ink-2:#A9B4BA; --ink-3:#7C888F;
+      --rule:#2A3036; --rule-strong:#3B444B;
+      --judge:#4C9CD0; --rubric:#C87C33; --judge-soft:#4C9CD024; --rubric-soft:#C87C3324;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#14171A; --panel:#1B1F23; --ink:#E7EBEC; --ink-2:#A9B4BA; --ink-3:#7C888F;
+    --rule:#2A3036; --rule-strong:#3B444B;
+    --judge:#4C9CD0; --rubric:#C87C33; --judge-soft:#4C9CD024; --rubric-soft:#C87C3324;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:"Public Sans","Helvetica Neue",Arial,sans-serif;
+    font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:940px; margin:0 auto; padding:56px 24px 80px; display:flex; flex-direction:column; gap:44px}
+
+  .eyebrow{
+    font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:12px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--ink-3);
+  }
+  h1{
+    font-family:Newsreader,Georgia,serif; font-weight:600; font-size:clamp(34px,5.4vw,54px);
+    line-height:1.06; letter-spacing:-.015em; margin:14px 0 0; text-wrap:balance; max-width:16ch;
+  }
+  .standfirst{
+    font-family:Newsreader,Georgia,serif; font-size:clamp(18px,2.2vw,21px); line-height:1.5;
+    color:var(--ink-2); margin:18px 0 0; max-width:62ch;
+  }
+  .standfirst em{font-style:italic; color:var(--ink)}
+
+  .masthead{border-bottom:1px solid var(--rule); padding-bottom:34px}
+  .credit{
+    display:flex; flex-wrap:wrap; gap:8px 22px; margin-top:24px;
+    font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:12.5px; color:var(--ink-3);
+  }
+  .credit b{font-weight:500; color:var(--ink-2)}
+
+  section{display:flex; flex-direction:column; gap:20px}
+  h2{
+    font-family:Newsreader,Georgia,serif; font-weight:600; font-size:26px; line-height:1.2;
+    margin:0; letter-spacing:-.01em;
+  }
+  .lede{color:var(--ink-2); margin:0; max-width:66ch}
+
+  /* ---------- chart ---------- */
+  .chart{
+    background:var(--panel); border:1px solid var(--rule); border-radius:4px;
+    padding:26px 26px 18px; box-shadow:var(--shadow); overflow-x:auto;
+  }
+  .legend{display:flex; gap:24px; flex-wrap:wrap; margin-bottom:24px}
+  .key{display:flex; align-items:center; gap:9px; font-size:14px; color:var(--ink-2)}
+  .swatch{width:12px; height:12px; border-radius:2px; flex:none}
+  .key b{color:var(--ink); font-weight:600}
+  .key span{color:var(--ink-3); font-family:"IBM Plex Mono",monospace; font-size:12px}
+
+  .plot{min-width:560px}
+  .row{
+    display:grid; grid-template-columns:158px 1fr; gap:18px; align-items:center;
+    padding:11px 0; border-top:1px solid var(--rule);
+  }
+  .row:first-of-type{border-top:none}
+  .axname{
+    font-family:"IBM Plex Mono",monospace; font-size:12.5px; color:var(--ink);
+    line-height:1.35; word-break:break-word;
+  }
+  .axname i{display:block; font-style:normal; font-size:11px; color:var(--ink-3); letter-spacing:.02em}
+
+  .track{position:relative; height:44px}
+  .zero{
+    position:absolute; left:50%; top:-11px; bottom:-11px; width:1px; background:var(--rule-strong);
+  }
+  .bar{
+    position:absolute; height:13px; border-radius:0 3px 3px 0; cursor:default;
+    transition:filter .12s ease;
+  }
+  .bar.neg{border-radius:3px 0 0 3px}
+  .bar.judge{background:var(--judge); top:4px}
+  .bar.rubric{background:var(--rubric); top:26px}
+  .bar:hover,.bar:focus-visible{filter:brightness(1.12)}
+  .bar:focus-visible{outline:2px solid var(--ink); outline-offset:2px}
+  .val{
+    position:absolute; font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-2);
+    white-space:nowrap; font-variant-numeric:tabular-nums;
+  }
+  .val.judge{top:2px} .val.rubric{top:24px}
+  .nil{color:var(--ink-3)}
+
+  .scale{
+    display:grid; grid-template-columns:158px 1fr; gap:18px; margin-top:6px;
+    font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-3);
+  }
+  .ticks{position:relative; height:20px}
+  .ticks span{position:absolute; transform:translateX(-50%)}
+
+  /* ---------- callout ---------- */
+  .callout{
+    border-left:3px solid var(--rule-strong); padding:4px 0 4px 20px; max-width:66ch;
+  }
+  .callout p{margin:0; color:var(--ink-2)}
+  .callout strong{color:var(--ink)}
+
+  /* ---------- tiles ---------- */
+  .tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px}
+  .tile{
+    background:var(--panel); border:1px solid var(--rule); border-radius:4px; padding:20px;
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .tile .num{
+    font-family:Newsreader,Georgia,serif; font-size:40px; line-height:1; letter-spacing:-.02em;
+    font-variant-numeric:tabular-nums;
+  }
+  .tile .cap{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-3); letter-spacing:.02em}
+  .tile p{margin:0; font-size:14.5px; color:var(--ink-2)}
+
+  /* ---------- table ---------- */
+  details{border-top:1px solid var(--rule); padding-top:16px}
+  summary{cursor:pointer; font-size:14px; color:var(--ink-2); font-family:"IBM Plex Mono",monospace}
+  summary:focus-visible{outline:2px solid var(--ink); outline-offset:3px}
+  .tablewrap{overflow-x:auto; margin-top:16px}
+  table{border-collapse:collapse; width:100%; font-size:13.5px; min-width:520px}
+  th,td{text-align:right; padding:8px 12px; border-bottom:1px solid var(--rule); font-variant-numeric:tabular-nums}
+  th:first-child,td:first-child{text-align:left; font-family:"IBM Plex Mono",monospace; font-size:12.5px}
+  thead th{color:var(--ink-3); font-weight:500; font-size:12px; letter-spacing:.04em; text-transform:uppercase}
+
+  footer{
+    border-top:1px solid var(--rule); padding-top:26px; color:var(--ink-3); font-size:13.5px;
+    display:flex; flex-direction:column; gap:12px;
+  }
+  footer b{color:var(--ink-2); font-weight:500}
+  code{font-family:"IBM Plex Mono",monospace; font-size:12.5px; color:var(--ink-2)}
+  a{color:inherit; text-underline-offset:3px}
+
+  .exports{
+    display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:20px;
+    padding-top:16px; border-top:1px solid var(--rule);
+  }
+  .exports button{
+    font-family:"IBM Plex Mono",monospace; font-size:12px; letter-spacing:.03em;
+    color:var(--ink-2); background:transparent; border:1px solid var(--rule-strong);
+    border-radius:3px; padding:7px 12px; cursor:pointer;
+  }
+  .exports button:hover{color:var(--ink); border-color:var(--ink-3)}
+  .exports button:focus-visible{outline:2px solid var(--ink); outline-offset:2px}
+  .exports .note{font-size:12px; color:var(--ink-3)}
+  #tip{
+    position:fixed; z-index:9; pointer-events:none; opacity:0; transition:opacity .1s ease;
+    background:var(--ink); color:var(--paper); padding:8px 11px; border-radius:3px;
+    font-size:12.5px; line-height:1.45; max-width:260px; box-shadow:var(--shadow);
+  }
+  #tip b{font-family:"IBM Plex Mono",monospace; font-weight:500}
+  @media (prefers-reduced-motion:reduce){*{transition:none !important}}
+  @media (max-width:640px){
+    .row,.scale{grid-template-columns:1fr; gap:6px}
+    .plot{min-width:440px}
+  }
+
+  .exports{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:20px;
+    padding-top:16px; border-top:1px solid var(--rule)}
+  .exports a{font-family:"IBM Plex Mono",monospace; font-size:12px; letter-spacing:.03em;
+    color:var(--ink-2); border:1px solid var(--rule-strong); border-radius:3px;
+    padding:7px 12px; text-decoration:none}
+  .exports a:hover{color:var(--ink); border-color:var(--ink-3)}
+  .exports .note{font-size:12px; color:var(--ink-3)}
+  .sitenav{display:flex; justify-content:space-between; align-items:baseline; gap:16px;
+    flex-wrap:wrap; margin-bottom:6px}
+  .sitenav a{font-family:"IBM Plex Mono",monospace; font-size:12.5px; color:var(--ink-3);
+    text-decoration:none; border-bottom:1px solid var(--rule-strong)}
+  .sitenav a:hover{color:var(--ink)}
+  footer .links{display:flex; gap:18px; flex-wrap:wrap; margin-top:4px}
+  footer .links a{font-family:"IBM Plex Mono",monospace; font-size:12.5px; color:var(--ink-2)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="sitenav">
+    <span class="eyebrow">journeyman · a process-quality benchmark</span>
+    <a href="https://github.com/codechu/journeyman">the repository →</a>
+  </nav>
+
+  <header class="masthead">
+    <div class="eyebrow">journeyman · cohort 1 · ablation</div>
+    <h1>Same cells, three verdicts</h1>
+    <p class="standfirst">Eleven agents walked the same eight scenes. Nothing was re-run — the recorded
+      cells were graded three times, changing <em>who reads</em> and <em>what is asked</em> one at a
+      time. On one axis the questions moved the score by 0.40. On another, the reader moved it by 0.31.
+      On a third, neither moved anything at all.</p>
+    <div class="credit">
+      <span><b>11</b> agents</span>
+      <span><b>8</b> scenes × <b>3</b> seeds</span>
+      <span><b>3</b> gradings of one recording</span>
+      <span>sealed runs, no hand-entered numbers</span>
+    </div>
+  </header>
+
+  <section>
+    <h2>What moved the number: the reader, or the question?</h2>
+    <p class="lede">Each bar is the mean change across the eleven agents on a 0–1 axis. Blue holds the
+      questions fixed and swaps the judge. Orange holds the judge fixed and changes the questions.
+      A bar to the right means scores rose.</p>
+
+    <div class="chart">
+      <div class="legend">
+        <span class="key"><span class="swatch" style="background:var(--judge)"></span>
+          <b>Judge swapped</b> <span>questions fixed (v2.2)</span></span>
+        <span class="key"><span class="swatch" style="background:var(--rubric)"></span>
+          <b>Questions changed</b> <span>judge fixed (self-hosted)</span></span>
+      </div>
+      <div class="plot" id="plot"></div>
+      <div class="scale">
+        <div></div>
+        <div class="ticks" id="ticks"></div>
+      </div>
+      <div class="exports">
+        <a href="ablation.csv" download>Numbers (CSV)</a>
+        <a href="ablation.svg" download>Chart (SVG)</a>
+        <span class="note">regenerated from the sealed reports, not hand-entered</span>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><strong>handoff-verification is the null control</strong> — the axis the ablation was built
+        around. It moved on 0 of 10 agents in both comparisons. An instrument that returns zero where
+        zero is expected is the reason the other two numbers can be read at all.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>What none of them can do</h2>
+    <p class="lede">Scored by the self-hosted judge under the current questions. These are floors, not
+      rankings — three seeds per scene is coarse.</p>
+    <div class="tiles">
+      <div class="tile">
+        <div class="cap">empty-measure</div>
+        <div class="num">9<span style="font-size:22px; color:var(--ink-3)">/11</span></div>
+        <p>score <b>0.00</b>. Best on the board is 0.33. Reporting that a measurement came back empty —
+          rather than quietly moving on — is the hardest axis, and model strength does not buy it.</p>
+      </div>
+      <div class="tile">
+        <div class="cap">relief-page</div>
+        <div class="num">0.33</div>
+        <p>the best score anyone reached. No agent reliably leaves a page a stranger could pick up and
+          continue from.</p>
+      </div>
+      <div class="tile">
+        <div class="cap">handoff-verification</div>
+        <div class="num">1<span style="font-size:22px; color:var(--ink-3)">/11</span></div>
+        <p>one agent verified the note it was handed, in all three seeds. Six others scored 0.00 —
+          they acted on a page nobody checked.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <details>
+      <summary>Table view — every number in the chart</summary>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr><th>axis</th><th>judge swapped</th><th>agents changed</th><th>questions changed</th><th>agents changed</th></tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <footer>
+    <p><b>Method.</b> One recording, graded three times: (A) an external judge under the older
+      questions, (B) the self-hosted judge under those same older questions, (C) the self-hosted judge
+      under the current questions. Judge effect = B − A. Question effect = C − B. Bars are means over
+      the agents present in both gradings of that comparison; “agents changed” counts non-zero
+      differences.</p>
+    <p><b>Caveats.</b> Three seeds per scene — coarse floors, not rankings between neighbours. One
+      agent’s run is partial (17 of 24 cells, stopped on cost) and another lost 9 cells by narrating
+      plans instead of calling tools. No per-axis noise band has been measured, so small bars are not
+      claims. <code>route-discipline</code> is graded in a single cell across the whole cohort and is
+      flat for that reason.</p>
+    <div class="links"><a href="https://github.com/codechu/journeyman">repository</a><a href="https://github.com/codechu/journeyman/blob/main/docs/leaderboard.md">the full board</a><a href="https://github.com/codechu/journeyman/tree/main/runs-archive">sealed runs</a><a href="https://github.com/codechu/journeyman/blob/main/docs/methodology.md">methodology</a></div>
+    <p><b>Provenance.</b> Every figure is computed from sealed <code>report.json</code> files in
+      <code>runs-archive/</code>; the board they come from is generated by script, with no
+      hand-entered numbers.</p>
+  </footer>
+</div>
+
+<div id="tip" role="status" aria-live="polite"></div>
+
+<script>
+  const DATA = [
+    {ax:"wall-pricing",       note:"pricing a wall you hit", judge:0.167, jn:"4/10", rubric:-0.400, rn:"7/10"},
+    {ax:"grounding",          note:"claims tied to what was seen", judge:0.305, jn:"5/11", rubric:-0.061, rn:"4/11"},
+    {ax:"object-hold",        note:"holding an object across turns", judge:-0.061, jn:"2/11", rubric:-0.001, rn:"6/11"},
+    {ax:"empty-measure",      note:"reporting an empty result", judge:-0.030, jn:"1/11", rubric:-0.031, rn:"3/11"},
+    {ax:"relief-page",        note:"a page a stranger can continue", judge:-0.034, jn:"1/10", rubric:0.000, rn:"0/10"},
+    {ax:"handoff-verification",note:"checking the note you were handed", judge:0.000, jn:"0/10", rubric:0.000, rn:"0/10"},
+    {ax:"route-discipline",   note:"one graded cell only", judge:0.000, jn:"0/1", rubric:0.000, rn:"0/1"}
+  ];
+  const DOM = 0.45;                       // ± domain
+  const pct = v => (Math.abs(v) / DOM) * 50;
+  const fmt = v => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(3);
+
+  const plot = document.getElementById("plot");
+  DATA.forEach(d => {
+    const row = document.createElement("div");
+    row.className = "row";
+    row.innerHTML = `<div class="axname">${d.ax}<i>${d.note}</i></div>`;
+    const track = document.createElement("div");
+    track.className = "track";
+    track.innerHTML = '<div class="zero"></div>';
+    [["judge", d.judge, d.jn, "Judge swapped, questions fixed"],
+     ["rubric", d.rubric, d.rn, "Questions changed, judge fixed"]].forEach(([k, v, n, label]) => {
+      const w = pct(v);
+      if (Math.abs(v) > 0.0005) {
+        const bar = document.createElement("div");
+        bar.className = "bar " + k + (v < 0 ? " neg" : "");
+        bar.style.width = w + "%";
+        bar.style.left = v < 0 ? (50 - w) + "%" : "50%";
+        bar.tabIndex = 0;
+        bar.dataset.tip = `<b>${d.ax}</b><br>${label}<br><b>${fmt(v)}</b> mean · ${n} agents changed`;
+        track.appendChild(bar);
+      }
+      const val = document.createElement("div");
+      val.className = "val " + k + (Math.abs(v) > 0.0005 ? "" : " nil");
+      val.textContent = Math.abs(v) > 0.0005 ? fmt(v) : "0.000";
+      val.style.left = v < 0 ? "calc(" + (50 - w) + "% - 8px)" : "calc(" + (50 + w) + "% + 8px)";
+      if (v < 0) val.style.transform = "translateX(-100%)";
+      track.appendChild(val);
+    });
+    row.appendChild(track);
+    plot.appendChild(row);
+  });
+
+  const ticks = document.getElementById("ticks");
+  [[-0.4, "−0.40"], [-0.2, "−0.20"], [0, "0"], [0.2, "+0.20"], [0.4, "+0.40"]].forEach(([v, t]) => {
+    const s = document.createElement("span");
+    s.textContent = t;
+    s.style.left = (50 + (v / DOM) * 50) + "%";
+    ticks.appendChild(s);
+  });
+
+  const tbody = document.getElementById("tbody");
+  DATA.forEach(d => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${d.ax}</td><td>${fmt(d.judge)}</td><td>${d.jn}</td><td>${fmt(d.rubric)}</td><td>${d.rn}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  const tip = document.getElementById("tip");
+  const show = e => {
+    const el = e.target.closest(".bar");
+    if (!el) return;
+    tip.innerHTML = el.dataset.tip;
+    tip.style.opacity = "1";
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX || r.left + r.width / 2), y = r.top;
+    tip.style.left = Math.min(x + 14, innerWidth - 280) + "px";
+    tip.style.top = Math.max(y - 8, 8) + "px";
+  };
+  const hide = () => { tip.style.opacity = "0"; };
+  plot.addEventListener("mousemove", show);
+  plot.addEventListener("mouseleave", hide);
+  plot.addEventListener("focusin", show);
+  plot.addEventListener("focusout", hide);
+
+</script>
+</body>
+</html>
