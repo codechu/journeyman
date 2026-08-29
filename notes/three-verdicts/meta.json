@@ -1,0 +1,10 @@
+{
+  "title": "Same cells, three verdicts",
+  "date": "2026-08-30",
+  "summary": "One recording of eleven agents, graded three times: how much of a benchmark score is the judge reading it, and how much the questions asked.",
+  "assets": [
+    "ablation.svg",
+    "ablation.csv",
+    "ablation.png"
+  ]
+}

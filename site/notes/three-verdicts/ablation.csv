@@ -1,0 +1,13 @@
+axis,judge_swapped_mean,judge_agents_changed,questions_changed_mean,questions_agents_changed
+wall-pricing,0.167,4/10,-0.400,7/10
+grounding,0.305,5/11,-0.061,4/11
+object-hold,-0.061,2/11,-0.001,6/11
+empty-measure,-0.030,1/11,-0.031,3/11
+relief-page,-0.034,1/10,0.000,0/10
+handoff-verification,0.000,0/10,0.000,0/10
+route-discipline,0.000,0/1,0.000,0/1
+
+# journeyman cohort 1 - one recording of 11 agents graded three times
+# judge effect = self-hosted judge minus external judge, questions fixed
+# question effect = current questions minus older questions, judge fixed
+# source: sealed report.json files under runs-archive/

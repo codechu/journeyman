@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Same cells, three verdicts</title>
+<meta name="description" content="One recording of eleven agents, graded three times: how much of a benchmark score is the judge reading it, and how much the questions asked.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Same cells, three verdicts">
+<meta property="og:description" content="One recording of eleven agents, graded three times: how much of a benchmark score is the judge reading it, and how much the questions asked.">
+<meta property="og:url" content="https://codechu.github.io/journeyman/notes/three-verdicts/">
+<meta property="og:image" content="https://codechu.github.io/journeyman/notes/three-verdicts/ablation.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+<div class="wrap">
+  <nav class="sitenav">
+    <a href="../../">journeyman</a>
+    <span class="navlinks"><a href="../../notes/">notes</a><a href="https://github.com/codechu/journeyman">repository</a></span>
+  </nav>
+  <header class="masthead">
+    <div class="eyebrow">journeyman · cohort 1 · ablation</div>
+    <h1>Same cells, three verdicts</h1>
+    <p class="standfirst">Eleven agents walked the same eight scenes. Nothing was re-run — the recorded
+      cells were graded three times, changing <em>who reads</em> and <em>what is asked</em> one at a
+      time. On one axis the questions moved the score by 0.40. On another, the reader moved it by 0.31.
+      On a third, neither moved anything at all.</p>
+    <div class="credit">
+      <span><b>11</b> agents</span>
+      <span><b>8</b> scenes × <b>3</b> seeds</span>
+      <span><b>3</b> gradings of one recording</span>
+      <span>sealed runs, no hand-entered numbers</span>
+    </div>
+  </header>
+
+  <section>
+    <h2>What moved the number: the reader, or the question?</h2>
+    <p class="lede">Each bar is the mean change across the eleven agents on a 0–1 axis. Blue holds the
+      questions fixed and swaps the judge. Orange holds the judge fixed and changes the questions.
+      A bar to the right means scores rose.</p>
+
+    <div class="chart">
+      <div class="legend">
+        <span class="key"><span class="swatch" style="background:var(--judge)"></span>
+          <b>Judge swapped</b> <span>questions fixed (v2.2)</span></span>
+        <span class="key"><span class="swatch" style="background:var(--rubric)"></span>
+          <b>Questions changed</b> <span>judge fixed (self-hosted)</span></span>
+      </div>
+      <div class="plot" id="plot"></div>
+      <div class="scale">
+        <div></div>
+        <div class="ticks" id="ticks"></div>
+      </div>
+      <div class="exports">
+        <a href="ablation.csv" download>Numbers (CSV)</a>
+        <a href="ablation.svg" download>Chart (SVG)</a>
+        <span class="note">regenerated from the sealed reports, not hand-entered</span>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><strong>handoff-verification is the null control</strong> — the axis the ablation was built
+        around. It moved on 0 of 10 agents in both comparisons. An instrument that returns zero where
+        zero is expected is the reason the other two numbers can be read at all.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>What none of them can do</h2>
+    <p class="lede">Scored by the self-hosted judge under the current questions. These are floors, not
+      rankings — three seeds per scene is coarse.</p>
+    <div class="tiles">
+      <div class="tile">
+        <div class="cap">empty-measure</div>
+        <div class="num">9<span style="font-size:22px; color:var(--ink-3)">/11</span></div>
+        <p>score <b>0.00</b>. Best on the board is 0.33. Reporting that a measurement came back empty —
+          rather than quietly moving on — is the hardest axis, and model strength does not buy it.</p>
+      </div>
+      <div class="tile">
+        <div class="cap">relief-page</div>
+        <div class="num">0.33</div>
+        <p>the best score anyone reached. No agent reliably leaves a page a stranger could pick up and
+          continue from.</p>
+      </div>
+      <div class="tile">
+        <div class="cap">handoff-verification</div>
+        <div class="num">1<span style="font-size:22px; color:var(--ink-3)">/11</span></div>
+        <p>one agent verified the note it was handed, in all three seeds. Six others scored 0.00 —
+          they acted on a page nobody checked.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <details>
+      <summary>Table view — every number in the chart</summary>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr><th>axis</th><th>judge swapped</th><th>agents changed</th><th>questions changed</th><th>agents changed</th></tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <footer>
+    <p><b>Method.</b> One recording, graded three times: (A) an external judge under the older
+      questions, (B) the self-hosted judge under those same older questions, (C) the self-hosted judge
+      under the current questions. Judge effect = B − A. Question effect = C − B. Bars are means over
+      the agents present in both gradings of that comparison; “agents changed” counts non-zero
+      differences.</p>
+    <p><b>Caveats.</b> Three seeds per scene — coarse floors, not rankings between neighbours. One
+      agent’s run is partial (17 of 24 cells, stopped on cost) and another lost 9 cells by narrating
+      plans instead of calling tools. No per-axis noise band has been measured, so small bars are not
+      claims. <code>route-discipline</code> is graded in a single cell across the whole cohort and is
+      flat for that reason.</p>
+    <div class="links"><a href="https://github.com/codechu/journeyman">repository</a><a href="https://github.com/codechu/journeyman/blob/main/docs/leaderboard.md">the full board</a><a href="https://github.com/codechu/journeyman/tree/main/runs-archive">sealed runs</a><a href="https://github.com/codechu/journeyman/blob/main/docs/methodology.md">methodology</a></div>
+    <p><b>Provenance.</b> Every figure is computed from sealed <code>report.json</code> files in
+      <code>runs-archive/</code>; the board they come from is generated by script, with no
+      hand-entered numbers.</p>
+  </footer>
+
+<script>
+  const DATA = [
+    {ax:"wall-pricing",       note:"pricing a wall you hit", judge:0.167, jn:"4/10", rubric:-0.400, rn:"7/10"},
+    {ax:"grounding",          note:"claims tied to what was seen", judge:0.305, jn:"5/11", rubric:-0.061, rn:"4/11"},
+    {ax:"object-hold",        note:"holding an object across turns", judge:-0.061, jn:"2/11", rubric:-0.001, rn:"6/11"},
+    {ax:"empty-measure",      note:"reporting an empty result", judge:-0.030, jn:"1/11", rubric:-0.031, rn:"3/11"},
+    {ax:"relief-page",        note:"a page a stranger can continue", judge:-0.034, jn:"1/10", rubric:0.000, rn:"0/10"},
+    {ax:"handoff-verification",note:"checking the note you were handed", judge:0.000, jn:"0/10", rubric:0.000, rn:"0/10"},
+    {ax:"route-discipline",   note:"one graded cell only", judge:0.000, jn:"0/1", rubric:0.000, rn:"0/1"}
+  ];
+  const DOM = 0.45;                       // ± domain
+  const pct = v => (Math.abs(v) / DOM) * 50;
+  const fmt = v => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(3);
+
+  const plot = document.getElementById("plot");
+  DATA.forEach(d => {
+    const row = document.createElement("div");
+    row.className = "row";
+    row.innerHTML = `<div class="axname">${d.ax}<i>${d.note}</i></div>`;
+    const track = document.createElement("div");
+    track.className = "track";
+    track.innerHTML = '<div class="zero"></div>';
+    [["judge", d.judge, d.jn, "Judge swapped, questions fixed"],
+     ["rubric", d.rubric, d.rn, "Questions changed, judge fixed"]].forEach(([k, v, n, label]) => {
+      const w = pct(v);
+      if (Math.abs(v) > 0.0005) {
+        const bar = document.createElement("div");
+        bar.className = "bar " + k + (v < 0 ? " neg" : "");
+        bar.style.width = w + "%";
+        bar.style.left = v < 0 ? (50 - w) + "%" : "50%";
+        bar.tabIndex = 0;
+        bar.dataset.tip = `<b>${d.ax}</b><br>${label}<br><b>${fmt(v)}</b> mean · ${n} agents changed`;
+        track.appendChild(bar);
+      }
+      const val = document.createElement("div");
+      const inside = w > 30;                 // long bars carry their label within
+      val.className = "val " + k + (Math.abs(v) > 0.0005 ? "" : " nil") + (inside ? " in" : "");
+      val.textContent = Math.abs(v) > 0.0005 ? fmt(v) : "0.000";
+      if (inside) {
+        val.style.left = v < 0 ? "calc(" + (50 - w) + "% + 8px)" : "calc(" + (50 + w) + "% - 8px)";
+        if (v > 0) val.style.transform = "translateX(-100%)";
+      } else {
+        val.style.left = v < 0 ? "calc(" + (50 - w) + "% - 8px)" : "calc(" + (50 + w) + "% + 8px)";
+        if (v < 0) val.style.transform = "translateX(-100%)";
+      }
+      track.appendChild(val);
+    });
+    row.appendChild(track);
+    plot.appendChild(row);
+  });
+
+  const ticks = document.getElementById("ticks");
+  [[-0.4, "−0.40"], [-0.2, "−0.20"], [0, "0"], [0.2, "+0.20"], [0.4, "+0.40"]].forEach(([v, t]) => {
+    const s = document.createElement("span");
+    s.textContent = t;
+    s.style.left = (50 + (v / DOM) * 50) + "%";
+    ticks.appendChild(s);
+  });
+
+  const tbody = document.getElementById("tbody");
+  DATA.forEach(d => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${d.ax}</td><td>${fmt(d.judge)}</td><td>${d.jn}</td><td>${fmt(d.rubric)}</td><td>${d.rn}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  const tip = document.getElementById("tip");
+  const show = e => {
+    const el = e.target.closest(".bar");
+    if (!el) return;
+    tip.innerHTML = el.dataset.tip;
+    tip.style.opacity = "1";
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX || r.left + r.width / 2), y = r.top;
+    tip.style.left = Math.min(x + 14, innerWidth - 280) + "px";
+    tip.style.top = Math.max(y - 8, 8) + "px";
+  };
+  const hide = () => { tip.style.opacity = "0"; };
+  plot.addEventListener("mousemove", show);
+  plot.addEventListener("mouseleave", hide);
+  plot.addEventListener("focusin", show);
+  plot.addEventListener("focusout", hide);
+
+</script>
+</div>
+</body>
+</html>
