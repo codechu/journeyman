@@ -118,7 +118,11 @@ What follows is this repository's shape of them.
    Pushing `v*` is what triggers publication and nothing else does; the tag
    is the human release signature. **Do not create the GitHub release by
    hand**: the workflow makes it from the tag, using the changelog section
-   for that version as its notes. The workflow also re-runs the suite and
+   for that version as its notes. If that section is missing or empty the
+   step fails rather than publishing a placeholder body, and if a release
+   for the tag already exists the workflow leaves its notes alone instead
+   of overwriting them — which is what a hand-made release would otherwise
+   lose. The workflow also re-runs the suite and
    the selftest inside the release, checks the tag against the packaged
    version, publishes to PyPI through a trusted publisher (no token in the
    repo), and syncs the calibration dataset to the Hub.

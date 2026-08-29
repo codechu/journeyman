@@ -6,6 +6,13 @@
   It had drifted both ways at once: `tools/bump.py` came back and the guide
   never mentioned it, while a step still instructed `gh release create`
   months after the workflow began making the release from the tag.
+- The release notes step fails on a missing or empty changelog section
+  instead of publishing "No CHANGELOG section for X." as the body; matches
+  the newest section when it is the only one (the pattern required a
+  following `## `); leaves an existing release's notes alone rather than
+  overwriting them; and passes `--verify-tag`. The shipped extractor is
+  pulled out of the workflow and run by a test, so the test cannot pass on
+  a workflow that has since changed.
 
 ## 0.2.1 — 2026-08-29
 

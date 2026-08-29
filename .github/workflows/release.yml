@@ -53,13 +53,27 @@ jobs:
           import re, sys
           v = sys.argv[1]
           text = open("CHANGELOG.md").read()
-          m = re.search(rf"^## {re.escape(v)}[^\n]*\n(.*?)(?=^## )", text, re.M | re.S)
-          sys.stdout.write((m.group(1).strip() if m else
-                            f"No CHANGELOG section for {v}.") + "\n")
+          # \Z so the newest section still matches when it is the only one —
+          # the old pattern required a following "## " and fell through to a
+          # placeholder on a first release or after archiving older entries.
+          m = re.search(rf"^## {re.escape(v)}[^\n]*\n(.*?)(?=^## |\Z)",
+                        text, re.M | re.S)
+          if not m or not m.group(1).strip():
+              # Never publish a release whose notes say there are none: a
+              # placeholder body is indistinguishable from a real one, and
+              # nothing downstream would have failed.
+              sys.exit(f"CHANGELOG.md has no section for {v} — the changelog "
+                       f"entry is the release note, so there is nothing to "
+                       f"publish. Add '## {v} — <date>' and re-run.")
+          sys.stdout.write(m.group(1).strip() + "\n")
           PY
-          gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" \
-            --notes-file /tmp/notes.md || \
-          gh release edit "$GITHUB_REF_NAME" --notes-file /tmp/notes.md
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            echo "::warning::a release for $GITHUB_REF_NAME already exists;" \
+                 "leaving its notes alone rather than overwriting them"
+          else
+            gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" \
+              --verify-tag --notes-file /tmp/notes.md
+          fi
 
   # The calibration set is the one artifact an outside reader wants to look at
   # without installing anything, so it goes to a dataset repo on the same tag
