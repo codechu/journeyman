@@ -16,7 +16,6 @@ service that owns it, and there is nothing local to compare them to.
 """
 import os
 import re
-import tomllib
 import unittest
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -28,8 +27,24 @@ def readme():
 
 
 def project():
-    with open(os.path.join(ROOT, "pyproject.toml"), "rb") as fh:
-        return tomllib.load(fh)["project"]
+    """The three fields, read without `tomllib`.
+
+    `tomllib` arrived in 3.11 and this package supports 3.10, so the test
+    that checks the Python-floor badge could not run at the floor the
+    badge claims. The matrix caught it; a local run on one interpreter
+    never would have.
+    """
+    text = open(os.path.join(ROOT, "pyproject.toml"), encoding="utf-8").read()
+
+    def field(name):
+        m = re.search(rf'(?m)^{name} = "([^"]+)"', text)
+        return m.group(1) if m else None
+
+    m = re.search(r"(?ms)^dependencies = \[(.*?)\]", text)
+    deps = re.findall(r'"([^"]+)"', m.group(1)) if m else []
+    return {"requires-python": field("requires-python"),
+            "license": field("license"),
+            "dependencies": deps}
 
 
 class TestBadgesStateTheTruth(unittest.TestCase):
