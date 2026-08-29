@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 — 2026-08-29
 
 - Judging phase metered: calls, tokens and the provider's charge land in
   `report.json` as `judge_cost`.

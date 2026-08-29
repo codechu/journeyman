@@ -1,25 +1,30 @@
 {
- "title": "Journeyman: a process-quality benchmark for LLM agents",
- "description": "<p>Journeyman grades <em>how</em> an agent worked rather than whether it passed. It drops an agent into small simulated jobs — diagnose a crashed service, assay an alloy at a bench, walk a fogged maze, pick up a night shift from a note that lies — and scores the walk: did it keep hitting the same wall, did it stop when the job was done, could it price what it could not reach, did it buy a planted false story.</p><p>Judged axes are scored by a model judge, and no judge is trusted on reputation: every judge sits a published exam against labelled real records first, and the exam, the labels and the failures are all in the repository. Zero dependencies, standard library only.</p>",
- "upload_type": "software",
- "access_right": "open",
- "license": "Apache-2.0",
- "version": "0.1.2",
- "creators": [
-  {"name": "Barlık, Onur", "affiliation": "Codechu"}
- ],
- "keywords": [
-  "benchmark",
-  "agent evaluation",
-  "process quality",
-  "LLM agents",
-  "LLM-as-a-judge",
-  "evaluation",
-  "tool use"
- ],
- "related_identifiers": [
-  {"identifier": "https://pypi.org/project/journeyman-bench/",
-   "relation": "isIdenticalTo",
-   "resource_type": "software"}
- ]
+  "title": "Journeyman: a process-quality benchmark for LLM agents",
+  "description": "<p>Journeyman grades <em>how</em> an agent worked rather than whether it passed. It drops an agent into small simulated jobs — diagnose a crashed service, assay an alloy at a bench, walk a fogged maze, pick up a night shift from a note that lies — and scores the walk: did it keep hitting the same wall, did it stop when the job was done, could it price what it could not reach, did it buy a planted false story.</p><p>Judged axes are scored by a model judge, and no judge is trusted on reputation: every judge sits a published exam against labelled real records first, and the exam, the labels and the failures are all in the repository. Zero dependencies, standard library only.</p>",
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "Apache-2.0",
+  "version": "0.2.0",
+  "creators": [
+    {
+      "name": "Barlık, Onur",
+      "affiliation": "Codechu"
+    }
+  ],
+  "keywords": [
+    "benchmark",
+    "agent evaluation",
+    "process quality",
+    "LLM agents",
+    "LLM-as-a-judge",
+    "evaluation",
+    "tool use"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://pypi.org/project/journeyman-bench/",
+      "relation": "isIdenticalTo",
+      "resource_type": "software"
+    }
+  ]
 }
