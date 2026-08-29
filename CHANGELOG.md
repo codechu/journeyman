@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.2 — 2026-08-29
 
 - The release guide matches the pipeline again, and a test keeps it there.
   It had drifted both ways at once: `tools/bump.py` came back and the guide
@@ -14,6 +14,13 @@
   forever: renaming it would break every past release page with no way to
   repair them. Project URLs use `/blob/HEAD/`, which names no branch. A
   test refuses any branch reference in the generated file.
+- The default branch is now `main`. It was `master` only because the
+  repository was created by a local `git init` on a machine where
+  `init.defaultBranch` was unset; every other Codechu repository, created
+  through GitHub, was already `main`. Descriptions published before this
+  release name the old branch and cannot be edited; raw URLs are not
+  redirected across a rename, so their images may stop loading. This one
+  does not depend on a branch at all.
 - The release notes step fails on a missing or empty changelog section
   instead of publishing "No CHANGELOG section for X." as the body; matches
   the newest section when it is the only one (the pattern required a
