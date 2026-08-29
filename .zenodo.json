@@ -1,6 +1,6 @@
 {
   "title": "Journeyman: a process-quality benchmark for LLM agents",
-  "description": "<p>Journeyman grades <em>how</em> an agent worked rather than whether it passed. It drops an agent into small simulated jobs — diagnose a crashed service, assay an alloy at a bench, walk a fogged maze, pick up a night shift from a note that lies — and scores the walk: did it keep hitting the same wall, did it stop when the job was done, could it price what it could not reach, did it buy a planted false story.</p><p>Judged axes are scored by a model judge, and no judge is trusted on reputation: every judge sits a published exam against labelled real records first, and the exam, the labels and the failures are all in the repository. Zero dependencies, standard library only.</p>",
+  "description": "<p><strong>Journeyman grades how an agent worked, not whether it passed.</strong> It drops an agent into eight small simulated jobs — diagnose a crashed service, assay an alloy at a bench, walk a fogged maze, pick up a night shift from a note that lies — and scores the walk on ten axes: did it keep hitting a wall that had already answered, did it stop when the work's object was served or when the budget ran out, could it name what it could not reach and price it, did it repeat a planted false story as fact. Nothing touches real files; every world is simulated and seed-rebuilt, so a claimed exit never reached is caught by arithmetic.</p><p><strong>What is unusual is not the grading — it is who is allowed to grade.</strong> Calibrating an LLM judge before trusting it is standard advice; almost nobody ships the labels to do it with. Three things follow from taking it literally. The calibration set is inside the package: 82 cases across seven axes, labelled by a three-family council in a blind round and an anonymous evidence-quoted second round, distilled from real agent records rather than synthetic vignettes. A judge that has not passed it cannot score — <code>journeyman qualify</code> grants or refuses a badge, and an unqualified run is stamped <code>NOT COMPARABLE</code>. And the judges that failed are published by name, beside the ones that passed.</p><p><strong>Two scoring layers, and the boundary between them is enforced.</strong> Facts are counted programmatically from the record; the questions no counter can answer go to a pluggable judge, one call per rubric item, with the verdict echoed from a fixed label set. Moving a judgement into a deterministic counter to save a call is a standing prohibition, not a preference.</p><p><strong>The record of being wrong is shipped with it.</strong> The first calibration set taught a lesson that the second retracted: under the earlier questions no judge outside one family read one axis at threshold, and that looked like a finding about judging skill. Under the revised definition every judge screened passes it. Most of that guillotine was our own rubric, and the superseded ledger stays published as what we believed and why.</p><p>Zero runtime dependencies, standard library only. Every report carries a seal — bench version, per-scene checksums, seeds, model, sampling params — and its own re-run command.</p>",
   "upload_type": "software",
   "access_right": "open",
   "license": "Apache-2.0",
@@ -25,6 +25,52 @@
       "identifier": "https://pypi.org/project/journeyman-bench/",
       "relation": "isIdenticalTo",
       "resource_type": "software"
+    },
+    {
+      "identifier": "https://github.com/codechu/journeyman",
+      "relation": "isSupplementTo",
+      "resource_type": "software"
+    },
+    {
+      "identifier": "https://arxiv.org/abs/2412.05579",
+      "relation": "cites",
+      "resource_type": "publication-preprint"
+    },
+    {
+      "identifier": "https://arxiv.org/abs/2604.11581",
+      "relation": "cites",
+      "resource_type": "publication-preprint"
+    },
+    {
+      "identifier": "https://arxiv.org/abs/2605.06283",
+      "relation": "cites",
+      "resource_type": "publication-preprint"
+    },
+    {
+      "identifier": "https://arxiv.org/abs/2605.24737",
+      "relation": "cites",
+      "resource_type": "publication-preprint"
+    }
+  ],
+  "language": "eng",
+  "notes": "<p>The archive is a source snapshot of the tagged release. The tool is normally installed from PyPI (<code>pipx install journeyman-bench</code>) and run against any OpenAI-compatible endpoint; <code>journeyman selftest</code> proves the pipeline end to end offline, with no model, network or credentials.</p><p><strong>Status, stated rather than discovered:</strong> pre-1.0, so no stability promise. Scores are comparable only across runs judged by a qualified judge on the standard scene set; anything else is stamped <code>NOT COMPARABLE</code> in the report itself. The known limitations are listed in the README rather than left for a reader to find.</p>",
+  "references": [
+    "Li et al. LLMs-as-Judges: a comprehensive survey on LLM-based evaluation methods. arXiv:2412.05579",
+    "Meta-judge frameworks for evaluating LLM judges. arXiv:2504.17087",
+    "Hidden Measurement Error in LLM Pipelines. arXiv:2604.11581",
+    "Quantifying the Statistical Effect of Rubric Modifications. arXiv:2605.06283",
+    "Who judges the judges? Runtime gating of LLM evaluators. arXiv:2605.24737"
+  ],
+  "subjects": [
+    {
+      "term": "Artificial intelligence",
+      "identifier": "http://id.loc.gov/authorities/subjects/sh85008180",
+      "scheme": "url"
+    },
+    {
+      "term": "Computer software—Testing",
+      "identifier": "http://id.loc.gov/authorities/subjects/sh85029535",
+      "scheme": "url"
     }
   ]
 }
