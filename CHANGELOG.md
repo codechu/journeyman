@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- The three badges that assert a fact — Python floor, dependency count,
+  licence — are checked against `pyproject.toml`. Nothing read them, so
+  raising `requires-python`, adding a dependency or changing the licence
+  would have left a green badge saying otherwise. A badge asserting an
+  unchecked fact is the same costume as one that points nowhere.
+
 ## 0.2.2 — 2026-08-29
 
 - The release guide matches the pipeline again, and a test keeps it there.
