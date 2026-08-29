@@ -6,6 +6,22 @@ renders right in the browser — reports ARE markdown. The
 [report.json](../runs-archive/reference-run-1-standard-2026-08-12/report.json)
 next to it is the same thing machine-readable.
 
+Two layers, and the boundary between them is the thing to see: what can be
+counted is never sent to a judge, and a judge that has not passed its exam
+cannot produce a comparable score.
+
+```mermaid
+flowchart LR
+    A[your agent] --> C[cells<br/>one scene, one seed]
+    C --> N[counted axes<br/>replayed from events]
+    C --> R[rubric questions]
+    R --> J{judge}
+    J -->|badge| S[judged axes]
+    J -->|no badge| X([NOT COMPARABLE])
+    N --> P[profile]
+    S --> P
+```
+
 What actually happens when you type `journeyman run`, and what every
 file in the run directory means.
 

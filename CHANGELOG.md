@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- A diagram in `run-guide.md` of the two scoring layers and the boundary
+  between them: what can be counted never goes to a judge, and a judge
+  without a badge produces a stamped score rather than a comparable one.
 - `docs/glossary.md` — the words that carry the rest of the documentation,
   defined by what the code does with them. A reader met `walk`, `cell`,
   `band` and `NOT COMPARABLE` scattered across nine documents and had to
