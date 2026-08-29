@@ -66,6 +66,27 @@ attached, is an ideal issue.
 - Describe *what changed and why* — and, for a scene, which pressure it
   measures and how you checked it doesn't teach.
 
+### Commit messages
+
+This repository writes **incident prose**, not Conventional Commits.
+Nothing here derives a version or release notes from commit subjects —
+the changelog entry is written by hand and is the release note — so the
+history is free to be read rather than parsed, and that is what it is
+for. Increasingly the reader is an agent deciding what to do next, and
+`fix: correct banner width` tells it nothing the diff did not.
+
+- The subject states the change as a sentence, in the present tense, no
+  type prefix: *Refuse to publish a release with nothing to say*.
+- The body names the incident: what went wrong, how it was noticed, and
+  what would have caught it. A change with no incident behind it says so
+  rather than inventing one.
+- A breaking change says so on the first line of its changelog entry;
+  no tool is reading for a `!`.
+
+Both conventions are legitimate — see
+[Codechu STANDARDS §5.0](https://github.com/codechu/codechu-org/blob/main/STANDARDS.md#50-who-the-history-is-written-for)
+— but a repository picks one, and this one has picked.
+
 Please keep discussion within our [Code of Conduct](CODE_OF_CONDUCT.md); for vulnerabilities see [SECURITY.md](SECURITY.md).
 
 By contributing you agree your work is licensed under
