@@ -100,9 +100,36 @@ def landing(notes, rows):
     ths = "".join(f"<th>{label}</th>" for label, _ in cols)
     zero_empty = sum(1 for r in rows if r["axes"].get("empty-measure") == 0.0)
     best_relief = max((r["axes"].get("relief-page") or 0) for r in rows)
+    featured, rest = (notes[0], notes[1:]) if notes else (None, [])
+    if featured:
+        art = next((a for a in featured.get("assets", [])
+                    if a.endswith((".png", ".svg"))), None)
+        thumb = (f'<img src="notes/{featured["slug"]}/{art}" alt="" loading="lazy">'
+                 if art else "")
+        feature_html = f"""  <section>
+    <a class="featured" href="notes/{featured['slug']}/">
+      <div class="ftext">
+        <span class="eyebrow">latest note · {featured['date']}</span>
+        <h2>{featured['title']}</h2>
+        <p>{featured['summary']}</p>
+        <span class="more">read the note →</span>
+      </div>
+      <div class="fig">{thumb}</div>
+    </a>
+  </section>
+
+"""
+    else:
+        feature_html = ""
     notes_html = "".join(
         f'<li><a href="notes/{n["slug"]}/">{n["title"]}</a>'
-        f'<time>{n["date"]}</time><p>{n["summary"]}</p></li>' for n in notes)
+        f'<time>{n["date"]}</time><p>{n["summary"]}</p></li>' for n in rest)
+    notes_section = f"""  <section>
+    <h2>Earlier notes</h2>
+    <ul class="notelist">{notes_html}</ul>
+  </section>
+
+""" if rest else ""
     return f"""  <header class="masthead">
     <div class="eyebrow">a benchmark for how an agent works</div>
     <h1>journeyman</h1>
@@ -120,7 +147,7 @@ def landing(notes, rows):
     </div>
   </header>
 
-  <section>
+{feature_html}  <section>
     <h2>Run your own model</h2>
     <pre><code>pip install journeyman-bench
 journeyman run --endpoint https://your-api/v1 --model your-model \\
@@ -142,14 +169,7 @@ journeyman run --endpoint https://your-api/v1 --model your-model \\
     </div>
   </section>
 
-  <section>
-    <h2>Notes</h2>
-    <p class="lede">What we learned while measuring — each one dated, with the
-      figure regenerated from the sealed reports.</p>
-    <ul class="notelist">{notes_html}</ul>
-  </section>
-
-  <footer>
+{notes_section}  <footer>
     <div class="links"><a href="{GH}">repository</a><a href="{GH}/blob/main/docs/methodology.md">methodology</a><a href="{GH}/tree/main/runs-archive">sealed runs</a><a href="https://pypi.org/project/journeyman-bench/">pypi</a></div>
     <p>Every number on this page is read from a <code>report.json</code> under
       <code>runs-archive/</code> at build time.</p>

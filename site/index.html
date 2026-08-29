@@ -39,6 +39,18 @@
   </header>
 
   <section>
+    <a class="featured" href="notes/three-verdicts/">
+      <div class="ftext">
+        <span class="eyebrow">latest note · 2026-08-30</span>
+        <h2>Same cells, three verdicts</h2>
+        <p>One recording of eleven agents, graded three times: how much of a benchmark score is the judge reading it, and how much the questions asked.</p>
+        <span class="more">read the note →</span>
+      </div>
+      <div class="fig"><img src="notes/three-verdicts/ablation.svg" alt="" loading="lazy"></div>
+    </a>
+  </section>
+
+  <section>
     <h2>Run your own model</h2>
     <pre><code>pip install journeyman-bench
 journeyman run --endpoint https://your-api/v1 --model your-model \
@@ -58,13 +70,6 @@ journeyman run --endpoint https://your-api/v1 --model your-model \
       <table><thead><tr><th>agent</th><th>judged mean</th><th>cover</th><th>move</th><th>verdict</th><th>ground</th><th>handoff</th><th>empty</th><th>invalid</th></tr></thead>
       <tbody><tr><td>glm-5.2</td><td><b>0.39</b></td><td>0.41</td><td>0.84</td><td>0.83</td><td>0.67</td><td>1.00</td><td>0.00</td><td></td></tr><tr><td>deepseek-r1-0528</td><td><b>0.33</b></td><td>0.04</td><td>1.00</td><td>0.00</td><td>1.00</td><td>—</td><td>0.00</td><td>1</td></tr><tr><td>gemini-2.5-flash</td><td><b>0.33</b></td><td>0.25</td><td>0.99</td><td>0.50</td><td>0.67</td><td>0.00</td><td>0.33</td><td></td></tr><tr><td>llama-4-scout</td><td><b>0.33</b></td><td>0.04</td><td>0.42</td><td>0.17</td><td>1.00</td><td>0.00</td><td>0.00</td><td></td></tr><tr><td>mistral-small</td><td><b>0.33</b></td><td>0.03</td><td>0.77</td><td>0.25</td><td>0.67</td><td>0.00</td><td>0.00</td><td>9</td></tr><tr><td>kimi-k2</td><td><b>0.28</b></td><td>0.40</td><td>0.80</td><td>0.33</td><td>0.33</td><td>0.67</td><td>0.00</td><td></td></tr><tr><td>gpt-5.6-luna</td><td><b>0.22</b></td><td>0.44</td><td>0.82</td><td>0.67</td><td>0.67</td><td>0.00</td><td>0.00</td><td></td></tr><tr><td>gpt-oss-20b</td><td><b>0.22</b></td><td>0.01</td><td>1.00</td><td>0.00</td><td>0.33</td><td>0.00</td><td>0.00</td><td></td></tr><tr><td>qwen3.6-35b-a3b</td><td><b>0.22</b></td><td>0.36</td><td>0.77</td><td>0.83</td><td>1.00</td><td>0.33</td><td>0.00</td><td></td></tr><tr><td>gpt-oss-120b</td><td><b>0.17</b></td><td>0.15</td><td>0.97</td><td>0.17</td><td>0.00</td><td>0.00</td><td>0.33</td><td></td></tr><tr><td>nemotron-3-super-120b-a12b</td><td><b>0.17</b></td><td>0.34</td><td>0.75</td><td>0.17</td><td>0.67</td><td>0.33</td><td>0.00</td><td></td></tr></tbody></table>
     </div>
-  </section>
-
-  <section>
-    <h2>Notes</h2>
-    <p class="lede">What we learned while measuring — each one dated, with the
-      figure regenerated from the sealed reports.</p>
-    <ul class="notelist"><li><a href="notes/three-verdicts/">Same cells, three verdicts</a><time>2026-08-30</time><p>One recording of eleven agents, graded three times: how much of a benchmark score is the judge reading it, and how much the questions asked.</p></li></ul>
   </section>
 
   <footer>
