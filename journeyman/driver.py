@@ -41,6 +41,15 @@ def chat_url(url):
     return base + "/v1/chat/completions"
 
 
+class Starved(Exception):
+    """A turn that produced no move because it had no room to.
+
+    Distinguished from silence deliberately: silence is behaviour and is
+    scored; starvation is a measurement fault and voids the cell, exactly
+    as a timeout does.
+    """
+
+
 class Endpoint:
     """Minimal OpenAI-compatible chat/completions client (stdlib only).
 
@@ -91,7 +100,13 @@ class Endpoint:
                 if attempt == 2:
                     raise
                 time.sleep(5 * (attempt + 1))
-        msg = data["choices"][0]["message"]
+        choice = data["choices"][0]
+        msg = choice["message"]
+        # Kept because it is the only thing that separates an agent which
+        # stopped from one that was cut off mid-word. Discarding it made the
+        # two indistinguishable in the record.
+        if choice.get("finish_reason"):
+            msg = dict(msg, finish_reason=choice["finish_reason"])
         usage = data.get("usage", {})
         return msg, usage
 
@@ -149,6 +164,25 @@ def run_cell(endpoint, scene, seed, log, agent_system=None):
         tool_calls = msg.get("tool_calls") or []
         if not tool_calls:
             final_text = (msg.get("content") or "").strip() or None
+            # An empty completion is not a silent agent. A reasoning model
+            # spends a fixed budget thinking before it writes, and when the
+            # budget runs out first the body comes back empty — the model
+            # produced no move, which is the same category as a timeout and
+            # is already handled that way above. Scored as behaviour it
+            # zeroes every axis that reads the closing report, and the
+            # profile then describes the token budget rather than the agent.
+            if final_text is None:
+                starved = (msg.get("finish_reason") == "length"
+                           or len((msg.get("reasoning_content") or "").strip()) > 200)
+                if starved:
+                    raise Starved(
+                        f"the closing turn came back empty after "
+                        f"{len((msg.get('reasoning_content') or '').strip())} "
+                        f"characters of reasoning"
+                        + (" (finish_reason: length)"
+                           if msg.get("finish_reason") == "length" else "")
+                        + " — raise max_tokens in --params-file; this is a "
+                          "starved turn, not a silent agent")
             break
         for tc in tool_calls:
             calls += 1

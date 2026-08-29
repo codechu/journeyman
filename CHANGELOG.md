@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- **An empty closing turn is no longer scored as a silent agent.** A
+  reasoning model spends a fixed budget thinking before it writes; when the
+  budget runs out first, the body comes back empty. That is a turn which
+  produced no move — the same category as a timeout, which this driver
+  already voids loudly — and scoring it as behaviour zeroes every axis that
+  reads the closing report. A cell whose closing turn is empty after
+  substantial reasoning, or with `finish_reason: length`, is now invalid
+  with a reason that names the fix. An empty turn with no thinking behind
+  it is still silence, and silence is what several axes measure.
+- `finish_reason` is recorded on each turn. It was read and discarded, and
+  it is the only thing separating an agent that stopped from one that was
+  cut off mid-word.
 - A diagram in `run-guide.md` of the two scoring layers and the boundary
   between them: what can be counted never goes to a judge, and a judge
   without a badge produces a stamped score rather than a comparable one.
