@@ -79,11 +79,28 @@ def main(argv=None):
         except (AttributeError, ValueError):
             pass
 
+    from . import __version__
     ap = argparse.ArgumentParser(prog="journeyman")
+    ap.add_argument("--version", action="version",
+                    version=f"journeyman {__version__}")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
-    r = sub.add_parser("run", help="run the benchmark against an endpoint")
-    r.add_argument("--endpoint", required=True)
+    # Shared by the two commands that take minutes and print chrome while
+    # they work. --quiet drops the chrome only: results, warnings and errors
+    # are never suppressed, because a quiet flag that can hide a failure is
+    # a footgun rather than an option.
+    chrome = argparse.ArgumentParser(add_help=False)
+    chrome.add_argument("-q", "--quiet", action="store_true",
+                        help="no banner, and on `run` no per-cell progress "
+                             "either; results, warnings and errors always "
+                             "print")
+
+    r = sub.add_parser("run", parents=[chrome],
+                       help="run the benchmark against an endpoint")
+    r.add_argument("--endpoint", required=True,
+                   help="OpenAI-compatible base URL of the agent "
+                        "under test; a bare host, a /v1, or a full "
+                        "/v1/chat/completions all work")
     r.add_argument("--model", default=None,
                    help="model id; if omitted, the endpoint is asked for its "
                         "models — the only one is used, or you pick from a list")
@@ -94,7 +111,9 @@ def main(argv=None):
     r.add_argument("--judge", default=None,
                    help="judge endpoint URL (default: the endpoint itself — "
                         "dev mode, scores marked NOT COMPARABLE)")
-    r.add_argument("--judge-model", default=None)
+    r.add_argument("--judge-model", default=None,
+                   help="model id on the judge endpoint "
+                        "(default: the same id as --model)")
     r.add_argument("--judge-api-key", default=_env_key("JOURNEYMAN_JUDGE_API_KEY"),
                    help="api key for the judge endpoint (it may be a "
                         "different provider than the agent)")
@@ -112,20 +131,34 @@ def main(argv=None):
                         "max_tokens, ...) sent with every request; part of "
                         "the agent definition, published verbatim in the "
                         "seal; cannot override measurement fields")
-    r.add_argument("--seeds", default="4242,777,31337")
-    r.add_argument("--runs-dir", default="runs")
+    r.add_argument("--seeds", default="4242,777,31337",
+                   help="comma-separated world seeds; each scene "
+                        "is run once per seed, and the set is "
+                        "stamped in the seal")
+    r.add_argument("--runs-dir", default="runs",
+                   help="directory the run is written under "
+                        "(default: ./runs)")
 
-    q = sub.add_parser("qualify", help="run a judge through the "
+    q = sub.add_parser("qualify", parents=[chrome],
+                       help="run a judge through the "
                        "qualification exam (labelled calibration set)")
-    q.add_argument("--judge", required=True)
-    q.add_argument("--judge-model", required=True)
+    q.add_argument("--judge", required=True,
+                   help="OpenAI-compatible base URL of the judge "
+                        "sitting the exam")
+    q.add_argument("--judge-model", required=True,
+                   help="model id on that endpoint — the badge is "
+                        "granted to the endpoint+model pair")
     q.add_argument("--api-key",
                    default=_env_key("JOURNEYMAN_JUDGE_API_KEY", "JOURNEYMAN_API_KEY"),
                    help="judge key; defaults to $JOURNEYMAN_JUDGE_API_KEY, then "
                         "$JOURNEYMAN_API_KEY. Prefer the variable — an argument "
                         "is visible in `ps` and in shell history")
-    q.add_argument("--params-file", default=None)
-    q.add_argument("--runs-dir", default="runs")
+    q.add_argument("--params-file", default=None,
+                   help="JSON of sampling params for the judge; "
+                        "part of what the badge is granted to")
+    q.add_argument("--runs-dir", default="runs",
+                   help="directory the exam record is written "
+                        "under (default: ./runs)")
     q.add_argument("--repeats", type=int, default=3,
                    help="judge draws per case, majority-voted (a badge is a "
                         "decision; one draw is noise). 1 = legacy single-draw.")
@@ -145,11 +178,17 @@ def main(argv=None):
 
     rp = sub.add_parser("report", help="re-render report.md/json from an "
                         "existing run directory (e.g. after re-judging)")
-    rp.add_argument("run_dir")
+    rp.add_argument("run_dir",
+                    help="a finished run directory under runs/ — "
+                         "its cell records are re-rendered, "
+                         "nothing is re-run")
 
     up = sub.add_parser("upgrade", help="backfill `kind` into a report.json "
                         "written before the field existed (0.1.0)")
-    up.add_argument("report_json")
+    up.add_argument("report_json",
+                    help="a report.json written before 0.1.0; it "
+                         "is read, never guessed at, and left "
+                         "untouched without --write")
     up.add_argument("--write", action="store_true",
                     help="edit the file in place (default: print to stdout)")
 
@@ -199,6 +238,10 @@ def main(argv=None):
     if args.cmd == "qualify":
         import json as _json
         from .qualify import main as qmain
+        if not args.quiet:
+            from .banner import banner
+            from .color import paint
+            print(paint(banner(__version__), "amber"))
         params = _json.load(open(args.params_file)) if args.params_file else None
         ep = Endpoint(args.judge, args.judge_model, args.api_key, params=params)
         sys.exit(qmain(args, ep))
@@ -222,24 +265,21 @@ def main(argv=None):
                          args.judge_api_key, params=jparams))
     judge_label = "SELF (default)" if self_judged else args.judge
 
-    from . import __version__
-    from .color import paint
-    banner = (
-        "┌─────────────────────────────────────────────────────────┐\n"
-        f"│  JOURNEYMAN  v{__version__:<20} process-quality bench │\n"
-        "│  measures how agents work — and how they fail           │\n"
-        "└─────────────────────────────────────────────────────────┘")
-    print(paint(banner, "amber"))
-    print(f"scenes {scenes} · seeds {seeds}")
+    if not args.quiet:
+        from .banner import banner
+        from .color import paint
+        print(paint(banner(__version__), "amber"))
+        print(f"scenes {scenes} · seeds {seeds}")
     if self_judged:
         print("judge: SELF — scores will be marked NOT COMPARABLE; "
               "use --judge for a reference judge")
     agent_system = open(args.system_file).read() if args.system_file else None
     run_dir = RunDir(args.runs_dir)
+    say = (lambda *a, **k: None) if args.quiet else print
     seal = run_grid(endpoint, scenes, seeds, run_dir,
-                    agent_system=agent_system)
+                    log=say, agent_system=agent_system)
 
-    print("--- judging phase ---")
+    say("--- judging phase ---")
     judge_meter = {}
     run_dir.event("judging_start", judge=judge_label)
     for cell in list(run_dir.read_cells()):

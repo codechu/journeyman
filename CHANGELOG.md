@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+- `journeyman --version` answers. It did not exist: asking the tool its
+  version failed with "the following arguments are required: cmd".
+- `-q/--quiet` on `run` and `qualify` drops the banner and, on `run`, the
+  per-cell progress. Results, warnings and errors always print.
+- The banner box is built from its content instead of four literals, which
+  had drifted one character wider than their border in every release.
+- Six flags that carried no help text now carry it, and a test fails on the
+  next one added without any.
+
 ## 0.2.0 — 2026-08-29
 
 - Judging phase metered: calls, tokens and the provider's charge land in
