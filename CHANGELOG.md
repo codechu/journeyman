@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.1 — 2026-08-29
 
 - `journeyman --version` answers. It did not exist: asking the tool its
   version failed with "the following arguments are required: cmd".

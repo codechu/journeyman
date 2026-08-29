@@ -18,7 +18,7 @@ doi: 10.5281/zenodo.22085820
 repository-code: "https://github.com/codechu/journeyman"
 url: "https://pypi.org/project/journeyman-bench/"
 license: Apache-2.0
-version: 0.2.0
+version: 0.2.1
 date-released: "2026-08-24"
 keywords:
   - benchmark
