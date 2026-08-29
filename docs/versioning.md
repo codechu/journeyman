@@ -81,26 +81,58 @@ changing it rather than after.
 
 ## Cutting a release
 
-Written down because it used to live in a script that no longer exists, and
-knowledge that survives only in tooling dies with the tooling.
+Written down because it used to live in a script that no longer exists,
+and knowledge that survives only in tooling dies with the tooling. The
+mirror of that is also true, and this section has already fallen for it:
+a script came back and these steps did not mention it, while step 4 kept
+instructing a command the workflow had taken over. A test now holds the
+two together.
 
-1. **Bump the version in all four files** — `pyproject.toml`,
-   `journeyman/__init__.py`, `CITATION.cff`, `.zenodo.json`. They are checked
-   against each other by a test, so a mismatch fails CI rather than shipping.
-   `__init__.py` is the one that matters most quietly: it is what every seal
-   records, and a run sealed with the wrong version cannot be reproduced.
-2. **Write the changelog entry.** It is the release note. A breaking change
-   says so on its first line, since pre-1.0 the version number alone cannot
-   tell a reader whether something broke.
-3. **Push to `master` and let CI pass** (offline selftest + test suite,
-   stdlib-only, five Python versions).
-4. **Cut the tag** — `gh release create vX.Y.Z --notes-file …`. The tag is the
-   human release signature: pushing `v*` is what triggers publication, nothing
-   else does. The workflow builds, runs the selftest again, publishes to PyPI
-   through a trusted publisher (no token in the repo), and then syncs the
-   calibration dataset to the Hub.
-5. **Check it landed** — the package on PyPI and the dataset card, not just a
-   green workflow.
+The org-wide rules are [`STANDARDS.md`
+§5.1](https://github.com/codechu/codechu-org/blob/main/STANDARDS.md#51-cutting-a-release)
+and the Python ones are
+[`lang/python/RELEASING.md`](https://github.com/codechu/codechu-org/blob/main/lang/python/RELEASING.md).
+What follows is this repository's shape of them.
+
+1. **Write the changelog entry** — rename `## Unreleased` to
+   `## X.Y.Z — YYYY-MM-DD`. It is the release note, and the workflow reads
+   it from here. A breaking change says so on its first line, since pre-1.0
+   the version number alone cannot tell a reader whether something broke.
+
+2. **`tools/bump.py X.Y.Z`** — moves the version in `pyproject.toml`,
+   `journeyman/__init__.py`, `CITATION.cff` and `.zenodo.json` together,
+   and refuses to run if they disagree beforehand. `__init__.py` is the one
+   that matters most quietly: it is what every seal records, and a run
+   sealed with the wrong version cannot be reproduced. A test asserts the
+   four agree, so a mismatch fails CI rather than shipping.
+
+3. **Run what CI runs, before CI does** —
+   `tools/pypi_readme.py --check` (the PyPI copy is generated; a stale one
+   ships a description one revision behind), `python -m unittest discover
+   -s tests`, and `python -m journeyman selftest`.
+
+4. **Commit and push to `master`**, and let CI pass — offline selftest and
+   suite, stdlib-only, five Python versions.
+
+5. **Tag and push the tag** — `git tag vX.Y.Z && git push origin vX.Y.Z`.
+   Pushing `v*` is what triggers publication and nothing else does; the tag
+   is the human release signature. **Do not create the GitHub release by
+   hand**: the workflow makes it from the tag, using the changelog section
+   for that version as its notes. The workflow also re-runs the suite and
+   the selftest inside the release, checks the tag against the packaged
+   version, publishes to PyPI through a trusted publisher (no token in the
+   repo), and syncs the calibration dataset to the Hub.
+
+6. **Check the artefacts, not the colour of the run — in both
+   directions.** A green run can leave a half-finished release, and a red
+   run can sit above a perfectly good one. v0.2.0 was the second: the
+   package published, then the release step 403'd for want of
+   `contents: write`, so the workflow is red for a version that is intact,
+   and the dataset job behind it never ran at all. Open the PyPI page, the
+   release page, and the dataset card.
+
+   If a version reached users in any state, say so in its changelog entry
+   rather than in a commit message nobody reads.
 
 ## Standing rules (every version)
 

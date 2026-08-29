@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- The release guide matches the pipeline again, and a test keeps it there.
+  It had drifted both ways at once: `tools/bump.py` came back and the guide
+  never mentioned it, while a step still instructed `gh release create`
+  months after the workflow began making the release from the tag.
+
 ## 0.2.1 — 2026-08-29
 
 - `journeyman --version` answers. It did not exist: asking the tool its
