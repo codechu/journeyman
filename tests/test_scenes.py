@@ -650,10 +650,16 @@ class VersionDoesNotDrift(unittest.TestCase):
         v = re.search(r'^version = "([^"]+)"',
                       open(os.path.join(root, "pyproject.toml")).read(),
                       re.M).group(1)
-        head = open(os.path.join(root, "CHANGELOG.md")).read()[:400]
-        self.assertIn(v, head,
-                      f"CHANGELOG.md does not mention {v} near the top — a "
-                      f"release without its entry is a release nobody can read")
+        text = open(os.path.join(root, "CHANGELOG.md")).read()
+        # The first released section — Unreleased may grow to any length
+        # without pushing the released version out of a fixed window.
+        released = [h for h in re.findall(r"^## (.+)$", text, re.M)
+                    if not h.strip().lower().startswith("unreleased")]
+        self.assertTrue(released, "CHANGELOG.md has no released section")
+        self.assertIn(v, released[0],
+                      f"CHANGELOG.md's first released section is "
+                      f"{released[0]!r}, not {v} — a release without its "
+                      f"entry is a release nobody can read")
 
 
 if __name__ == "__main__":
