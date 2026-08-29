@@ -11,6 +11,11 @@
       <span><b>3</b> gradings of one recording</span>
       <span>sealed runs, no hand-entered numbers</span>
     </div>
+    <p class="byline"><time datetime="2026-08-30">2026-08-30</time> · computed from
+      <a href="https://github.com/codechu/journeyman/tree/main/runs-archive/leaderboard-1-v2-2026-08-23">leaderboard-1-v2</a>,
+      <a href="https://github.com/codechu/journeyman/tree/main/runs-archive/leaderboard-1-v22-ablation-2026-08-24">v22-ablation</a> and
+      <a href="https://github.com/codechu/journeyman/tree/main/runs-archive/leaderboard-1-v24-2026-08-24">v24</a>
+      · rubric v2.2 → v2.4 · bench 0.0.5/0.0.7</p>
   </header>
 
   <section>
@@ -27,6 +32,7 @@
           <b>Questions changed</b> <span>judge fixed (self-hosted)</span></span>
       </div>
       <div class="plot" id="plot"></div>
+      <noscript><img src="ablation.svg" alt="Per-axis mean change: questions moved wall-pricing by −0.400, the judge moved grounding by +0.305, handoff-verification moved by 0.000." style="width:100%;height:auto"></noscript>
       <div class="scale">
         <div></div>
         <div class="ticks" id="ticks"></div>
@@ -112,7 +118,7 @@
     {ax:"handoff-verification",note:"checking the note you were handed", judge:0.000, jn:"0/10", rubric:0.000, rn:"0/10"},
     {ax:"route-discipline",   note:"one graded cell only", judge:0.000, jn:"0/1", rubric:0.000, rn:"0/1"}
   ];
-  const DOM = 0.45;                       // ± domain
+  const DOM = 0.55;                       // ± domain
   const pct = v => (Math.abs(v) / DOM) * 50;
   const fmt = v => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(3);
 
@@ -126,27 +132,22 @@
     track.innerHTML = '<div class="zero"></div>';
     [["judge", d.judge, d.jn, "Judge swapped, questions fixed"],
      ["rubric", d.rubric, d.rn, "Questions changed, judge fixed"]].forEach(([k, v, n, label]) => {
-      const w = pct(v);
-      if (Math.abs(v) > 0.0005) {
-        const bar = document.createElement("div");
-        bar.className = "bar " + k + (v < 0 ? " neg" : "");
-        bar.style.width = w + "%";
-        bar.style.left = v < 0 ? (50 - w) + "%" : "50%";
-        bar.tabIndex = 0;
-        bar.dataset.tip = `<b>${d.ax}</b><br>${label}<br><b>${fmt(v)}</b> mean · ${n} agents changed`;
-        track.appendChild(bar);
-      }
+      const w = pct(v);                       // a measured zero is a mark, not blank space
+      const bar = document.createElement("div");
+      bar.className = "bar " + k + (v < 0 ? " neg" : "") + (w < 0.4 ? " stub" : "");
+      bar.style.width = w < 0.4 ? "3px" : w + "%";
+      bar.style.left = v < 0 && w >= 0.4 ? (50 - w) + "%" : "50%";
+      bar.tabIndex = 0;
+      bar.setAttribute("role", "img");
+      bar.setAttribute("aria-label",
+        `${d.ax}, ${label}, ${fmt(v)} mean, ${n} agents changed`);
+      bar.dataset.tip = `<b>${d.ax}</b><br>${label}<br><b>${fmt(v)}</b> mean · ${n} agents changed`;
+      track.appendChild(bar);
       const val = document.createElement("div");
-      const inside = w > 30;                 // long bars carry their label within
-      val.className = "val " + k + (Math.abs(v) > 0.0005 ? "" : " nil") + (inside ? " in" : "");
-      val.textContent = Math.abs(v) > 0.0005 ? fmt(v) : "0.000";
-      if (inside) {
-        val.style.left = v < 0 ? "calc(" + (50 - w) + "% + 8px)" : "calc(" + (50 + w) + "% - 8px)";
-        if (v > 0) val.style.transform = "translateX(-100%)";
-      } else {
-        val.style.left = v < 0 ? "calc(" + (50 - w) + "% - 8px)" : "calc(" + (50 + w) + "% + 8px)";
-        if (v < 0) val.style.transform = "translateX(-100%)";
-      }
+      val.className = "val " + k + (Math.abs(v) > 0.0005 ? "" : " nil");
+      val.textContent = fmt(v);
+      val.style.left = v < 0 ? "calc(" + (50 - w) + "% - 8px)" : "calc(" + (50 + w) + "% + 8px)";
+      if (v < 0) val.style.transform = "translateX(-100%)";
       track.appendChild(val);
     });
     row.appendChild(track);
@@ -154,7 +155,7 @@
   });
 
   const ticks = document.getElementById("ticks");
-  [[-0.4, "−0.40"], [-0.2, "−0.20"], [0, "0"], [0.2, "+0.20"], [0.4, "+0.40"]].forEach(([v, t]) => {
+  [[-0.5, "−0.50"], [-0.25, "−0.25"], [0, "0"], [0.25, "+0.25"], [0.5, "+0.50"]].forEach(([v, t]) => {
     const s = document.createElement("span");
     s.textContent = t;
     s.style.left = (50 + (v / DOM) * 50) + "%";
@@ -168,10 +169,12 @@
     tbody.appendChild(tr);
   });
 
-  const tip = document.getElementById("tip");
+  const tip = document.getElementById("tip")
+    || document.body.appendChild(Object.assign(document.createElement("div"),
+         {id: "tip", role: "status"}));
   const show = e => {
     const el = e.target.closest(".bar");
-    if (!el) return;
+    if (!el || !tip) return;
     tip.innerHTML = el.dataset.tip;
     tip.style.opacity = "1";
     const r = el.getBoundingClientRect();

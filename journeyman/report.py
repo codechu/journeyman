@@ -6,6 +6,7 @@ disagree. Judge stamp sits at the top; self-judged runs carry
 NOT COMPARABLE in capitals, not in a footnote.
 """
 import json
+import re
 import os
 
 
@@ -112,6 +113,30 @@ def held_and_broke(cells):
     return held, broke
 
 
+PRIVATE_HOST = re.compile(
+    r"https?://(?:localhost|127\.\d+\.\d+\.\d+|10\.\d+\.\d+\.\d+"
+    r"|192\.168\.\d+\.\d+|172\.(?:1[6-9]|2\d|3[01])\.\d+\.\d+"
+    r"|[\w-]+\.local)(?::\d+)?(?:/\S*)?")
+POSIX_PATH = re.compile(r"(?:(?<=^)|(?<=[\s(=]))/(?:[^\s/()]+/){1,}[^\s()]*")
+WIN_PATH = re.compile(r"(?:(?<=^)|(?<=[\s(=]))[A-Za-z]:\\(?:[^\s\\()]+\\?)+")
+
+
+def public_label(label):
+    """A judge label safe to publish.
+
+    Provenance has to say WHO judged, not where the maintainer keeps their
+    files. A private address (RFC1918, loopback, .local) and an absolute
+    filesystem path identify a machine, not a judge — and both have shipped
+    inside published archives before. They are folded here, at the single
+    place the label is written into report.json and report.md.
+    """
+    if not label:
+        return label
+    out = PRIVATE_HOST.sub("self-hosted", label)
+    out = POSIX_PATH.sub("<path>", out)
+    return WIN_PATH.sub("<path>", out)
+
+
 def render(run_dir, seal, judge_label, self_judged, nonstandard=None,
            judge_meter=None):
     cells = list(run_dir.read_cells())
@@ -123,7 +148,7 @@ def render(run_dir, seal, judge_label, self_judged, nonstandard=None,
     invalid = sum(1 for c in cells if c["invalid"])
 
     lines = ["JOURNEYMAN — run report", ""]
-    stamp = f"Judge : {judge_label}"
+    stamp = f"Judge : {public_label(judge_label)}"
     if self_judged:
         stamp += "  ⚠ NOT COMPARABLE — self-judged scores"
     if nonstandard:
@@ -151,7 +176,8 @@ def render(run_dir, seal, judge_label, self_judged, nonstandard=None,
 
     open(os.path.join(run_dir.path, "report.md"), "w").write(text)
     json.dump({"schema_version": SCHEMA_VERSION,
-               "seal": seal, "judge": judge_label, "self_judged": self_judged,
+               "seal": seal, "judge": public_label(judge_label),
+               "self_judged": self_judged,
                "nonstandard": nonstandard,
                "axes": axes, "judge_cost": judge_meter or {},
                "cost": {"calls": calls, "tokens_in": tin,

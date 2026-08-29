@@ -34,8 +34,7 @@ HEAD = """<!doctype html>
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{summary}">
 <meta property="og:url" content="{url}">
-<meta property="og:image" content="{image}">
-<meta name="twitter:card" content="summary_large_image">
+{ogimage}<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="{root}style.css">
@@ -43,7 +42,7 @@ HEAD = """<!doctype html>
 <body>
 <div class="wrap">
   <nav class="sitenav">
-    <a href="{root}">journeyman</a>
+    <a href="{root}" {current}>journeyman</a>
     <span class="navlinks"><a href="{root}notes/">notes</a><a href="{gh}">repository</a></span>
   </nav>
 """
@@ -51,6 +50,14 @@ FOOT = """</div>
 </body>
 </html>
 """
+
+
+def version():
+    """The shipping version, from pyproject — not a literal in this file."""
+    for line in open(os.path.join(REPO, "pyproject.toml")):
+        if line.startswith("version"):
+            return line.split("=")[1].strip().strip('"')
+    return "?"
 
 
 def read_notes():
@@ -70,109 +77,172 @@ def read_notes():
 def board_rows():
     """The cohort table, read from the sealed reports — never typed by hand."""
     root = os.path.join(REPO, BOARD)
-    judged = ["wall-pricing", "empty-measure", "object-hold", "grounding",
-              "relief-page", "handoff-verification"]
+    mean_axes = ["wall-pricing", "empty-measure", "object-hold", "grounding",
+                 "relief-page", "handoff-verification"]
     rows = []
     for agent in sorted(os.listdir(root)):
         f = os.path.join(root, agent, "report.json")
         if not os.path.exists(f):
             continue
         r = json.load(open(f))
-        ax = {k: v["score"] for k, v in r["axes"].items()}
-        vals = [ax[a] for a in judged if ax.get(a) is not None]
-        rows.append({"agent": agent,
-                     "mean": round(sum(vals) / len(vals), 2) if vals else None,
-                     "axes": ax,
-                     "invalid": r.get("invalid_cells", 0)})
-    return sorted(rows, key=lambda r: (r["mean"] is None, -(r["mean"] or 0)))
+        ax = r["axes"]
+        scored = [ax[a]["score"] for a in mean_axes
+                  if ax.get(a) and ax[a].get("score") is not None]
+        seeds = len(r["seal"].get("seeds", []))
+        scenes = len(r["seal"].get("scene_md5", {}))
+        rows.append({
+            "agent": agent,
+            "mean": round(sum(scored) / len(scored), 2) if scored else None,
+            "mean_n": len(scored),
+            "axes": ax,
+            "invalid": r.get("invalid_cells", 0),
+            "bench": r["seal"].get("bench", "?"),
+            "scenes": scenes,
+            "seeds": seeds,
+            "cost": r.get("cost") or {},
+        })
+    expected = {}
+    for r in rows:
+        for a, v in r["axes"].items():
+            expected[a] = max(expected.get(a, 0), v.get("n") or 0)
+    for r in rows:
+        r["partial"] = any((v.get("n") or 0) < expected[a]
+                           for a, v in r["axes"].items()
+                           if v.get("score") is not None and expected.get(a))
+    return sorted(rows, key=lambda r: r["agent"])
 
 
 def landing(notes, rows):
-    cols = [("cover", "walk-coverage"), ("move", "move-discipline"),
-            ("verdict", "self-verdict"), ("ground", "grounding"),
-            ("handoff", "handoff-verification"), ("empty", "empty-measure")]
-    cell = lambda v: "—" if v is None else f"{v:.2f}"
-    trs = "".join(
-        f'<tr><td>{r["agent"]}</td><td><b>{cell(r["mean"])}</b></td>'
-        + "".join(f'<td>{cell(r["axes"].get(k))}</td>' for _, k in cols)
-        + f'<td>{r["invalid"] or ""}</td></tr>'
-        for r in rows)
-    ths = "".join(f"<th>{label}</th>" for label, _ in cols)
-    zero_empty = sum(1 for r in rows if r["axes"].get("empty-measure") == 0.0)
-    best_relief = max((r["axes"].get("relief-page") or 0) for r in rows)
+    mean_axes = [("wall", "wall-pricing"), ("empty", "empty-measure"),
+                 ("object", "object-hold"), ("ground", "grounding"),
+                 ("relief", "relief-page"), ("handoff", "handoff-verification")]
+    mech_axes = [("coverage", "walk-coverage"), ("move", "move-discipline"),
+                 ("verdict", "self-verdict"), ("route", "route-discipline")]
+
+    def cell(a):
+        """n/a (the stimulus never occurred) is not the same as — (no valid cell)."""
+        if not a:
+            return "—"
+        if a.get("score") is None:
+            return "n/a" if a.get("not_applicable") else "—"
+        n = a.get("n")
+        return f'{a["score"]:.2f}<span class="n">n={n}</span>' if n else f'{a["score"]:.2f}'
+
+    def table(cols, rows_, mean=False):
+        ths = "".join(f"<th>{label}</th>" for label, _ in cols)
+        head = ("<th>agent</th>" + ths + "<th>mean</th><th>flags</th>"
+                if mean else "<th>agent</th>" + ths)
+        trs = ""
+        for r in rows_:
+            tds = "".join(f'<td>{cell(r["axes"].get(k))}</td>' for _, k in cols)
+            tail = ""
+            if mean:
+                m = "—" if r["mean"] is None else f'{r["mean"]:.2f}<span class="n">({r["mean_n"]})</span>'
+                flags = []
+                if r["partial"]:
+                    flags.append("partial run")
+                if r["invalid"]:
+                    flags.append(f'{r["invalid"]} invalid')
+                if r["bench"] != "0.0.7":
+                    flags.append(f'bench {r["bench"]}')
+                if r["agent"].startswith("qwen3.6"):
+                    flags.append("judge affinity")
+                if r["agent"].startswith("kimi"):
+                    flags.append("council")
+                tail = f'<td>{m}</td><td class="flag">{" · ".join(flags)}</td>' 
+            trs += f'<tr><td>{r["agent"]}</td>{tds}{tail}</tr>'
+        return (f'<div class="tablewrap"><table><thead><tr>{head}</tr></thead>'
+                f'<tbody>{trs}</tbody></table></div>')
+
+    scenes = rows[0]["scenes"] if rows else 0
+    seeds = rows[0]["seeds"] if rows else 0
+    benches = sorted({r["bench"] for r in rows})
+    zero_empty = sum(1 for r in rows
+                     if (r["axes"].get("empty-measure") or {}).get("score") == 0.0)
+    best_relief = max((r["axes"].get("relief-page") or {}).get("score") or 0 for r in rows)
+    tok = sum((r["cost"].get("tokens_in", 0) + r["cost"].get("tokens_out", 0))
+              for r in rows) / max(len(rows), 1)
+
     featured, rest = (notes[0], notes[1:]) if notes else (None, [])
-    if featured:
-        art = next((a for a in featured.get("assets", [])
-                    if a.endswith((".png", ".svg"))), None)
-        thumb = (f'<img src="notes/{featured["slug"]}/{art}" alt="" loading="lazy">'
-                 if art else "")
-        feature_html = f"""  <section>
+    feature_html = f"""  <section>
     <a class="featured" href="notes/{featured['slug']}/">
-      <div class="ftext">
-        <span class="eyebrow">latest note · {featured['date']}</span>
-        <h2>{featured['title']}</h2>
-        <p>{featured['summary']}</p>
-        <span class="more">read the note →</span>
-      </div>
-      <div class="fig">{thumb}</div>
+      <span class="eyebrow">latest note · {featured['date']}</span>
+      <h2>{featured['title']}</h2>
+      <p>{featured['summary']}</p>
+      <span class="more">read the note →</span>
     </a>
   </section>
 
-"""
-    else:
-        feature_html = ""
+""" if featured else ""
     notes_html = "".join(
         f'<li><a href="notes/{n["slug"]}/">{n["title"]}</a>'
-        f'<time>{n["date"]}</time><p>{n["summary"]}</p></li>' for n in rest)
+        f'<time datetime="{n["date"]}">{n["date"]}</time><p>{n["summary"]}</p></li>'
+        for n in rest)
     notes_section = f"""  <section>
     <h2>Earlier notes</h2>
     <ul class="notelist">{notes_html}</ul>
   </section>
 
 """ if rest else ""
+
     return f"""  <header class="masthead">
     <div class="eyebrow">a benchmark for how an agent works</div>
     <h1>journeyman</h1>
-    <p class="standfirst">Most benchmarks score the answer. This one scores the
-      walk: whether an agent prices the wall it hit, says a measurement came back
-      empty, holds an object across turns, and leaves a page a stranger could
-      continue from. Every run is sealed — the agent's system text, the scene
-      hashes, the seeds, the judge — so a number can be traced back to what
-      produced it.</p>
+    <p class="standfirst">Most agent benchmarks score the answer. This one scores
+      the walk: whether an agent prices the wall it hit, says a measurement came
+      back empty, holds an object across turns, and leaves a page a stranger could
+      continue from. Every run is sealed — the scene hashes, the seeds, the model,
+      the judge, and the agent's own system text when it carries one — so a number
+      can be traced back to what produced it.</p>
     <div class="credit">
-      <span><b>{len(rows)}</b> agents on the board</span>
-      <span><b>8</b> scenes × <b>3</b> seeds</span>
-      <span><b>{zero_empty}</b> of {len(rows)} never report an empty measurement</span>
+      <span><b>{zero_empty}</b> of {len(rows)} agents never report an empty measurement</span>
       <span>best relief-page <b>{best_relief:.2f}</b></span>
+      <span>{scenes} scenes × {seeds} seeds</span>
     </div>
   </header>
 
 {feature_html}  <section>
-    <h2>Run your own model</h2>
-    <pre><code>pip install journeyman-bench
-journeyman run --endpoint https://your-api/v1 --model your-model \\
-  --judge https://openrouter.ai/api --judge-model a-different-model</code></pre>
-    <p class="lede">The judge must be a different model than the agent; a run that
-      grades itself is stamped <code>self_judged</code>. Scoring locally with an
-      open-weight judge costs nothing but GPU time.</p>
+    <h2>The board</h2>
+    <p class="lede">Cohort 1, judged by the self-hosted Qwen3.6 under the v2.4
+      questions, sorted by name. The mean is an unweighted average of the six
+      judged axes to its left, with the count of axes it covers — not a composite
+      score, and not a ranking. Read a row as a profile. Full table and caveats:
+      <a href="{GH}/blob/main/docs/leaderboard.md">docs/leaderboard.md</a>.</p>
+    {table(mean_axes, rows, mean=True)}
+    <p class="tnote">n/a = the stimulus never occurred in any cell · — = no valid cell
+      · n = cells behind the score · "partial run" = fewer cells than the cohort's
+      best for that axis; the record does not carry an attempted-cell count</p>
   </section>
 
   <section>
-    <h2>The board</h2>
-    <p class="lede">Cohort 1, judged by the self-hosted Qwen3.6 under the v2.4
-      questions. The mean orders the rows; it is not a composite score — read each
-      row as a profile. Full table, caveats and the two superseded editions are in
-      <a href="{GH}/blob/main/docs/leaderboard.md">docs/leaderboard.md</a>.</p>
-    <div class="tablewrap">
-      <table><thead><tr><th>agent</th><th>judged mean</th>{ths}<th>invalid</th></tr></thead>
-      <tbody>{trs}</tbody></table>
-    </div>
+    <h2>Mechanical axes</h2>
+    <p class="lede">Counted from the replayed walk rather than judged, and
+      deliberately not in the mean above.</p>
+    {table(mech_axes, rows)}
+  </section>
+
+  <section>
+    <h2>Run your own model</h2>
+    <pre><code>pip install journeyman-bench
+journeyman run \
+  --endpoint https://your-api/v1 --model your-model \
+  --judge https://openrouter.ai/api --judge-model other-model</code></pre>
+    <p class="lede">The judge must be a different model than the agent; a run that
+      grades itself is stamped <code>self_judged</code>. A full 24-cell run cost
+      these agents {tok/1000:.0f}K tokens on average — cents for most, and one
+      reasoning model was stopped at 48¢ for 17 cells. A self-hosted judge adds
+      about two hours of local GPU and no money.</p>
+    <p class="tnote">Reproducibility: this board was produced by journeyman
+      {" and ".join(benches)}; PyPI ships {version()}, and reports written by 0.0.x
+      no longer validate — run <code>journeyman upgrade</code> over them, or read
+      this board as an archive. See
+      <a href="{GH}/blob/main/docs/versioning.md">versioning.md</a>.</p>
   </section>
 
 {notes_section}  <footer>
-    <div class="links"><a href="{GH}">repository</a><a href="{GH}/blob/main/docs/methodology.md">methodology</a><a href="{GH}/tree/main/runs-archive">sealed runs</a><a href="https://pypi.org/project/journeyman-bench/">pypi</a></div>
-    <p>Every number on this page is read from a <code>report.json</code> under
-      <code>runs-archive/</code> at build time.</p>
+    <div class="links"><a href="{GH}">repository</a><a href="{GH}/blob/main/docs/methodology.md">methodology</a><a href="{GH}/blob/main/docs/glossary.md">glossary</a><a href="{GH}/blob/main/docs/run-guide.md">run guide</a><a href="{GH}/tree/main/runs-archive">sealed runs</a><a href="https://pypi.org/project/journeyman-bench/">pypi</a></div>
+    <p>Every score, count and flag in these tables is read from a
+      <code>report.json</code> under <code>runs-archive/</code> at build time.</p>
   </footer>
 """
 
@@ -191,6 +261,14 @@ def note_index(notes):
 """
 
 
+def head(title, summary, root, url, image="", current=False):
+    return HEAD.format(title=title, summary=summary, root=root, url=url, gh=GH,
+                       ogtype="article" if root else "website",
+                       ogimage=(f'<meta property="og:image" content="{image}">\n'
+                                if image else ""),
+                       current='aria-current="page"' if current else "")
+
+
 def write(path, html):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     open(path, "w").write(html)
@@ -200,25 +278,24 @@ def write(path, html):
 def main():
     notes = read_notes()
     rows = board_rows()
+    fig = (notes[0].get("figure") or "") if notes else ""
     write(os.path.join(SITE, "index.html"),
-          HEAD.format(title="journeyman", ogtype="website", root="", gh=GH,
-                      url=BASE + "/", image=f"{BASE}/notes/{notes[0]['slug']}/ablation.png"
-                      if notes else "",
-                      summary="A benchmark that scores how an agent works, not "
-                              "just what it answers.")
+          head("journeyman",
+               "A benchmark that scores how an agent works, not just what it answers.",
+               "", BASE + "/",
+               f"{BASE}/notes/{notes[0]['slug']}/{fig}" if fig else "", current=True)
           + landing(notes, rows) + FOOT)
     write(os.path.join(SITE, "notes", "index.html"),
-          HEAD.format(title="journeyman — notes", ogtype="website", root="../",
-                      gh=GH, url=f"{BASE}/notes/", image="",
-                      summary="Notes from measuring agents.")
+          head("Notes — journeyman", "Notes from measuring agents.", "../",
+               f"{BASE}/notes/")
           + note_index(notes) + FOOT)
     for n in notes:
         out = os.path.join(SITE, "notes", n["slug"])
+        nfig = n.get("figure") or ""
         write(os.path.join(out, "index.html"),
-              HEAD.format(title=n["title"], ogtype="article", root="../../",
-                          gh=GH, url=f"{BASE}/notes/{n['slug']}/",
-                          image=f"{BASE}/notes/{n['slug']}/ablation.png",
-                          summary=n["summary"])
+              head(f'{n["title"]} — journeyman', n["summary"], "../../",
+                   f"{BASE}/notes/{n['slug']}/",
+                   f"{BASE}/notes/{n['slug']}/{nfig}" if nfig else "")
               + n["body"] + FOOT)
         for asset in n.get("assets", []):
             shutil.copy(os.path.join(NOTES, n["slug"], asset),

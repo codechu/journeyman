@@ -6,5 +6,15 @@
     "ablation.svg",
     "ablation.csv",
     "ablation.png"
-  ]
+  ],
+  "figure": "ablation.png",
+  "authors": [
+    "Onur Barlık"
+  ],
+  "source_runs": [
+    "runs-archive/leaderboard-1-v2-2026-08-23",
+    "runs-archive/leaderboard-1-v22-ablation-2026-08-24",
+    "runs-archive/leaderboard-1-v24-2026-08-24"
+  ],
+  "status": "current"
 }
