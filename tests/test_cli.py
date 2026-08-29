@@ -51,6 +51,33 @@ class TestFlags(unittest.TestCase):
             self.assertIn("--quiet", text, f"{cmd} has no --quiet")
 
 
+class TestBareInvocation(unittest.TestCase):
+    """`journeyman` alone introduces the tool; it does not scold.
+
+    It used to answer with argparse's two-line error on stderr, exit 2 —
+    naming `cmd`, an internal dest, as the thing that was missing. The
+    first contact a new reader has was a failure.
+    """
+
+    def test_it_prints_the_mark_and_the_help_on_stdout(self):
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            with self.assertRaises(SystemExit) as e:
+                main([])
+        self.assertEqual(e.exception.code, 0)
+        text = out.getvalue()
+        self.assertIn("JOURNEYMAN", text)
+        self.assertIn("run", text)
+        self.assertEqual(err.getvalue(), "", "nothing belongs on stderr here")
+
+    def test_a_wrong_command_is_still_an_error(self):
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            with self.assertRaises(SystemExit) as e:
+                main(["nosuchcommand"])
+        self.assertEqual(e.exception.code, 2)
+
+
 class TestHelpDoesNotRot(unittest.TestCase):
     """Every optional flag explains itself.
 

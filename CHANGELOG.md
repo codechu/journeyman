@@ -10,6 +10,9 @@
   had drifted one character wider than their border in every release.
 - Six flags that carried no help text now carry it, and a test fails on the
   next one added without any.
+- Bare `journeyman` prints the mark and the help on stdout and exits 0. It
+  used to answer with argparse's error on stderr, exit 2, naming `cmd` — an
+  internal dest — as the missing thing. A wrong command is still an error.
 
 ## 0.2.0 — 2026-08-29
 

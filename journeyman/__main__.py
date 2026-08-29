@@ -83,7 +83,10 @@ def main(argv=None):
     ap = argparse.ArgumentParser(prog="journeyman")
     ap.add_argument("--version", action="version",
                     version=f"journeyman {__version__}")
-    sub = ap.add_subparsers(dest="cmd", required=True)
+    # Not required: bare `journeyman` is a reader asking what this is, not
+    # a mistake. It gets the mark and the full help on stdout and exits 0.
+    # A wrong command or a missing flag is still an error on stderr.
+    sub = ap.add_subparsers(dest="cmd", required=False)
 
     # Shared by the two commands that take minutes and print chrome while
     # they work. --quiet drops the chrome only: results, warnings and errors
@@ -203,6 +206,12 @@ def main(argv=None):
                 "seeds": "4242,777,31337"}
 
     args = ap.parse_args(argv)
+    if args.cmd is None:
+        from .banner import banner
+        from .color import paint
+        print(paint(banner(__version__), "amber"))
+        ap.print_help()
+        sys.exit(0)
     if args.cmd == "selftest":
         from .selftest import selftest
         sys.exit(selftest())
