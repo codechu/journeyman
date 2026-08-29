@@ -11,6 +11,14 @@
 - The changelog version guard reads the first *released* section instead of
   the first 400 characters, so writing an Unreleased entry no longer breaks
   the build.
+- **Release note.** The release workflow published this version to PyPI and
+  then failed creating the GitHub release: the job carried
+  `permissions: contents: read`. The GitHub release and the dataset sync were
+  completed by hand and the permission was fixed afterwards. The package is
+  intact — the red `release v0.2.0` run in Actions is that failure, not a
+  broken release. It is left in place because the log is the only record of
+  what a half-finished release looks like: PyPI is immutable, so a job that
+  can fail *after* publishing leaves a state no re-run can repair.
 
 ## 0.1.2 — 2026-08-28
 
