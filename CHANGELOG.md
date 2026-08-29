@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- `docs/glossary.md` — the words that carry the rest of the documentation,
+  defined by what the code does with them. A reader met `walk`, `cell`,
+  `band` and `NOT COMPARABLE` scattered across nine documents and had to
+  assemble the meanings from context.
 - The three badges that assert a fact — Python floor, dependency count,
   licence — are checked against `pyproject.toml`. Nothing read them, so
   raising `requires-python`, adding a dependency or changing the licence

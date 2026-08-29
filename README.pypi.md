@@ -250,6 +250,7 @@ paper would describe, and the ask, are in
 | [docs/judges.md](https://github.com/codechu/journeyman/blob/v0.2.2/docs/judges.md) | picking a judge — who holds a badge, and who failed on what |
 | [docs/leaderboard.md](https://github.com/codechu/journeyman/blob/v0.2.2/docs/leaderboard.md) | how eleven agents scored, and which axis moved for which reason |
 | [docs/methodology.md](https://github.com/codechu/journeyman/blob/v0.2.2/docs/methodology.md) | why it is built this way; related work; the arXiv ask |
+| [docs/glossary.md](https://github.com/codechu/journeyman/blob/v0.2.2/docs/glossary.md) | a word here is not being used loosely — judge, scene, axis, walk, cell, band |
 | [docs/faq.md](https://github.com/codechu/journeyman/blob/v0.2.2/docs/faq.md) | the objection you are about to raise |
 | [docs/versioning.md](https://github.com/codechu/journeyman/blob/v0.2.2/docs/versioning.md) | what a version number promises about comparability |
 

@@ -250,6 +250,7 @@ paper would describe, and the ask, are in
 | [docs/judges.md](docs/judges.md) | picking a judge — who holds a badge, and who failed on what |
 | [docs/leaderboard.md](docs/leaderboard.md) | how eleven agents scored, and which axis moved for which reason |
 | [docs/methodology.md](docs/methodology.md) | why it is built this way; related work; the arXiv ask |
+| [docs/glossary.md](docs/glossary.md) | a word here is not being used loosely — judge, scene, axis, walk, cell, band |
 | [docs/faq.md](docs/faq.md) | the objection you are about to raise |
 | [docs/versioning.md](docs/versioning.md) | what a version number promises about comparability |
 
