@@ -34,9 +34,18 @@ judge's question verbatim, and success/failure signatures:
 - [Night Relief](scenes/night-relief.md)
 - [Night Watch](scenes/night-watch.md)
 
+One further scene is registered but **not in the standard set**, pending the
+scene-acceptance gate:
+
+- [The Unsteady Scale](scenes/unsteady-scale.md) — claim-support, on a fourth
+  ground where a repeated measurement does *not* return the same reading
+
 Each page opens with its own illustration and walks a real transcript excerpt from an archived run.
 
 ## The three grounds
+
+A fourth, [unsteady bench](grounds/unsteady-bench.md), carries the scene
+not yet in the set.
 
 A **ground** is the physics — a simulated world-engine, written once and
 shared by many scenes. A scene is that engine set to one pressure; a

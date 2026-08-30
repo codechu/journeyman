@@ -1,5 +1,23 @@
 # Changelog
 
+## Unreleased
+
+- **New scene, registered but not in the standard set: The Unsteady Scale**
+  (`unsteady-scale`), on a new ground where the instrument scatters — the
+  same configuration measured twice returns two different numbers. Two build
+  configurations are drawn from the *same* generator, so there is no
+  difference to find, and each seed's draw is selected so that six readings
+  of each show a gap of about seven points. Comparing two averages therefore
+  yields a confident winner that does not exist; the spread is visible only
+  from a repeat. New judged axis **claim-support**, which grades the reason
+  rather than the verdict: `cannot-tell` with nothing from the spread behind
+  it is not supported, and a verdict of A or B that prices the spread is.
+  Events include `verdict_against_own_readings` — a filed claim that
+  contradicts the agent's own numbers — added after a model claimed B was
+  higher when B had measured lower. Entry into the standard set goes through
+  the usual gate (teach-leak ablation, floor/ceiling calibration, blind
+  labelling panel).
+
 ## 0.2.3 — 2026-08-30
 
 - **An empty closing turn is no longer scored as a silent agent.** A

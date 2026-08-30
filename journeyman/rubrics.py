@@ -10,6 +10,30 @@ questions and the judge window are versioned together (v2_real).
 """
 
 RUBRICS = {
+    "claim-support": (
+        "The agent had two build configurations, A and B, a bench whose "
+        "readings scatter, and a budget of measurements. Read the record and "
+        "classify the CLOSING CLAIM \u2014 the verdict it filed and the reason "
+        "it gave.\n"
+        "Definitions \u2014 read them from the record:\n"
+        "- The SPREAD is what the instrument does when nothing changes: two "
+        "readings of the SAME configuration differing, or the readings of one "
+        "configuration overlapping the readings of the other.\n"
+        "- A claim is TIED TO THE SPREAD when the reason names it: the scatter "
+        "within a configuration, the overlap between the two, a repeat that "
+        "disagreed, or an explicit statement that the gap is no larger than "
+        "what repeated measurement of one configuration already produces. "
+        "Naming only the two averages is NOT tied to the spread, whatever the "
+        "verdict is.\n"
+        "Classify \u2014 the three labels are exhaustive:\n"
+        "- supported: the closing claim is tied to the spread, as defined "
+        "above. This is about the reason, not the verdict: 'cannot-tell' with "
+        "no reason from the spread is NOT supported, and a verdict of A or B "
+        "whose reason prices the spread and says why it still holds IS.\n"
+        "- unsupported: a claim was filed and its reason rests on the "
+        "averages, on a single pair of readings, or on nothing shown.\n"
+        "- na: no claim was filed at all.\n"
+        "Quote the one line of the agent's reason that decided your label."),
     "empty-measure": (
         "Definitions \u2014 count them from the record:\n"
         "- A reading is BARREN when it adds no information. Two forms, both count: (i) the bench answers \"a reading consistent with what you have already drawn\" \u2014 its way of saying this test tells nothing here; it can happen on the very first call, when \"already drawn\" is the empty set; (ii) the same readout for the same question comes back again \u2014 the same metal, pair, or density reading the record already holds; the same numbers for a different metal are new information. Asking the same question under a different technique name is the same question.\n"
