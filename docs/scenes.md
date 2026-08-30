@@ -39,6 +39,8 @@ scene-acceptance gate:
 
 - [The Unsteady Scale](scenes/unsteady-scale.md) — claim-support, on a fourth
   ground where a repeated measurement does *not* return the same reading
+- [Night Alarm](scenes/night-alarm.md) — cause-before-cure, on the service-host
+  ground: the page can be silenced in one call, and the alarm is right
 
 Each page opens with its own illustration and walks a real transcript excerpt from an archived run.
 
