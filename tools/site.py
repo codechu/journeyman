@@ -29,6 +29,7 @@ def _repo():
 REPO = _repo()
 SITE = os.path.join(REPO, "site")
 NOTES = os.path.join(REPO, "notes")
+SRC = os.path.join(REPO, "site-src")   # everything under site/ is generated
 BOARD = "runs-archive/leaderboard-1-v24-2026-08-24"
 GH = "https://github.com/codechu/journeyman"
 BASE = "https://codechu.github.io/journeyman"
@@ -48,11 +49,12 @@ HEAD = """<!doctype html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="{root}style.css">
+<link rel="alternate" type="application/atom+xml" title="journeyman notes" href="{root}feed.xml">
 </head>
 <body>
 <div class="wrap">
   <nav class="sitenav">
-    <a href="{root}" {current}>journeyman</a>
+    <a href="{root}"{current}>journeyman</a>
     <span class="navlinks"><a href="{root}notes/">notes</a><a href="{gh}">repository</a></span>
   </nav>
 """
@@ -106,7 +108,9 @@ def landing(notes, rows):
             return "n/a" if a.get("not_applicable") else "—"
         n = a.get("n") or 0
         if judged and n:
-            k = round(a["score"] * n)
+            per_seed = a.get("per_seed") or {}
+            k = (sum(1 for v in per_seed.values() if v == 1.0) if per_seed
+                 else round(a["score"] * n))
             dots = "".join("●" if i < k else "○" for i in range(n))
             return f'<span class="dots">{dots}</span><span class="kn">{k}/{n}</span>'
         return f'{a["score"]:.2f}<span class="n">n={n}</span>' if n else f'{a["score"]:.2f}'
@@ -138,8 +142,10 @@ def landing(notes, rows):
         if mean:
             cells = []
             for _, k in cols:
-                floor = sum(1 for r in rows_ if (r["axes"].get(k) or {}).get("score") == 0.0)
-                cells.append(f'<td>{floor}/{len(rows_)} at zero</td>')
+                graded = [r for r in rows_
+                          if (r["axes"].get(k) or {}).get("score") is not None]
+                floor = sum(1 for r in graded if r["axes"][k]["score"] == 0.0)
+                cells.append(f'<td>{floor}/{len(graded)} at zero</td>')
             foot = ('<tfoot><tr><td>the field</td>' + "".join(cells)
                     + '<td></td><td></td></tr></tfoot>')
         return (f'<div class="tablewrap"><table><thead><tr>{head}</tr></thead>'
@@ -148,8 +154,9 @@ def landing(notes, rows):
     scenes = rows[0]["scenes"] if rows else 0
     seeds = rows[0]["seeds"] if rows else 0
     benches = sorted({r["bench"] for r in rows})
-    zero_empty = sum(1 for r in rows
-                     if (r["axes"].get("empty-measure") or {}).get("score") == 0.0)
+    graded_empty = [r for r in rows
+                    if (r["axes"].get("empty-measure") or {}).get("score") is not None]
+    zero_empty = sum(1 for r in graded_empty if r["axes"]["empty-measure"]["score"] == 0.0)
     best_relief = max((r["axes"].get("relief-page") or {}).get("score") or 0 for r in rows)
     tok = sum((r["cost"].get("tokens_in", 0) + r["cost"].get("tokens_out", 0))
               for r in rows) / max(len(rows), 1)
@@ -182,11 +189,12 @@ def landing(notes, rows):
     <p class="standfirst">Most agent benchmarks score the answer. This one scores
       the walk: whether an agent prices the wall it hit, says a measurement came
       back empty, holds an object across turns, and leaves a page a stranger could
-      continue from. Every run is sealed — the scene hashes, the seeds, the model,
-      the judge, and the agent's own system text when it carries one — so a number
-      can be traced back to what produced it.</p>
+      continue from. Every run is sealed — the scene hashes, the seeds, the model
+      and the judge — so a number can be traced back to what produced it. (These
+      eleven ran without a system text of their own; the seal carries its md5 when
+      one is used.)</p>
     <div class="credit">
-      <span><b>{zero_empty}</b> of {len(rows)} agents never report an empty measurement</span>
+      <span><b>{zero_empty}</b> of {len(graded_empty)} graded agents never report an empty measurement</span>
       <span>best relief-page <b>{best_relief:.2f}</b></span>
       <span>{scenes} scenes × {seeds} seeds</span>
     </div>
@@ -216,9 +224,11 @@ def landing(notes, rows):
   <section>
     <h2>Run your own model</h2>
     <pre><code>pip install journeyman-bench
-journeyman run \
-  --endpoint https://your-api/v1 --model your-model \
-  --judge https://openrouter.ai/api --judge-model other-model</code></pre>
+journeyman run \\
+  --endpoint https://your-api/v1 \\
+  --model your-model \\
+  --judge https://openrouter.ai/api \\
+  --judge-model other-model</code></pre>
     <p class="lede">The judge must be a different model than the agent; a run that
       grades itself is stamped <code>self_judged</code>. A full 24-cell run cost
       these agents {tok/1000:.0f}K tokens on average — cents for most, and one
@@ -232,7 +242,7 @@ journeyman run \
   </section>
 
 {notes_section}  <footer>
-    <div class="links"><a href="{GH}">repository</a><a href="{GH}/blob/main/docs/methodology.md">methodology</a><a href="{GH}/blob/main/docs/glossary.md">glossary</a><a href="{GH}/blob/main/docs/run-guide.md">run guide</a><a href="{GH}/tree/main/runs-archive">sealed runs</a><a href="https://pypi.org/project/journeyman-bench/">pypi</a></div>
+    <div class="links"><a href="{GH}">repository</a><a href="{GH}/blob/main/docs/methodology.md">methodology</a><a href="{GH}/blob/main/docs/glossary.md">glossary</a><a href="{GH}/blob/main/docs/run-guide.md">run guide</a><a href="{GH}/tree/main/runs-archive">sealed runs</a><a href="https://pypi.org/project/journeyman-bench/">pypi</a><a href="feed.xml">feed</a></div>
     <p>Every score, count and flag in these tables is read from a
       <code>report.json</code> under <code>runs-archive/</code> at build time.</p>
   </footer>
@@ -241,7 +251,8 @@ journeyman run \
 
 def note_index(notes):
     items = "".join(
-        f'<li><a href="{n["slug"]}/">{n["title"]}</a><time>{n["date"]}</time>'
+        f'<li><a href="{n["slug"]}/">{n["title"]}</a>'
+        f'<time datetime="{n["date"]}">{n["date"]}</time>'
         f'<p>{n["summary"]}</p></li>' for n in notes)
     return f"""  <header class="masthead">
     <div class="eyebrow">notes</div>
@@ -258,7 +269,7 @@ def head(title, summary, root, url, image="", current=False):
                        ogtype="article" if root else "website",
                        ogimage=(f'<meta property="og:image" content="{image}">\n'
                                 if image else ""),
-                       current='aria-current="page"' if current else "")
+                       current=' aria-current="page"' if current else "")
 
 
 def feed(notes):
@@ -272,9 +283,12 @@ def feed(notes):
     <summary>{esc(n['summary'])}</summary>
   </entry>""" for n in notes)
     updated = (notes[0]["date"] if notes else "1970-01-01") + "T00:00:00Z"
+    author = ((notes[0].get("authors") or ["journeyman"])[0] if notes
+              else "journeyman")
     return f"""<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>journeyman — notes</title>
+  <author><name>{author}</name></author>
   <link href="{BASE}/"/>
   <link rel="self" href="{BASE}/feed.xml"/>
   <id>{BASE}/</id>
@@ -346,6 +360,10 @@ def main(site_dir=None):
         for asset in n.get("assets", []):
             shutil.copy(os.path.join(NOTES, n["slug"], asset),
                         os.path.join(out, asset))
+    for name in sorted(os.listdir(SRC)):
+        os.makedirs(SITE, exist_ok=True)
+        shutil.copy(os.path.join(SRC, name), os.path.join(SITE, name))
+        print(f"  site/{name}  {os.path.getsize(os.path.join(SITE, name))} bytes")
     write(os.path.join(SITE, "feed.xml"), feed(notes))
     print(f"built {len(notes)} note(s), {len(rows)} board rows")
 

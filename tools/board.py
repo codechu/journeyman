@@ -57,10 +57,15 @@ def rows(directory, notes=None):
     for r in out:
         for a, v in r["axes"].items():
             expected[a] = max(expected.get(a, 0), v.get("n") or 0)
+    seen = {a for r in out for a in r["axes"]}
     for r in out:
-        r["partial"] = any((v.get("n") or 0) < expected[a]
-                           for a, v in r["axes"].items()
-                           if v.get("score") is not None and expected.get(a))
+        # an axis that vanished entirely is the loudest evidence of a short run,
+        # and iterating only the axes present would step straight over it
+        r["missing_axes"] = sorted(seen - set(r["axes"]))
+        r["partial"] = bool(r["missing_axes"]) or any(
+            (v.get("n") or 0) < expected[a]
+            for a, v in r["axes"].items()
+            if v.get("score") is not None and expected.get(a))
     return sorted(out, key=lambda r: r["agent"])
 
 

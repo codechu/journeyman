@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>journeyman — notes</title>
+  <author><name>Onur Barlık</name></author>
   <link href="https://codechu.github.io/journeyman/"/>
   <link rel="self" href="https://codechu.github.io/journeyman/feed.xml"/>
   <id>https://codechu.github.io/journeyman/</id>

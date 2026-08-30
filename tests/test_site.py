@@ -42,11 +42,24 @@ class SiteIsGenerated(unittest.TestCase):
                     committed = os.path.join(SITE, rel)
                     self.assertTrue(os.path.exists(committed),
                                     f"site/{rel} is missing — run tools/site.py")
-                    if f.endswith((".html", ".xml", ".csv")):
+                    if f.endswith((".html", ".xml", ".csv")):  # bytes must match
                         self.assertEqual(open(committed).read(), open(fresh).read(),
                                          f"site/{rel} differs from a fresh build — "
                                          "edit the source under notes/ or tools/, "
                                          "then run tools/site.py")
+            fresh_files = {os.path.relpath(os.path.join(b, f), tmp)
+                           for b, _, fs in os.walk(tmp) for f in fs}
+            for b, _, fs in os.walk(SITE):
+                for f in fs:
+                    rel = os.path.relpath(os.path.join(b, f), SITE)
+                    self.assertIn(rel, fresh_files,
+                                  f"site/{rel} is left over — no source builds it")
+
+
+def _board():
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    import board
+    return board.rows(BOARD)
 
 
 class NumbersComeFromRecords(unittest.TestCase):
@@ -64,6 +77,65 @@ class NumbersComeFromRecords(unittest.TestCase):
         self.assertTrue(printed, "no scores parsed — did the table markup change?")
         self.assertTrue(printed <= scores,
                         f"printed but not in any report.json: {printed - scores}")
+
+    def test_every_judged_cell_is_the_record_counted(self):
+        """`●●○ 2/3` must be the per_seed record counted, not a rounded score
+        re-expanded. The regex that guarded the old decimal notation went quiet
+        when the notation changed — this one reads what is actually printed."""
+        html = open(os.path.join(SITE, "index.html")).read()
+        table = html[html.index("<table>"):html.index("</table>")]
+        printed = re.findall(
+            r"<tr><td>([^<]+)</td>(.*?)</tr>", table, re.S)
+        axes = ["wall-pricing", "empty-measure", "object-hold", "grounding",
+                "relief-page", "handoff-verification"]
+        rows = {r["agent"]: r for r in _board()}
+        checked = 0
+        for agent, body in printed:
+            if agent not in rows:
+                continue
+            cells = re.findall(r"<td>(.*?)</td>", body, re.S)
+            for axis, cell in zip(axes, cells):
+                m = re.search(r'class="kn">(\d+)/(\d+)<', cell)
+                a = rows[agent]["axes"].get(axis) or {}
+                if not m:
+                    self.assertIn(cell.strip(), ("—", "n/a"))
+                    continue
+                k, n = int(m.group(1)), int(m.group(2))
+                per_seed = a.get("per_seed") or {}
+                self.assertEqual(n, a.get("n"), f"{agent}/{axis} denominator")
+                self.assertEqual(k, sum(1 for v in per_seed.values() if v == 1.0),
+                                 f"{agent}/{axis} count")
+                checked += 1
+        self.assertGreater(checked, 50, "parsed too few judged cells")
+
+    def test_mean_and_field_row_are_recomputed(self):
+        html = open(os.path.join(SITE, "index.html")).read()
+        table = html[html.index("<table>"):html.index("</table>")]
+        rows = {r["agent"]: r for r in _board()}
+        for agent, mean, k in re.findall(
+                r"<tr><td>([^<]+)</td>.*?(\d\.\d\d)<span class=\"n\">\((\d)\)",
+                table, re.S):
+            self.assertEqual(float(mean), rows[agent]["mean"], f"{agent} mean")
+            self.assertEqual(int(k), rows[agent]["mean_n"], f"{agent} mean axes")
+        axes = ["wall-pricing", "empty-measure", "object-hold", "grounding",
+                "relief-page", "handoff-verification"]
+        foot = re.findall(r"<td>(\d+)/(\d+) at zero</td>", table)
+        self.assertEqual(len(foot), len(axes))
+        for axis, (floor, denom) in zip(axes, foot):
+            graded = [r for r in rows.values()
+                      if (r["axes"].get(axis) or {}).get("score") is not None]
+            self.assertEqual(int(denom), len(graded),
+                             f"{axis}: the denominator must be what was graded, "
+                             "not the cohort size")
+            self.assertEqual(int(floor),
+                             sum(1 for r in graded if r["axes"][axis]["score"] == 0.0))
+
+    def test_the_run_command_is_readable_on_a_phone(self):
+        """Twice now the primary call to action has shipped as one clipped line."""
+        html = open(os.path.join(SITE, "index.html")).read()
+        block = html[html.index("<pre>"):html.index("</pre>")]
+        for line in block.replace("<pre><code>", "").split("\n"):
+            self.assertLessEqual(len(line), 60, f"too long to read on a phone: {line}")
 
     def test_note_chart_data_equals_its_csv(self):
         slug = "three-verdicts"
