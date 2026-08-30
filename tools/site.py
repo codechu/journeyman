@@ -54,7 +54,7 @@ HEAD = """<!doctype html>
 <body>
 <div class="wrap">
   <nav class="sitenav">
-    <a href="{root}"{current}>journeyman</a>
+    <a href="{root}./"{current}>journeyman</a>
     <span class="navlinks"><a href="{root}notes/">notes</a><a href="{gh}">repository</a></span>
   </nav>
 """
@@ -145,10 +145,11 @@ def landing(notes, rows):
                 graded = [r for r in rows_
                           if (r["axes"].get(k) or {}).get("score") is not None]
                 floor = sum(1 for r in graded if r["axes"][k]["score"] == 0.0)
-                cells.append(f'<td>{floor}/{len(graded)} at zero</td>')
-            foot = ('<tfoot><tr><td>the field</td>' + "".join(cells)
+                cells.append(f'<td>{floor}/{len(graded)}</td>')
+            foot = ('<tfoot><tr><td>at zero</td>' + "".join(cells)
                     + '<td></td><td></td></tr></tfoot>')
-        return (f'<div class="tablewrap"><table><thead><tr>{head}</tr></thead>'
+        cls = 'board' if mean else 'mech'
+        return (f'<div class="tablewrap"><table class="{cls}"><thead><tr>{head}</tr></thead>'
                 f'<tbody>{trs}</tbody>{foot}</table></div>')
 
     scenes = rows[0]["scenes"] if rows else 0
@@ -203,21 +204,23 @@ def landing(notes, rows):
 {feature_html}  <section>
     <h2>The board</h2>
     <p class="lede">Cohort 1, judged by the self-hosted Qwen3.6 under the v2.4
-      questions, sorted by name. The mean is an unweighted average of the six
-      judged axes to its left, with the count of axes it covers — not a composite
-      score, and not a ranking. Read a row as a profile. Full table and caveats:
+      questions, sorted by name. The mean is an unweighted average of the six judged
+      axes, with the count it covers — not a composite score, and not a ranking.
+      Read a row as a profile. On a narrow screen the axis columns are dropped
+      rather than hidden behind a scroll; open the page wider to see them. Full table and caveats:
       <a href="{GH}/blob/main/docs/leaderboard.md">docs/leaderboard.md</a>.</p>
     {table(mean_axes, rows, mean=True)}
-    <p class="tnote">n/a = the stimulus never occurred in any cell · — = no valid cell
-      · ●○ = seeds where the axis was met, out of the cells it was graded on
-      · "partial run" = fewer cells than the cohort's
+    <p class="tnote">●○ = seeds where the axis was met, out of the cells it was
+      graded on · — = no valid cell · the foot row counts agents at zero over the
+      agents that axis was graded on · "partial run" = fewer cells than the cohort's
       best for that axis; the record does not carry an attempted-cell count</p>
   </section>
 
   <section>
     <h2>Mechanical axes</h2>
     <p class="lede">Counted from the replayed walk rather than judged, and
-      deliberately not in the mean above.</p>
+      deliberately not in the mean above. Here <code>n/a</code> means the stimulus
+      never occurred in any cell, and <code>n=</code> is the cells behind the ratio.</p>
     {table(mech_axes, rows)}
   </section>
 
@@ -308,16 +311,25 @@ def inject_data(body, csv_path):
         table = [r for r in _csv.reader(f)
                  if r and not r[0].startswith("#") and r[0] != "axis"]
     notes_col = {
-        "wall-pricing": "pricing a wall you hit",
-        "grounding": "claims tied to what was seen",
-        "object-hold": "holding an object across turns",
-        "empty-measure": "reporting an empty result",
-        "relief-page": "a page a stranger can continue",
-        "handoff-verification": "checking the note you were handed",
-        "route-discipline": "one graded cell only",
+        "wall-pricing": "pricing a wall hit",
+        "grounding": "tied to what was seen",
+        "object-hold": "an object held",
+        "empty-measure": "an empty result said",
+        "relief-page": "a page to continue",
+        "handoff-verification": "the note checked",
+        "route-discipline": "one graded cell",
     }
     data = [{"ax": r[0], "note": notes_col.get(r[0], ""), "judge": float(r[1]),
              "jn": r[2], "rubric": float(r[3]), "rn": r[4]} for r in table]
+    fmt = lambda v: ("+" if v > 0 else "\u2212" if v < 0 else "") + f"{abs(v):.3f}"
+    static = ('<table><thead><tr><th>axis</th><th>judge swapped</th>'
+              '<th>questions changed</th></tr></thead><tbody>'
+              + "".join(f'<tr><td>{d["ax"]}</td><td>{fmt(d["judge"])}'
+                        f'<span class="n">{d["jn"]}</span></td>'
+                        f'<td>{fmt(d["rubric"])}<span class="n">{d["rn"]}</span></td></tr>'
+                        for d in data)
+              + "</tbody></table>")
+    body = body.replace("{{STATIC_TABLE}}", static)
     start = body.index("  const DATA = [")
     end = body.index("];", start) + 2
     return (body[:start] + "  const DATA = "

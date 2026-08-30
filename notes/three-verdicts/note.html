@@ -32,7 +32,7 @@
           <b>Questions changed</b> <span>judge fixed (self-hosted)</span></span>
       </div>
       <div class="plot" id="plot"></div>
-      <noscript><img src="ablation.svg" alt="Per-axis mean change: questions moved wall-pricing by −0.400, the judge moved grounding by +0.305, handoff-verification moved by 0.000." style="width:100%;height:auto"></noscript>
+      <noscript>{{STATIC_TABLE}}</noscript>
       <div class="scale">
         <div></div>
         <div class="ticks" id="ticks"></div>
@@ -58,7 +58,7 @@
     <div class="tiles">
       <div class="tile">
         <div class="cap">empty-measure</div>
-        <div class="num">9<span style="font-size:22px; color:var(--ink-3)">/11</span></div>
+        <div class="num">9<span style="font-size:21px; color:var(--ink-3)">/11</span></div>
         <p>score <b>0.00</b>. Best on the board is 0.33. Reporting that a measurement came back empty —
           rather than quietly moving on — is the hardest axis, and model strength does not buy it.</p>
       </div>
@@ -70,7 +70,7 @@
       </div>
       <div class="tile">
         <div class="cap">handoff-verification</div>
-        <div class="num">1<span style="font-size:22px; color:var(--ink-3)">/11</span></div>
+        <div class="num">1<span style="font-size:21px; color:var(--ink-3)">/11</span></div>
         <p>one agent verified the note it was handed, in all three seeds. Six others scored 0.00 —
           they acted on a page nobody checked.</p>
       </div>
@@ -133,10 +133,13 @@
     [["judge", d.judge, d.jn, "Judge swapped, questions fixed"],
      ["rubric", d.rubric, d.rn, "Questions changed, judge fixed"]].forEach(([k, v, n, label]) => {
       const w = pct(v);                       // a measured zero is a mark, not blank space
+      const stub = w < 0.4;                   // side follows the sign, never the size
       const bar = document.createElement("div");
-      bar.className = "bar " + k + (v < 0 ? " neg" : "") + (w < 0.4 ? " stub" : "");
-      bar.style.width = w < 0.4 ? "3px" : w + "%";
-      bar.style.left = v < 0 && w >= 0.4 ? (50 - w) + "%" : "50%";
+      bar.className = "bar " + k + (v < 0 ? " neg" : "") + (stub ? " stub" : "");
+      bar.style.width = stub ? "3px" : w + "%";
+      bar.style.left = stub
+        ? (v < 0 ? "calc(50% - 3px)" : v > 0 ? "50%" : "calc(50% - 1.5px)")
+        : (v < 0 ? (50 - w) + "%" : "50%");
       bar.tabIndex = 0;
       bar.setAttribute("role", "img");
       bar.setAttribute("aria-label",
@@ -169,9 +172,12 @@
     tbody.appendChild(tr);
   });
 
-  const tip = document.getElementById("tip")
-    || document.body.appendChild(Object.assign(document.createElement("div"),
-         {id: "tip", role: "status"}));
+  const tip = document.getElementById("tip") || (() => {
+    const d = document.createElement("div");
+    d.id = "tip";
+    d.setAttribute("role", "status");    // setAttribute, not property reflection
+    return document.body.appendChild(d);
+  })();
   const show = e => {
     const el = e.target.closest(".bar");
     if (!el || !tip) return;
@@ -189,3 +195,5 @@
   plot.addEventListener("focusout", hide);
 
 </script>
+
+<div id="tip" role="status" aria-live="polite"></div>

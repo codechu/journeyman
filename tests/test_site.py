@@ -63,7 +63,8 @@ def _board():
 
 
 class NumbersComeFromRecords(unittest.TestCase):
-    def test_every_board_score_appears_in_a_report(self):
+    def test_every_mechanical_score_appears_in_a_report(self):
+        """The mechanical table is the one that still prints decimals."""
         scores = set()
         for agent in os.listdir(BOARD):
             path = os.path.join(BOARD, agent, "report.json")
@@ -72,7 +73,7 @@ class NumbersComeFromRecords(unittest.TestCase):
                     if a.get("score") is not None:
                         scores.add(f"{a['score']:.2f}")
         html = open(os.path.join(SITE, "index.html")).read()
-        table = html[html.index("<table>"):html.rindex("</table>")]
+        table = html[html.index('<table class="mech">'):html.rindex("</table>")]
         printed = set(re.findall(r">(\d\.\d\d)<span class=\"n\">n=", table))
         self.assertTrue(printed, "no scores parsed — did the table markup change?")
         self.assertTrue(printed <= scores,
@@ -83,7 +84,7 @@ class NumbersComeFromRecords(unittest.TestCase):
         re-expanded. The regex that guarded the old decimal notation went quiet
         when the notation changed — this one reads what is actually printed."""
         html = open(os.path.join(SITE, "index.html")).read()
-        table = html[html.index("<table>"):html.index("</table>")]
+        table = html[html.index('<table class="board">'):html.index("</table>")]
         printed = re.findall(
             r"<tr><td>([^<]+)</td>(.*?)</tr>", table, re.S)
         axes = ["wall-pricing", "empty-measure", "object-hold", "grounding",
@@ -110,7 +111,7 @@ class NumbersComeFromRecords(unittest.TestCase):
 
     def test_mean_and_field_row_are_recomputed(self):
         html = open(os.path.join(SITE, "index.html")).read()
-        table = html[html.index("<table>"):html.index("</table>")]
+        table = html[html.index('<table class="board">'):html.index("</table>")]
         rows = {r["agent"]: r for r in _board()}
         for agent, mean, k in re.findall(
                 r"<tr><td>([^<]+)</td>.*?(\d\.\d\d)<span class=\"n\">\((\d)\)",
@@ -119,7 +120,8 @@ class NumbersComeFromRecords(unittest.TestCase):
             self.assertEqual(int(k), rows[agent]["mean_n"], f"{agent} mean axes")
         axes = ["wall-pricing", "empty-measure", "object-hold", "grounding",
                 "relief-page", "handoff-verification"]
-        foot = re.findall(r"<td>(\d+)/(\d+) at zero</td>", table)
+        tfoot = table[table.index("<tfoot>"):]
+        foot = re.findall(r"<td>(\d+)/(\d+)</td>", tfoot)
         self.assertEqual(len(foot), len(axes))
         for axis, (floor, denom) in zip(axes, foot):
             graded = [r for r in rows.values()

@@ -19,7 +19,7 @@
 <body>
 <div class="wrap">
   <nav class="sitenav">
-    <a href="../../">journeyman</a>
+    <a href="../.././">journeyman</a>
     <span class="navlinks"><a href="../../notes/">notes</a><a href="https://github.com/codechu/journeyman">repository</a></span>
   </nav>
   <header class="masthead">
@@ -56,7 +56,7 @@
           <b>Questions changed</b> <span>judge fixed (self-hosted)</span></span>
       </div>
       <div class="plot" id="plot"></div>
-      <noscript><img src="ablation.svg" alt="Per-axis mean change: questions moved wall-pricing by −0.400, the judge moved grounding by +0.305, handoff-verification moved by 0.000." style="width:100%;height:auto"></noscript>
+      <noscript><table><thead><tr><th>axis</th><th>judge swapped</th><th>questions changed</th></tr></thead><tbody><tr><td>wall-pricing</td><td>+0.167<span class="n">4/10</span></td><td>−0.400<span class="n">7/10</span></td></tr><tr><td>grounding</td><td>+0.305<span class="n">5/11</span></td><td>−0.061<span class="n">4/11</span></td></tr><tr><td>object-hold</td><td>−0.061<span class="n">2/11</span></td><td>−0.001<span class="n">6/11</span></td></tr><tr><td>empty-measure</td><td>−0.030<span class="n">1/11</span></td><td>−0.031<span class="n">3/11</span></td></tr><tr><td>relief-page</td><td>−0.034<span class="n">1/10</span></td><td>0.000<span class="n">0/10</span></td></tr><tr><td>handoff-verification</td><td>0.000<span class="n">0/10</span></td><td>0.000<span class="n">0/10</span></td></tr><tr><td>route-discipline</td><td>0.000<span class="n">0/1</span></td><td>0.000<span class="n">0/1</span></td></tr></tbody></table></noscript>
       <div class="scale">
         <div></div>
         <div class="ticks" id="ticks"></div>
@@ -82,7 +82,7 @@
     <div class="tiles">
       <div class="tile">
         <div class="cap">empty-measure</div>
-        <div class="num">9<span style="font-size:22px; color:var(--ink-3)">/11</span></div>
+        <div class="num">9<span style="font-size:21px; color:var(--ink-3)">/11</span></div>
         <p>score <b>0.00</b>. Best on the board is 0.33. Reporting that a measurement came back empty —
           rather than quietly moving on — is the hardest axis, and model strength does not buy it.</p>
       </div>
@@ -94,7 +94,7 @@
       </div>
       <div class="tile">
         <div class="cap">handoff-verification</div>
-        <div class="num">1<span style="font-size:22px; color:var(--ink-3)">/11</span></div>
+        <div class="num">1<span style="font-size:21px; color:var(--ink-3)">/11</span></div>
         <p>one agent verified the note it was handed, in all three seeds. Six others scored 0.00 —
           they acted on a page nobody checked.</p>
       </div>
@@ -136,7 +136,7 @@
   const DATA = [
     {
       "ax": "wall-pricing",
-      "note": "pricing a wall you hit",
+      "note": "pricing a wall hit",
       "judge": 0.167,
       "jn": "4/10",
       "rubric": -0.4,
@@ -144,7 +144,7 @@
     },
     {
       "ax": "grounding",
-      "note": "claims tied to what was seen",
+      "note": "tied to what was seen",
       "judge": 0.305,
       "jn": "5/11",
       "rubric": -0.061,
@@ -152,7 +152,7 @@
     },
     {
       "ax": "object-hold",
-      "note": "holding an object across turns",
+      "note": "an object held",
       "judge": -0.061,
       "jn": "2/11",
       "rubric": -0.001,
@@ -160,7 +160,7 @@
     },
     {
       "ax": "empty-measure",
-      "note": "reporting an empty result",
+      "note": "an empty result said",
       "judge": -0.03,
       "jn": "1/11",
       "rubric": -0.031,
@@ -168,7 +168,7 @@
     },
     {
       "ax": "relief-page",
-      "note": "a page a stranger can continue",
+      "note": "a page to continue",
       "judge": -0.034,
       "jn": "1/10",
       "rubric": 0.0,
@@ -176,7 +176,7 @@
     },
     {
       "ax": "handoff-verification",
-      "note": "checking the note you were handed",
+      "note": "the note checked",
       "judge": 0.0,
       "jn": "0/10",
       "rubric": 0.0,
@@ -184,7 +184,7 @@
     },
     {
       "ax": "route-discipline",
-      "note": "one graded cell only",
+      "note": "one graded cell",
       "judge": 0.0,
       "jn": "0/1",
       "rubric": 0.0,
@@ -206,10 +206,13 @@
     [["judge", d.judge, d.jn, "Judge swapped, questions fixed"],
      ["rubric", d.rubric, d.rn, "Questions changed, judge fixed"]].forEach(([k, v, n, label]) => {
       const w = pct(v);                       // a measured zero is a mark, not blank space
+      const stub = w < 0.4;                   // side follows the sign, never the size
       const bar = document.createElement("div");
-      bar.className = "bar " + k + (v < 0 ? " neg" : "") + (w < 0.4 ? " stub" : "");
-      bar.style.width = w < 0.4 ? "3px" : w + "%";
-      bar.style.left = v < 0 && w >= 0.4 ? (50 - w) + "%" : "50%";
+      bar.className = "bar " + k + (v < 0 ? " neg" : "") + (stub ? " stub" : "");
+      bar.style.width = stub ? "3px" : w + "%";
+      bar.style.left = stub
+        ? (v < 0 ? "calc(50% - 3px)" : v > 0 ? "50%" : "calc(50% - 1.5px)")
+        : (v < 0 ? (50 - w) + "%" : "50%");
       bar.tabIndex = 0;
       bar.setAttribute("role", "img");
       bar.setAttribute("aria-label",
@@ -242,9 +245,12 @@
     tbody.appendChild(tr);
   });
 
-  const tip = document.getElementById("tip")
-    || document.body.appendChild(Object.assign(document.createElement("div"),
-         {id: "tip", role: "status"}));
+  const tip = document.getElementById("tip") || (() => {
+    const d = document.createElement("div");
+    d.id = "tip";
+    d.setAttribute("role", "status");    // setAttribute, not property reflection
+    return document.body.appendChild(d);
+  })();
   const show = e => {
     const el = e.target.closest(".bar");
     if (!el || !tip) return;
@@ -262,6 +268,8 @@
   plot.addEventListener("focusout", hide);
 
 </script>
+
+<div id="tip" role="status" aria-live="polite"></div>
 </div>
 </body>
 </html>

@@ -202,21 +202,36 @@
   .tnote{font-family:"IBM Plex Mono",monospace; font-size:13px; color:var(--ink-3); margin:10px 0 0}
   td.flag{font-family:"IBM Plex Mono",monospace; font-size:13px; color:var(--ink-3)}
   @media (max-width:640px){
-    .tablewrap{mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent)}
     pre code{white-space:pre-wrap; overflow-wrap:anywhere}
+    /* a 28px fade cannot announce 320px of hidden table; drop the axis columns
+       instead and keep what the lede spends its sentences on */
+    .board th:nth-child(n+2):nth-child(-n+7),
+    .board td:nth-child(n+2):nth-child(-n+7){display:none}
+    .zero{top:0; bottom:0}
+    .track{margin:0 44px}
   }
   @media print{
+    :root, :root[data-theme="dark"], :root:not([data-theme="light"]){
+      --paper:#fff; --panel:#fff; --ink:#000; --ink-2:#333; --ink-3:#555;
+      --rule:#bbb; --rule-strong:#888; --judge:#1B6FA8; --rubric:#C06014;
+    }
     body{background:#fff; color:#000}
     .sitenav,.exports{display:none}
     .chart,.tile,.featured{box-shadow:none}
   }
-  .n{font-size:11px; color:var(--ink-3); margin-left:4px; letter-spacing:0}
+  .n{font-size:13px; color:var(--ink-3); margin-left:6px; letter-spacing:0}
   .byline{font-family:"IBM Plex Mono",monospace; font-size:13px; color:var(--ink-3);
     margin:16px 0 0; line-height:1.7}
   .byline a{color:var(--ink-2)}
   .bar.stub{border-radius:1px}
   .notelist li:first-child{border-top:none; padding-top:0}
-  .dots{font-size:11px; letter-spacing:1px; color:var(--ink); margin-right:6px}
+  .dots{font-family:"DejaVu Sans","Segoe UI Symbol","Apple Symbols",sans-serif;
+    font-size:13px; letter-spacing:1px; color:var(--ink);
+    display:block; width:4ch; margin:0 0 2px auto; text-align:left}
+  .kn{display:block}
   .kn{font-family:"IBM Plex Mono",monospace; font-size:13px; color:var(--ink-2)}
-  tfoot td{color:var(--ink-3); font-family:"IBM Plex Mono",monospace; font-size:11px;
-    border-top:1px solid var(--rule-strong); border-bottom:none; padding-top:10px}
+  tfoot td{color:var(--ink-3); font-family:"IBM Plex Mono",monospace; font-size:13px;
+    border-top:2px solid var(--rule-strong); border-bottom:none; padding-top:12px;
+    white-space:nowrap}
+  tfoot td:first-child{font-size:13px}
+  .mech th:first-child, .mech td:first-child{width:220px}
