@@ -15,8 +15,18 @@ import os
 import shutil
 import sys
 
-REPO = os.path.abspath(sys.argv[1] if len(sys.argv) > 1 else
-                       os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import board  # noqa: E402
+
+def _repo():
+    """argv only counts when this file is the program — under a test runner
+    sys.argv[1] belongs to the runner, not to us."""
+    if __name__ == "__main__" and len(sys.argv) > 1:
+        return os.path.abspath(sys.argv[1])
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+
+REPO = _repo()
 SITE = os.path.join(REPO, "site")
 NOTES = os.path.join(REPO, "notes")
 BOARD = "runs-archive/leaderboard-1-v24-2026-08-24"
@@ -75,41 +85,8 @@ def read_notes():
 
 
 def board_rows():
-    """The cohort table, read from the sealed reports — never typed by hand."""
-    root = os.path.join(REPO, BOARD)
-    mean_axes = ["wall-pricing", "empty-measure", "object-hold", "grounding",
-                 "relief-page", "handoff-verification"]
-    rows = []
-    for agent in sorted(os.listdir(root)):
-        f = os.path.join(root, agent, "report.json")
-        if not os.path.exists(f):
-            continue
-        r = json.load(open(f))
-        ax = r["axes"]
-        scored = [ax[a]["score"] for a in mean_axes
-                  if ax.get(a) and ax[a].get("score") is not None]
-        seeds = len(r["seal"].get("seeds", []))
-        scenes = len(r["seal"].get("scene_md5", {}))
-        rows.append({
-            "agent": agent,
-            "mean": round(sum(scored) / len(scored), 2) if scored else None,
-            "mean_n": len(scored),
-            "axes": ax,
-            "invalid": r.get("invalid_cells", 0),
-            "bench": r["seal"].get("bench", "?"),
-            "scenes": scenes,
-            "seeds": seeds,
-            "cost": r.get("cost") or {},
-        })
-    expected = {}
-    for r in rows:
-        for a, v in r["axes"].items():
-            expected[a] = max(expected.get(a, 0), v.get("n") or 0)
-    for r in rows:
-        r["partial"] = any((v.get("n") or 0) < expected[a]
-                           for a, v in r["axes"].items()
-                           if v.get("score") is not None and expected.get(a))
-    return sorted(rows, key=lambda r: r["agent"])
+    """One reader for both surfaces — see tools/board.py."""
+    return board.rows(os.path.join(REPO, BOARD))
 
 
 def landing(notes, rows):
@@ -269,13 +246,64 @@ def head(title, summary, root, url, image="", current=False):
                        current='aria-current="page"' if current else "")
 
 
+def feed(notes):
+    esc = lambda t: (t.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
+    entries = "".join(f"""
+  <entry>
+    <title>{esc(n['title'])}</title>
+    <link href="{BASE}/notes/{n['slug']}/"/>
+    <id>{BASE}/notes/{n['slug']}/</id>
+    <updated>{n['date']}T00:00:00Z</updated>
+    <summary>{esc(n['summary'])}</summary>
+  </entry>""" for n in notes)
+    updated = (notes[0]["date"] if notes else "1970-01-01") + "T00:00:00Z"
+    return f"""<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>journeyman — notes</title>
+  <link href="{BASE}/"/>
+  <link rel="self" href="{BASE}/feed.xml"/>
+  <id>{BASE}/</id>
+  <updated>{updated}</updated>{entries}
+</feed>
+"""
+
+
+def inject_data(body, csv_path):
+    """Replace the note's DATA array with rows read from its CSV at build time.
+
+    The array used to be typed into the page eight lines above the words
+    "regenerated from the sealed reports, not hand-entered". Now it is.
+    """
+    import csv as _csv
+    with open(csv_path) as f:
+        table = [r for r in _csv.reader(f)
+                 if r and not r[0].startswith("#") and r[0] != "axis"]
+    notes_col = {
+        "wall-pricing": "pricing a wall you hit",
+        "grounding": "claims tied to what was seen",
+        "object-hold": "holding an object across turns",
+        "empty-measure": "reporting an empty result",
+        "relief-page": "a page a stranger can continue",
+        "handoff-verification": "checking the note you were handed",
+        "route-discipline": "one graded cell only",
+    }
+    data = [{"ax": r[0], "note": notes_col.get(r[0], ""), "judge": float(r[1]),
+             "jn": r[2], "rubric": float(r[3]), "rn": r[4]} for r in table]
+    start = body.index("  const DATA = [")
+    end = body.index("];", start) + 2
+    return (body[:start] + "  const DATA = "
+            + json.dumps(data, indent=2).replace("\n", "\n  ") + ";" + body[end:])
+
+
 def write(path, html):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     open(path, "w").write(html)
     print(f"  {os.path.relpath(path, REPO)}  {os.path.getsize(path)} bytes")
 
 
-def main():
+def main(site_dir=None):
+    global SITE
+    SITE = site_dir or SITE
     notes = read_notes()
     rows = board_rows()
     fig = (notes[0].get("figure") or "") if notes else ""
@@ -292,6 +320,9 @@ def main():
     for n in notes:
         out = os.path.join(SITE, "notes", n["slug"])
         nfig = n.get("figure") or ""
+        if n.get("data"):
+            n["body"] = inject_data(n["body"],
+                                    os.path.join(NOTES, n["slug"], n["data"]))
         write(os.path.join(out, "index.html"),
               head(f'{n["title"]} — journeyman', n["summary"], "../../",
                    f"{BASE}/notes/{n['slug']}/",
@@ -300,6 +331,7 @@ def main():
         for asset in n.get("assets", []):
             shutil.copy(os.path.join(NOTES, n["slug"], asset),
                         os.path.join(out, asset))
+    write(os.path.join(SITE, "feed.xml"), feed(notes))
     print(f"built {len(notes)} note(s), {len(rows)} board rows")
 
 

@@ -33,7 +33,7 @@ move on a single agent — so the edit alone does not account for the two
 axes that did.
 
 Reproduce: `scripts/journeyman_rejudge.py SRC DEST --judge <url>
---judge-model <model>` per agent, then `scripts/journeyman_leaderboard.py`
+--judge-model <model>` per agent, then `tools/journeyman_leaderboard.py`
 over the resulting `report.json` files (notes sidecar:
 `docs/research/journeyman-real-calibration/leaderboard-notes.json` in the
 development monorepo). Cost: ~2 h of local GPU, $0.

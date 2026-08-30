@@ -2,7 +2,7 @@
 
 Nine agents on the standard set v2 (8 scenes × seeds 4242/777/31337),
 judged by the qualified self-hosted Qwen3.6-35B-A3B (IQ4_XS). The table
-is rendered from these sealed reports by `scripts/journeyman_leaderboard.py`
+is rendered from these sealed reports by `tools/journeyman_leaderboard.py`
 into `docs/leaderboard.md`; nothing there is hand-entered.
 
 - `deepseek-r1-0528`: PARTIAL — 17/24 cells, stopped on cost; judged

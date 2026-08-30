@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>journeyman — notes</title>
+  <link href="https://codechu.github.io/journeyman/"/>
+  <link rel="self" href="https://codechu.github.io/journeyman/feed.xml"/>
+  <id>https://codechu.github.io/journeyman/</id>
+  <updated>2026-08-30T00:00:00Z</updated>
+  <entry>
+    <title>Same cells, three verdicts</title>
+    <link href="https://codechu.github.io/journeyman/notes/three-verdicts/"/>
+    <id>https://codechu.github.io/journeyman/notes/three-verdicts/</id>
+    <updated>2026-08-30T00:00:00Z</updated>
+    <summary>One recording of eleven agents, graded three times: how much of a benchmark score is the judge reading it, and how much the questions asked.</summary>
+  </entry>
+</feed>

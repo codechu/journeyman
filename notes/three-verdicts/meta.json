@@ -16,5 +16,6 @@
     "runs-archive/leaderboard-1-v22-ablation-2026-08-24",
     "runs-archive/leaderboard-1-v24-2026-08-24"
   ],
-  "status": "current"
+  "status": "current",
+  "data": "ablation.csv"
 }

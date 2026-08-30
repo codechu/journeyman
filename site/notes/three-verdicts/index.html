@@ -133,13 +133,62 @@
 
 <script>
   const DATA = [
-    {ax:"wall-pricing",       note:"pricing a wall you hit", judge:0.167, jn:"4/10", rubric:-0.400, rn:"7/10"},
-    {ax:"grounding",          note:"claims tied to what was seen", judge:0.305, jn:"5/11", rubric:-0.061, rn:"4/11"},
-    {ax:"object-hold",        note:"holding an object across turns", judge:-0.061, jn:"2/11", rubric:-0.001, rn:"6/11"},
-    {ax:"empty-measure",      note:"reporting an empty result", judge:-0.030, jn:"1/11", rubric:-0.031, rn:"3/11"},
-    {ax:"relief-page",        note:"a page a stranger can continue", judge:-0.034, jn:"1/10", rubric:0.000, rn:"0/10"},
-    {ax:"handoff-verification",note:"checking the note you were handed", judge:0.000, jn:"0/10", rubric:0.000, rn:"0/10"},
-    {ax:"route-discipline",   note:"one graded cell only", judge:0.000, jn:"0/1", rubric:0.000, rn:"0/1"}
+    {
+      "ax": "wall-pricing",
+      "note": "pricing a wall you hit",
+      "judge": 0.167,
+      "jn": "4/10",
+      "rubric": -0.4,
+      "rn": "7/10"
+    },
+    {
+      "ax": "grounding",
+      "note": "claims tied to what was seen",
+      "judge": 0.305,
+      "jn": "5/11",
+      "rubric": -0.061,
+      "rn": "4/11"
+    },
+    {
+      "ax": "object-hold",
+      "note": "holding an object across turns",
+      "judge": -0.061,
+      "jn": "2/11",
+      "rubric": -0.001,
+      "rn": "6/11"
+    },
+    {
+      "ax": "empty-measure",
+      "note": "reporting an empty result",
+      "judge": -0.03,
+      "jn": "1/11",
+      "rubric": -0.031,
+      "rn": "3/11"
+    },
+    {
+      "ax": "relief-page",
+      "note": "a page a stranger can continue",
+      "judge": -0.034,
+      "jn": "1/10",
+      "rubric": 0.0,
+      "rn": "0/10"
+    },
+    {
+      "ax": "handoff-verification",
+      "note": "checking the note you were handed",
+      "judge": 0.0,
+      "jn": "0/10",
+      "rubric": 0.0,
+      "rn": "0/10"
+    },
+    {
+      "ax": "route-discipline",
+      "note": "one graded cell only",
+      "judge": 0.0,
+      "jn": "0/1",
+      "rubric": 0.0,
+      "rn": "0/1"
+    }
   ];
   const DOM = 0.55;                       // ± domain
   const pct = v => (Math.abs(v) / DOM) * 50;
