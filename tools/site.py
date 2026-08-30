@@ -96,13 +96,19 @@ def landing(notes, rows):
     mech_axes = [("coverage", "walk-coverage"), ("move", "move-discipline"),
                  ("verdict", "self-verdict"), ("route", "route-discipline")]
 
-    def cell(a):
-        """n/a (the stimulus never occurred) is not the same as — (no valid cell)."""
+    def cell(a, judged=True):
+        """A judged axis over three seeds takes four values — 0.00, 0.33, 0.67,
+        1.00 — because it is a count of 3 wearing a decimal. Print the count.
+        Mechanical axes are ratios over a whole walk and stay decimals."""
         if not a:
             return "—"
         if a.get("score") is None:
             return "n/a" if a.get("not_applicable") else "—"
-        n = a.get("n")
+        n = a.get("n") or 0
+        if judged and n:
+            k = round(a["score"] * n)
+            dots = "".join("●" if i < k else "○" for i in range(n))
+            return f'<span class="dots">{dots}</span><span class="kn">{k}/{n}</span>'
         return f'{a["score"]:.2f}<span class="n">n={n}</span>' if n else f'{a["score"]:.2f}'
 
     def table(cols, rows_, mean=False):
@@ -111,7 +117,7 @@ def landing(notes, rows):
                 if mean else "<th>agent</th>" + ths)
         trs = ""
         for r in rows_:
-            tds = "".join(f'<td>{cell(r["axes"].get(k))}</td>' for _, k in cols)
+            tds = "".join(f'<td>{cell(r["axes"].get(k), mean)}</td>' for _, k in cols)
             tail = ""
             if mean:
                 m = "—" if r["mean"] is None else f'{r["mean"]:.2f}<span class="n">({r["mean_n"]})</span>'
@@ -128,8 +134,16 @@ def landing(notes, rows):
                     flags.append("council")
                 tail = f'<td>{m}</td><td class="flag">{" · ".join(flags)}</td>' 
             trs += f'<tr><td>{r["agent"]}</td>{tds}{tail}</tr>'
+        foot = ""
+        if mean:
+            cells = []
+            for _, k in cols:
+                floor = sum(1 for r in rows_ if (r["axes"].get(k) or {}).get("score") == 0.0)
+                cells.append(f'<td>{floor}/{len(rows_)} at zero</td>')
+            foot = ('<tfoot><tr><td>the field</td>' + "".join(cells)
+                    + '<td></td><td></td></tr></tfoot>')
         return (f'<div class="tablewrap"><table><thead><tr>{head}</tr></thead>'
-                f'<tbody>{trs}</tbody></table></div>')
+                f'<tbody>{trs}</tbody>{foot}</table></div>')
 
     scenes = rows[0]["scenes"] if rows else 0
     seeds = rows[0]["seeds"] if rows else 0
@@ -187,7 +201,8 @@ def landing(notes, rows):
       <a href="{GH}/blob/main/docs/leaderboard.md">docs/leaderboard.md</a>.</p>
     {table(mean_axes, rows, mean=True)}
     <p class="tnote">n/a = the stimulus never occurred in any cell · — = no valid cell
-      · n = cells behind the score · "partial run" = fewer cells than the cohort's
+      · ●○ = seeds where the axis was met, out of the cells it was graded on
+      · "partial run" = fewer cells than the cohort's
       best for that axis; the record does not carry an attempted-cell count</p>
   </section>
 

@@ -216,3 +216,7 @@
   .byline a{color:var(--ink-2)}
   .bar.stub{border-radius:1px}
   .notelist li:first-child{border-top:none; padding-top:0}
+  .dots{font-size:11px; letter-spacing:1px; color:var(--ink); margin-right:6px}
+  .kn{font-family:"IBM Plex Mono",monospace; font-size:13px; color:var(--ink-2)}
+  tfoot td{color:var(--ink-3); font-family:"IBM Plex Mono",monospace; font-size:11px;
+    border-top:1px solid var(--rule-strong); border-bottom:none; padding-top:10px}
