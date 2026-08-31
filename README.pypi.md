@@ -14,7 +14,7 @@
 > **Journeyman measures how agents work — and how they fail.**
 
 You point it at your agent (any OpenAI-compatible endpoint). It drops
-the agent into eight small **simulated jobs** — diagnose a crashed
+the agent into nine small **simulated jobs** — diagnose a crashed
 service, assay an alloy at a bench, walk a fogged maze, pick up a night
 shift from a note that lies — and grades **how it worked**, not just
 whether it finished:
@@ -129,7 +129,7 @@ still owed). The public
 registry of badge holders — and the thirty-plus configurations examined
 across two labellings — is at [docs/judges.md](https://github.com/codechu/journeyman/blob/v0.2.3/docs/judges.md).
 
-## Eight scenes
+## Nine scenes
 
 Each puts pressure on ONE expensive, real failure family — and declares
 only its tools and budget, never what good behaviour looks like. Full pages (world, task, trap, counted events, the judge's question
@@ -146,6 +146,7 @@ world-engines beneath them are documented under [docs/grounds/](https://github.c
 | [The Unmarked Maze](https://github.com/codechu/journeyman/blob/v0.2.3/docs/scenes/unmarked-maze.md) | wandering without coverage, claiming what the world denies |
 | [Night Relief](https://github.com/codechu/journeyman/blob/v0.2.3/docs/scenes/night-relief.md) | leaving a handoff a stranger cannot continue |
 | [Night Watch](https://github.com/codechu/journeyman/blob/v0.2.3/docs/scenes/night-watch.md) | repeating an authoritative note the world contradicts |
+| [Night Alarm](https://github.com/codechu/journeyman/blob/v0.2.3/docs/scenes/night-alarm.md) | ending the symptom and leaving the cause running |
 
 ## How it works
 
@@ -214,7 +215,7 @@ We would rather you read these here than discover them:
 
 ## Status
 
-**v1 engineering complete:** eight sealed scenes/modes on three grounds,
+**v1 engineering complete:** nine sealed scenes/modes on three grounds,
 two scoring layers, the judge qualification exam, sealed reports.
 Reference runs are archived under [runs-archive/](https://github.com/codechu/journeyman/blob/v0.2.3/runs-archive/).
 **Shown since v0.0.5:** multi-model separation (a four-model panel under
@@ -262,7 +263,7 @@ journeyman/
   scene.py     scene contract + registry (scenes attach here, @register)
   grounds/     shared world-engines (service-host, labyrinth) —
                a ground is physics; scenes configure it with pressures
-  scenes/      the eight official scenes/modes — the standard set
+  scenes/      the nine official scenes/modes — the standard set
   driver.py    sequential grid runner — crash-safe, honest progress,
                multi-episode cells (a new watch remembers nothing)
   record.py    seals, cell records, events.jsonl (single source of truth)

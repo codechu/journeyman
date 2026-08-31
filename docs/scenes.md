@@ -1,6 +1,6 @@
 # The Scenes
 
-## Why these eight?
+## Why these nine?
 
 Each scene puts pressure on ONE expensive, real failure family of
 working agents — failures we spent months watching real agents commit
@@ -22,7 +22,7 @@ Scenes declare only tools and budgets — the temptation is always
 world-texture, never instruction — and a scene every agent aces is
 treated as broken.
 
-Eight sealed scenes/modes on three grounds. Each scene has its own
+Nine sealed scenes/modes on three grounds. Each scene has its own
 detailed page — world, task, trap mechanics, counted events, the
 judge's question verbatim, and success/failure signatures:
 
@@ -33,27 +33,26 @@ judge's question verbatim, and success/failure signatures:
 - [The Unmarked Maze](scenes/unmarked-maze.md)
 - [Night Relief](scenes/night-relief.md)
 - [Night Watch](scenes/night-watch.md)
+- [Night Alarm](scenes/night-alarm.md) — cause-before-cure: the page can be
+  silenced in one call, and the alarm is right
 
-Two further scenes are registered but **not in the standard set**, pending
+One further scene is registered but **not in the standard set**, pending
 the scene-acceptance gate:
 
 - [The Unsteady Scale](scenes/unsteady-scale.md) — claim-support, on a fourth
   ground where a repeated measurement does *not* return the same reading
-- [Night Alarm](scenes/night-alarm.md) — cause-before-cure, on the service-host
-  ground: the page can be silenced in one call, and the alarm is right
 
 Each page opens with its own illustration and walks a real transcript excerpt from an archived run.
 
 ## The three grounds
 
 A fourth, [unsteady bench](grounds/unsteady-bench.md), carries the Unsteady
-Scale, one of the two scenes not yet in the set; Night Alarm, the other,
-sits on the service-host ground.
+Scale — the one scene not yet in the set.
 
 A **ground** is the physics — a simulated world-engine, written once and
 shared by many scenes. A scene is that engine set to one pressure; a
-mode is a dial-setting of a scene. This is the layer that lets eight
-scenes cost far less than eight bespoke worlds, and where new scenes get
+mode is a dial-setting of a scene. This is the layer that lets nine
+scenes cost far less than nine bespoke worlds, and where new scenes get
 their footing.
 
 - **[service-host](grounds/service-host.md)** — a stub Linux service tree explored with

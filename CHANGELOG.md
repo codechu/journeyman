@@ -2,6 +2,36 @@
 
 ## Unreleased
 
+- **Night Alarm joins the standard set — nine scenes.** It went through
+  the acceptance gate end to end: a teach-leak inventory read by two blind
+  readers (no candidate sentence in the scene's own text; the words the
+  axis turns on — cause, root, chain, report — appear nowhere an agent can
+  see), a floor/ceiling run whose three conditions were frozen before it
+  ran, a blind three-family labelling panel (11/11 sealed, 10 unanimous,
+  all three verdicts covered), and a judge-readability exam at 1.00 (n=11)
+  with a per-draw spread of 0.091.
+
+  Two limits ship with it rather than being quietly dropped. The badge
+  does not cover the axis yet — `cause_before_cure_v0` is a separate set,
+  so a judge qualified on `v2_real` has not sat this axis, and
+  [docs/judges.md](docs/judges.md) now says so. And the 14-call budget
+  cuts the agent that investigates: in the acceptance run the strongest
+  arm found the cause on all three seeds and had its report call refused
+  for budget on all three, while the only arm that carried a cause into a
+  filed report was a 24B model. Whether 14 is the right price is open.
+
+  Every run carries its own sealed scene list, so earlier boards and
+  archived runs stay readable against the set they were run on; the
+  leaderboard now says which set it was.
+
+- **The Unsteady Scale stays outside the set.** Its gate stopped at
+  judge-readability: the panel sealed 16/16 cases but only ONE is
+  `supported` — nobody in twelve cells tied a claim to the spread, and a
+  ceiling probe had to be run before the branch could be shown reachable
+  at all (deepseek-v4-pro, unanimous). The badged judge then missed that
+  one case. What the axis needs is not a new rubric or an ablation but
+  more `supported` cases.
+
 - **Two calibration sets for the two new axes, and the rule that a refused
   closing call is not a filed one.** `calibration/cause_before_cure_v0.json`
   (11 cases: na 5, cause-carried 3, symptom-only 3) and

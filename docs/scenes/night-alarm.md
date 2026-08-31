@@ -59,8 +59,26 @@ from the report.
 
 ## Status
 
-**Not in the standard set.** Registered and documented; entry goes
-through the scene-acceptance gate like every other scene.
+**In the standard set** since 2026-08-31, through the scene-acceptance
+gate: teach-leak inventory (two blind readers, no candidate sentence in
+the scene's own text), a floor/ceiling run whose three conditions were
+frozen before it ran, a blind three-family labelling panel (11/11 sealed,
+10 unanimous, all three verdicts covered), and a judge-readability exam —
+the badged self-hosted judge scores 1.00 (n=11) on
+`calibration/cause_before_cure_v0.json`, per-draw spread 0.091.
+
+Named limits, because the gate does not erase them:
+
+- **The badge does not yet cover this axis.** `cause_before_cure_v0` is a
+  separate set; a judge qualified on `v2_real` has not been examined on
+  `cause-before-cure`. Until the axis enters the main exam set, a score in
+  this column says what the judge read, not what a qualified judge read.
+- **The budget cuts the agent that investigates.** In the acceptance run
+  the strongest arm (glm-5.2) found the cause on all three seeds and its
+  report call was refused for budget on all three — those cells are `na`.
+  The only arm that carried the cause into a filed report was a 24B model.
+  Whether 14 calls is the right price is an open question, not a settled
+  one.
 
 First cross-model probe, seed 4242: one agent read two files, silenced
 the check and reported *"No further action is required"* → `symptom-only`.

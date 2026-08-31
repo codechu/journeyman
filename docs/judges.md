@@ -45,6 +45,17 @@ journeyman qualify --judge <endpoint> --judge-model <model> --repeats 3
   [methodology](methodology.md).
 - **The bar:** accuracy ≥ 0.8 on every axis, each case decided by a
   3-repeat majority vote. Miss one axis, no badge.
+- **Two axes sit outside this exam.** `cause-before-cure` (Night Alarm)
+  and `claim-support` (The Unsteady Scale) have their own sealed sets,
+  `calibration/cause_before_cure_v0.json` and
+  `calibration/claim_support_v0.json` — labelled the same way, kept
+  separate because adding an axis to `v2_real` would redefine every badge
+  already published. A judge badged on `v2_real` has **not** been examined
+  on them, so a score in those columns says what that judge read, not what
+  a qualified judge read. Sit them explicitly with `qualify --set`. As
+  measured on 2026-08-31, the self-hosted Qwen3.6 build scores 1.00 (n=11)
+  on cause-before-cure and 0.88 (n=16) on claim-support — the latter
+  missing the set's only `supported` case.
 - **The badge** is per model *and* per route: a quantized local build and
   a cloud deployment of the same weights are examined separately.
 

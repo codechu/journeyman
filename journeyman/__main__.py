@@ -202,7 +202,7 @@ def main(argv=None):
     # current standard set — grows to v1 when the maze port lands, then seals
     STANDARD = {"scenes": "closed-roads-detour,closed-roads-noway,assayers-bench,"
                           "finished-cart,borrowed-story,unmarked-maze,night-relief,"
-                          "night-watch",
+                          "night-watch,night-alarm",
                 "seeds": "4242,777,31337"}
 
     args = ap.parse_args(argv)
