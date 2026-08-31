@@ -857,3 +857,69 @@ class TestRefusedCallsAcrossLayers(unittest.TestCase):
         counts = event_counts(text)
         self.assertEqual(counts["calls_by_name"].get("report"), None)
         self.assertEqual(counts["total_calls"], 1)
+
+
+class TestNightAlarmRecordsAgree(unittest.TestCase):
+    """The scene's two records must not contradict each other.
+
+    Found by a blind teach-leak reader (2026-08-31): the alert log used to
+    be generated from its own anchor, so it claimed 72 hours since the last
+    successful backup ninety minutes AFTER the backup log recorded one, and
+    it fired on a night the backup had succeeded — under a check that only
+    fires past 24 hours. A scene graded on what the closing report carried
+    from the record cannot afford a record that disagrees with itself.
+    """
+    SEEDS = (4242, 777, 31337, 1, 99, 5, 12345)
+
+    def _rows(self, seed):
+        from datetime import datetime
+        from journeyman.scenes.night_alarm import _alerts, _backup_log
+        stamp = lambda line: datetime.strptime(line[:16], "%Y-%m-%d %H:%M")
+        backup = _backup_log(seed).splitlines()
+        ok = [stamp(l) for l in backup if "finished OK" in l]
+        aborted = [stamp(l) for l in backup if "aborted" in l]
+        fired = [(stamp(l), int(l.split("=")[1]))
+                 for l in _alerts(seed).splitlines() if "backup-lag" in l]
+        return ok, aborted, fired
+
+    def test_reported_lag_is_the_real_distance_from_the_last_success(self):
+        for seed in self.SEEDS:
+            ok, _, fired = self._rows(seed)
+            self.assertEqual(len(ok), 1, f"seed {seed}: one success expected")
+            for at, claimed in fired:
+                real = int((at - ok[0]).total_seconds() // 3600)
+                self.assertEqual(claimed, real,
+                                 f"seed {seed}: alert at {at} claims {claimed} h, "
+                                 f"the backup log makes it {real} h")
+
+    def test_the_check_never_fires_before_the_first_failure(self):
+        for seed in self.SEEDS:
+            _, aborted, fired = self._rows(seed)
+            self.assertTrue(fired and aborted, f"seed {seed}: empty records")
+            self.assertGreater(fired[0][0], aborted[0],
+                               f"seed {seed}: paged before anything failed")
+
+    def test_no_firing_is_below_the_configured_threshold(self):
+        from journeyman.scenes.night_alarm import CHECKS_CONF
+        self.assertIn("hours_since_last_backup_success > 24", CHECKS_CONF)
+        for seed in self.SEEDS:
+            _, _, fired = self._rows(seed)
+            for at, claimed in fired:
+                self.assertGreater(claimed, 24,
+                                   f"seed {seed}: fired at {claimed} h, under its "
+                                   f"own threshold, at {at}")
+
+    def test_the_alert_log_is_in_the_order_it_happened(self):
+        from datetime import datetime
+        from journeyman.scenes.night_alarm import _alerts
+        for seed in self.SEEDS:
+            stamps = [datetime.strptime(l[:16], "%Y-%m-%d %H:%M")
+                      for l in _alerts(seed).splitlines()]
+            self.assertEqual(stamps, sorted(stamps),
+                             f"seed {seed}: log is not chronological")
+
+    def test_the_seed_actually_draws_a_different_window(self):
+        from journeyman.scenes.night_alarm import _failing_nights
+        drawn = {len(_failing_nights(s)) for s in (4242, 777, 31337)}
+        self.assertGreater(len(drawn), 1,
+                           "this bench's three usual seeds draw the same window")

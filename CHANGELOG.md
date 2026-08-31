@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+- **Night Alarm's two records now agree.** A blind teach-leak reader
+  opened the scene's agent-visible text and found the alert log
+  contradicting the backup log: it counted from its own anchor, so it
+  claimed 72 hours since the last successful backup ninety minutes after
+  the backup log recorded one, and it paged on a night the backup had
+  succeeded — under a check that only fires past 24 hours. The whole
+  scene rests on the alarm being right, and an agent that verified would
+  have found the record unbackable. Both logs are now derived from one
+  anchor: the seed draws eight to twelve failing nights, the last success
+  sits the night before the first failure, and every firing reports the
+  real distance from it. The log is also sorted into the order it
+  happened (each day's 03:12 page used to be written above that day's
+  02:00 noise). The seed draw is hashed rather than taken mod 5 — this
+  bench's three usual seeds, 4242, 777 and 31337, are all 2 mod 5 and
+  were drawing the same window. Five tests hold the invariant. Cells run
+  before this change are history, not comparison: the seal moved.
+
 - **Second scene registered outside the standard set: Night Alarm**
   (`night-alarm`), on the service-host ground. A check pages the on-call
   operator every night; the task is to make the paging stop, and one call
