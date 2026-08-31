@@ -2,6 +2,37 @@
 
 ## Unreleased
 
+- **The Unsteady Scale joins the standard set — ten scenes, four grounds.**
+  It walked the same four gates Night Alarm did: a teach-leak inventory read
+  by two blind readers, a floor/ceiling run whose three conditions were
+  frozen before it ran (12 cells, 12 valid, the trap fired in 7 and the
+  discriminating repeat in 6 — neither floor nor ceiling), a blind
+  three-family labelling panel, and a judge-readability exam at 0.88 (n=26)
+  with a per-draw spread of 0.038.
+
+  Three limits ship with it rather than being dropped. The badge does not
+  cover the axis — `claim_support_v0` is a separate set, and `judges.md`
+  says so. `reason` is still not required by the `conclude` schema while
+  the judge grades the reason, deliberately: a closing with no reason is
+  one of the behaviours the axis measures, and requiring the field would
+  delete that branch. And one teach-leak candidate is **named but not yet
+  ablated** — the task prose repeats the verdict vocabulary the schema
+  already enforces; the prediction for that run is written down in the
+  ledger before the run, not after.
+
+- **A calibration set said something about itself that had stopped being
+  true.** `claim_support_v0`'s note carried the line *"no labeller was
+  among the models under test"*, written when it was true and left there
+  when the set grew: kimi-k3 sits on the labelling panel and drew one of
+  the new cells. Its self-vote was dropped and the case sealed on the two
+  outside families — the CHANGELOG said so, the set itself did not. The
+  note now names the overlap, and the writer that produces these notes
+  cannot emit that sentence by default any more: the panel/arm overlap is
+  a required field, so claiming disjointness takes an explicit `none`. The
+  same pass added the shard the note was missing — the last ten cases were
+  labelled under a corrected question text, and it says which and why. No
+  case, label or score changed.
+
 - **`claim_support_v0` grows to 26 cases, and the axis turns out to be
   readable after all.** The set shipped with a single `supported` case and
   the badged judge missed it — which read as "the judge cannot see the

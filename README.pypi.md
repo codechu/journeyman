@@ -14,7 +14,7 @@
 > **Journeyman measures how agents work — and how they fail.**
 
 You point it at your agent (any OpenAI-compatible endpoint). It drops
-the agent into nine small **simulated jobs** — diagnose a crashed
+the agent into ten small **simulated jobs** — diagnose a crashed
 service, assay an alloy at a bench, walk a fogged maze, pick up a night
 shift from a note that lies — and grades **how it worked**, not just
 whether it finished:
@@ -129,7 +129,7 @@ still owed). The public
 registry of badge holders — and the thirty-plus configurations examined
 across two labellings — is at [docs/judges.md](https://github.com/codechu/journeyman/blob/v0.2.3/docs/judges.md).
 
-## Nine scenes
+## Ten scenes
 
 Each puts pressure on ONE expensive, real failure family — and declares
 only its tools and budget, never what good behaviour looks like. Full pages (world, task, trap, counted events, the judge's question
@@ -147,6 +147,7 @@ world-engines beneath them are documented under [docs/grounds/](https://github.c
 | [Night Relief](https://github.com/codechu/journeyman/blob/v0.2.3/docs/scenes/night-relief.md) | leaving a handoff a stranger cannot continue |
 | [Night Watch](https://github.com/codechu/journeyman/blob/v0.2.3/docs/scenes/night-watch.md) | repeating an authoritative note the world contradicts |
 | [Night Alarm](https://github.com/codechu/journeyman/blob/v0.2.3/docs/scenes/night-alarm.md) | ending the symptom and leaving the cause running |
+| [The Unsteady Scale](https://github.com/codechu/journeyman/blob/v0.2.3/docs/scenes/unsteady-scale.md) | naming a winner the instrument's own scatter denies |
 
 ## How it works
 
@@ -208,14 +209,18 @@ We would rather you read these here than discover them:
   that contained a candidate sentence: Night Relief's wake line
   (2026-08-18 — it taught, and was cut) and the maze's conclude shape
   (2026-08-23 — naming unknowns was not taught by the shape; the shape
-  only supplies the form, which is allowed). The other five scene texts
-  contain only tool vocabulary and budgets — nothing to ablate — and
-  rest on the floor evidence that weak models fail them. Per-scene
-  notes are on [docs/scenes.md](https://github.com/codechu/journeyman/blob/v0.2.3/docs/scenes.md).
+  only supplies the form, which is allowed). A third candidate is named
+  and **not yet run**: The Unsteady Scale repeats its verdict vocabulary
+  in the task prose, where the tool schema already enforces it, and the
+  prediction for that ablation is written down before the run. The
+  remaining scene texts contain only tool vocabulary and budgets —
+  nothing to ablate — and rest on the floor evidence that weak models
+  fail them. The two newest were read by two blind readers before entry.
+  Per-scene notes are on [docs/scenes.md](https://github.com/codechu/journeyman/blob/v0.2.3/docs/scenes.md).
 
 ## Status
 
-**v1 engineering complete:** nine sealed scenes/modes on three grounds,
+**v1 engineering complete:** ten sealed scenes/modes on four grounds,
 two scoring layers, the judge qualification exam, sealed reports.
 Reference runs are archived under [runs-archive/](https://github.com/codechu/journeyman/blob/v0.2.3/runs-archive/).
 **Shown since v0.0.5:** multi-model separation (a four-model panel under
@@ -261,9 +266,10 @@ paper would describe, and the ask, are in
 ```
 journeyman/
   scene.py     scene contract + registry (scenes attach here, @register)
-  grounds/     shared world-engines (service-host, labyrinth) —
+  grounds/     shared world-engines (service-host, bench, labyrinth,
+               unsteady-bench) —
                a ground is physics; scenes configure it with pressures
-  scenes/      the nine official scenes/modes — the standard set
+  scenes/      the ten official scenes/modes — the standard set
   driver.py    sequential grid runner — crash-safe, honest progress,
                multi-episode cells (a new watch remembers nothing)
   record.py    seals, cell records, events.jsonl (single source of truth)

@@ -1,6 +1,6 @@
 # The Scenes
 
-## Why these nine?
+## Why these ten?
 
 Each scene puts pressure on ONE expensive, real failure family of
 working agents — failures we spent months watching real agents commit
@@ -22,7 +22,7 @@ Scenes declare only tools and budgets — the temptation is always
 world-texture, never instruction — and a scene every agent aces is
 treated as broken.
 
-Nine sealed scenes/modes on three grounds. Each scene has its own
+Ten sealed scenes/modes on four grounds. Each scene has its own
 detailed page — world, task, trap mechanics, counted events, the
 judge's question verbatim, and success/failure signatures:
 
@@ -35,24 +35,17 @@ judge's question verbatim, and success/failure signatures:
 - [Night Watch](scenes/night-watch.md)
 - [Night Alarm](scenes/night-alarm.md) — cause-before-cure: the page can be
   silenced in one call, and the alarm is right
-
-One further scene is registered but **not in the standard set**, pending
-the scene-acceptance gate:
-
 - [The Unsteady Scale](scenes/unsteady-scale.md) — claim-support, on a fourth
   ground where a repeated measurement does *not* return the same reading
 
 Each page opens with its own illustration and walks a real transcript excerpt from an archived run.
 
-## The three grounds
-
-A fourth, [unsteady bench](grounds/unsteady-bench.md), carries the Unsteady
-Scale — the one scene not yet in the set.
+## The four grounds
 
 A **ground** is the physics — a simulated world-engine, written once and
 shared by many scenes. A scene is that engine set to one pressure; a
-mode is a dial-setting of a scene. This is the layer that lets nine
-scenes cost far less than nine bespoke worlds, and where new scenes get
+mode is a dial-setting of a scene. This is the layer that lets ten
+scenes cost far less than ten bespoke worlds, and where new scenes get
 their footing.
 
 - **[service-host](grounds/service-host.md)** — a stub Linux service tree explored with
@@ -69,6 +62,10 @@ their footing.
   physics (sound fades with distance), turn/stone budgets, and a
   deterministic **replay** so a walk re-runs from its seed and record,
   exact. Rides it: The Unmarked Maze and its Night Relief mode.
+- **[unsteady bench](grounds/unsteady-bench.md)** — the bench's opposite in one
+  mechanic: `measure` scatters, so the same configuration read twice gives two
+  different numbers, and the repeat is the only way to learn what the
+  instrument does when nothing changes. Rides it: The Unsteady Scale.
 
 New scenes usually don't need a new ground — most are a new dial on an
 existing one (see [CONTRIBUTING](../CONTRIBUTING.md)). A ground of its
@@ -89,6 +86,8 @@ was read for a sentence that could; where one existed it was ablated
 | The Unmarked Maze | the conclude shape's `if_wrong_costs` field | ablated 2026-08-23: naming unknowns did not drop without the field (scout 4→6); the field supplies the form, not the behaviour — kept, disclosed here as a form instruction. A side claim made here on 2026-08-23 — that the nested shape penalises weak formatters, after one model filed 0/3 conclusions under it and 3/3 under a flat one — is **withdrawn**: the record shows that model never called conclude at all under the nested shape (zero attempts, no rejected call), so nothing was penalised on form. n=3, one model, no mechanism |
 | Night Relief | the wake line pointing at the tally | ablated 2026-08-18: it taught (read_tally 56% → 100%); cut |
 | Night Watch | none — "Report back when it is" | nothing to ablate; acceptance on cross-model floor/ceiling evidence |
+| Night Alarm | none in the scene's own text — two blind readers named five candidates, all of them world-record or price (the alarm's own numbers, the wall's change-history heading, the `.prev` filename, the repeated log block) | nothing to ablate. The inventory did find a real defect, in the world rather than the text: the alarm fired a 72-hour figure on a night the backup had succeeded, and both records now derive from one anchor (2026-08-31) |
+| The Unsteady Scale | the task prose repeats the verdict vocabulary the tool schema already enforces | **candidate, ablation not yet run.** The schema enum itself stays — an honest answer must be mechanically available. The prediction is written before the run: dropping the prose sentence should lower the `cannot-tell` **verdict** rate while leaving the `supported` **label** rate inside its band, since the label lives in the reason. If both fall together, the scene is scoring verdict choice rather than reason quality, and it gets rebuilt |
 
 ## Measured baselines — a floor, not a target
 

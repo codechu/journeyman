@@ -54,8 +54,12 @@ journeyman qualify --judge <endpoint> --judge-model <model> --repeats 3
   on them, so a score in those columns says what that judge read, not what
   a qualified judge read. Sit them explicitly with `qualify --set`. As
   measured on 2026-08-31, the self-hosted Qwen3.6 build scores 1.00 (n=11)
-  on cause-before-cure and 0.88 (n=16) on claim-support — the latter
-  missing the set's only `supported` case.
+  on cause-before-cure and 0.88 (n=26) on claim-support, the latter with
+  the `supported` branch 5/6 correct. An earlier reading of that column —
+  0.88 over 16 cases, missing the set's only `supported` case — is
+  **withdrawn**: the branch held one case, and one case cannot tell a
+  blind judge from an unlucky draw. Over four draws the spread fell from
+  0.125 to 0.038 once the branch held six.
 - **The badge** is per model *and* per route: a quantized local build and
   a cloud deployment of the same weights are examined separately.
 
