@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- **`claim_support_v0` grows to 26 cases, and the axis turns out to be
+  readable after all.** The set shipped with a single `supported` case and
+  the badged judge missed it — which read as "the judge cannot see the
+  branch this scene exists to measure". Twelve more cells from four strong
+  arms (claude-opus-5 3/3 supported, deepseek-v4-pro 2/3, qwen3-max 0/3,
+  kimi-k3 two cells starved) took the branch to six. The same judge on the
+  same rubric now scores 0.88 (n=26) with the `supported` branch 5/6
+  correct, and its per-draw spread fell from 0.125 to **0.038**. The
+  earlier verdict was an artefact of n=1.
+
+  The panel rule earned its keep in the process: kimi-k3 sits on the
+  labelling panel and drew one of the new cells, where it labelled its own
+  record `supported` while both outside families said `unsupported`. Its
+  vote was dropped and the case sealed on the two outside labellers.
+
 - **Night Alarm joins the standard set — nine scenes.** It went through
   the acceptance gate end to end: a teach-leak inventory read by two blind
   readers (no candidate sentence in the scene's own text; the words the
