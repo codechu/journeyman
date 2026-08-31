@@ -4,19 +4,12 @@ Rules we hold ourselves to. Short on purpose.
 
 ## Semantic versioning
 
-- **patch** (0.0.x) — fixes, docs, ergonomics **and additive changes**: a
-  new flag, a new optional field, a new scene that does not enter the
-  standard set. Nothing that changes a score or breaks a command.
-- **minor** (0.x.0) — pre-1.0 this digit is **reserved for breaks**: a
-  changed contract, or anything that makes published scores stop being
-  comparable. Adding a scene to the standard set is minor, because it
-  changes composite scores.
-- **major** (x.0.0) — 1.0, the stability promise itself (see below).
-
-Adopted 2026-08-31, one release late: 0.4.0 was cut for a purely additive
-change (`--stop-after-invalid`, a progress-mark fix) and under this rule
-it should have been 0.3.1. It stays published — a version number is not
-worth rewriting history for — and this line is the ledger entry.
+- **patch** (0.0.x) — fixes, docs, ergonomics; nothing that changes a
+  score or breaks a command.
+- **minor** (0.x.0) — new scenes/modes, new flags, additive changes.
+  Adding a scene to the standard set is minor (it changes composite
+  scores, so we say so in the changelog).
+- **major** (x.0.0) — anything that breaks a frozen contract below.
 
 **Pre-1.0, minor is the breaking slot.** While the version starts with a
 zero there is no stability promise to break — that promise is what 1.0

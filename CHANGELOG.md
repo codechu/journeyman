@@ -1,17 +1,5 @@
 # Changelog
 
-## Unreleased
-
-- **Versioning rule tightened: in 0.x, additive is a patch.** The table
-  said additive changes take the minor digit while the paragraph under it
-  said minor is the breaking slot — both cannot hold. From now on the
-  third digit carries anything that does not break a contract or move a
-  published score, and the second is reserved for breaks (a scene entering
-  the standard set still counts, since composite scores move). The rule
-  arrives one release late: 0.4.0 was additive and should have been 0.3.1.
-  It stays as published, and `docs/versioning.md` says so rather than
-  quietly renumbering.
-
 ## 0.4.0 — 2026-08-31
 
 - **The progress mark said "no report" about cells that had reported.** It
