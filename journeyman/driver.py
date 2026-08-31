@@ -41,6 +41,31 @@ def chat_url(url):
     return base + "/v1/chat/completions"
 
 
+def reasoning_text(msg):
+    """The thinking a provider exposes on one message, however it names it.
+
+    Three spellings in the wild: `reasoning_content` (vLLM, DeepSeek-style),
+    `reasoning` (OpenRouter), and `reasoning_details` (OpenRouter's
+    structured form). The starved-turn guard read only the first, so on
+    every OpenRouter run it never fired: five cells of a 2026-08-31
+    calibration run closed with an empty turn after 77-256 characters of
+    visible reasoning and were scored as silent agents. The unit test
+    could not catch it — its fake agent emitted the one field the code
+    already read.
+    """
+    for key in ("reasoning_content", "reasoning"):
+        val = msg.get(key)
+        if isinstance(val, str) and val.strip():
+            return val.strip()
+    details = msg.get("reasoning_details")
+    if isinstance(details, list):
+        parts = [d.get("text", "") for d in details if isinstance(d, dict)]
+        joined = "\n".join(p for p in parts if p)
+        if joined.strip():
+            return joined.strip()
+    return ""
+
+
 class Starved(Exception):
     """A turn that produced no move because it had no room to.
 
@@ -172,12 +197,13 @@ def run_cell(endpoint, scene, seed, log, agent_system=None):
             # zeroes every axis that reads the closing report, and the
             # profile then describes the token budget rather than the agent.
             if final_text is None:
+                thought = reasoning_text(msg)
                 starved = (msg.get("finish_reason") == "length"
-                           or len((msg.get("reasoning_content") or "").strip()) > 200)
+                           or len(thought) > 200)
                 if starved:
                     raise Starved(
                         f"the closing turn came back empty after "
-                        f"{len((msg.get('reasoning_content') or '').strip())} "
+                        f"{len(thought)} "
                         f"characters of reasoning"
                         + (" (finish_reason: length)"
                            if msg.get("finish_reason") == "length" else "")
