@@ -977,3 +977,113 @@ class TestSealPinsTheWorld(unittest.TestCase):
                          [4242], "m")
         md5s = list(seal["scene_md5"].values())
         self.assertEqual(len(set(md5s)), len(md5s), "two scenes, one hash")
+
+
+class TestUnfiledBranchesSayWhatRefusedMeans(unittest.TestCase):
+    """Every rubric with an unfiled branch must price a refused closing call.
+
+    A scene's closing tool can be refused when the budget is spent; the
+    transcript then shows a complete-looking report that never reached
+    the world. Older rubrics say so; the two written on 2026-08-31 did
+    not, and it cost immediately — a blind three-family panel AND the
+    badged judge both read a refused report as filed, on the same cells,
+    all four draws. The wording is the fix; the test is so the next axis
+    cannot ship without it.
+    """
+    # An unfiled branch is one that says a closing act is MISSING — not
+    # every `na`: empty-measure's na means the stimulus never occurred.
+    SAYS_UNFILED = ("no report was filed", "no closing report was filed",
+                    "no claim was filed")
+
+    def test_every_unfiled_branch_prices_refusal(self):
+        from journeyman.rubrics import RUBRICS
+        checked = 0
+        for axis, question in RUBRICS.items():
+            branches = [ln for ln in question.split("\n")
+                        if any(p in ln.lower() for p in self.SAYS_UNFILED)]
+            if not branches:
+                continue
+            checked += 1
+            self.assertTrue(
+                any("budget exhausted" in ln for ln in branches),
+                f"{axis}: the unfiled branch never says a refused closing call "
+                f"is not a filed one")
+        self.assertGreaterEqual(checked, 3,
+                                "no unfiled branch matched — the guard stopped "
+                                "guarding (wording drifted?)")
+
+
+class TestEveryShippedSetIsHygienic(unittest.TestCase):
+    """The v2_real guards, applied to EVERY real set the package ships.
+
+    TestCalibrationHygiene reads one file by name. Two more real sets
+    shipped on 2026-08-31 (cause_before_cure_v0, claim_support_v0) and
+    nothing above would have looked at them — a set can be malformed and
+    still be handed to `qualify --set`. The rules are the same rules; the
+    only thing that was missing is that they were addressed to one file.
+    """
+    UNFILED = {"cause-before-cure": "na", "claim-support": "na",
+               "grounding": "na", "wall-pricing": "none",
+               "handoff-verification": "na"}
+
+    # v1_real is the superseded labelling kept as history (v2_real revision
+    # 2.1 relabelled its refused-call cases; the v1.3 badges it defines are
+    # historical). Guarding it would demand rewriting the record of what was
+    # once believed, which is the opposite of keeping one.
+    HISTORICAL = {"v1_real.json"}
+
+    def _sets(self):
+        import glob as _glob
+        import journeyman
+        base = os.path.join(os.path.dirname(journeyman.__file__), "calibration")
+        for p in sorted(_glob.glob(os.path.join(base, "*.json"))):
+            name = os.path.basename(p)
+            if name in self.HISTORICAL:
+                continue
+            cal = json.load(open(p))
+            if cal.get("synthetic"):
+                continue
+            yield name, cal
+
+    def test_labels_are_declared_verdicts(self):
+        rub = {}
+        for cls in REGISTRY.values():
+            for item in cls().rubric():
+                rub[item.axis] = item.verdicts
+        for name, cal in self._sets():
+            for i, c in enumerate(cal["cases"]):
+                self.assertIn(c["axis"], rub, f"{name} case {i}: axis has no rubric")
+                self.assertIn(c["true_label"], rub[c["axis"]],
+                              f"{name} case {i}: label outside declared verdicts")
+
+    def test_refused_closing_call_is_labelled_unfiled(self):
+        from journeyman.record import BUDGET_REFUSED
+        for name, cal in self._sets():
+            for i, c in enumerate(cal["cases"]):
+                if c["axis"] not in self.UNFILED or BUDGET_REFUSED not in c["record"]:
+                    continue
+                closers = [ln for ln in c["record"].split("\n")
+                           if ln.startswith("[CALL] report")
+                           or ln.startswith("[CALL] conclude")]
+                if closers and not _answered_closers(c["record"]):
+                    self.assertEqual(c["true_label"], self.UNFILED[c["axis"]],
+                                     f"{name} case {i}: closing call refused, "
+                                     f"label says {c['true_label']}")
+
+    def test_each_axis_carries_more_than_one_label(self):
+        known_single = {"route-discipline"}
+        for name, cal in self._sets():
+            seen = {}
+            for c in cal["cases"]:
+                seen.setdefault(c["axis"], set()).add(c["true_label"])
+            for axis, labels in seen.items():
+                if axis in known_single:
+                    continue
+                self.assertGreater(len(labels), 1,
+                                   f"{name}: axis {axis} carries one label only "
+                                   f"({labels}) — it measures that label, not the axis")
+
+    def test_a_set_says_who_labelled_it(self):
+        for name, cal in self._sets():
+            self.assertTrue((cal.get("note") or "").strip(),
+                            f"{name}: a real set ships without a provenance note")

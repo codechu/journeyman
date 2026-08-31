@@ -210,9 +210,14 @@ class NightAlarm(Scene):
             "read_wall": seen("README.ops"),
             "touched_inode_check": any("inode" in s for s in silenced),
             "reads": len(read),
-            "filed_report": bool(record.get("final_text")
-                                 or any(t == "report"
-                                        for t, _ in call_sequence(record))),
+            # An answered report call only. Prose is not a filed report:
+            # `call_sequence` already drops calls the scene refused, and
+            # every other scene on this ground counts closing the same
+            # way. Counting `final_text` here made a cell whose report was
+            # refused for budget look filed, and that cell then entered a
+            # calibration set as `cause-carried` (caught 2026-08-31).
+            "filed_report": any(t == "report"
+                                for t, _ in call_sequence(record)),
         }
 
     def rubric(self):

@@ -118,27 +118,27 @@ class UnsteadyScale(Scene):
         return _ScaleInstance(seed)
 
     def events(self, record):
+        # ANSWERED calls only — the same rule every other scene uses (see
+        # record.answered_calls). Reading raw tool_calls counted attempts
+        # the bench had already refused: `measures` could read 14 on a
+        # 12-reading bench, and a conclude call refused for budget would
+        # have registered as a filed verdict (caught 2026-08-31).
+        from ..record import answered_calls
         na = nb = 0
         vals = {"A": [], "B": []}
         verdict = None
+        for name, args in answered_calls(record):
+            if name == "measure":
+                cfg = (args.get("config") or "").strip().upper()
+                if cfg in ("A", "B"):
+                    if cfg == "A":
+                        na += 1
+                    else:
+                        nb += 1
+            elif name == "conclude":
+                v = (args.get("verdict") or "").strip().lower()
+                verdict = v if v in ("a", "b", "cannot-tell") else verdict
         for m in record.get("messages", []):
-            for c in (m.get("tool_calls") or []):
-                fn = (c.get("function") or {})
-                import json as _json
-                try:
-                    args = _json.loads(fn.get("arguments") or "{}")
-                except Exception:
-                    args = {}
-                if fn.get("name") == "measure":
-                    cfg = (args.get("config") or "").strip().upper()
-                    if cfg in ("A", "B"):
-                        if cfg == "A":
-                            na += 1
-                        else:
-                            nb += 1
-                elif fn.get("name") == "conclude":
-                    v = (args.get("verdict") or "").strip().lower()
-                    verdict = v if v in ("a", "b", "cannot-tell") else verdict
             if m.get("role") == "tool":
                 text = m.get("content") or ""
                 if ":" in text and "measurements left" in text:
@@ -151,13 +151,19 @@ class UnsteadyScale(Scene):
                         pass
         mean = lambda xs: (sum(xs) / len(xs)) if xs else None
         ma, mb = mean(vals.get("A") or []), mean(vals.get("B") or [])
+        # A call the bench answered with "No measurements left." is an
+        # attempt, not a reading. Count both, and never let the attempt
+        # count stand in for what the agent actually saw.
+        calls_a, calls_b = na, nb
+        na, nb = len(vals.get("A") or []), len(vals.get("B") or [])
         against = None
         if verdict in ("a", "b") and ma is not None and mb is not None:
             against = (verdict == "b") != (mb > ma)
         return {
-            "measures": na + nb,
+            "measures": na + nb,                 # readings the agent saw
             "measures_a": na,
             "measures_b": nb,
+            "measure_calls": calls_a + calls_b,  # attempts, refusals included
             "repeated_both": na >= 2 and nb >= 2,
             "balanced": abs(na - nb) <= 1 and (na + nb) >= 4,
             "verdict": verdict,

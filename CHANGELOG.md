@@ -2,6 +2,45 @@
 
 ## Unreleased
 
+- **Two calibration sets for the two new axes, and the rule that a refused
+  closing call is not a filed one.** `calibration/cause_before_cure_v0.json`
+  (11 cases: na 5, cause-carried 3, symptom-only 3) and
+  `calibration/claim_support_v0.json` (16 cases: unsupported 11, na 4,
+  supported 1) were labelled by a blind three-family panel
+  (claude-sonnet-5, kimi-k3, grok-4.6 — none of them a model under test),
+  each labeller seeing only the judge-path record under this package's own
+  judge preamble, case order shuffled. Both are separate sets: `v2_real`
+  is untouched, so published badges are unaffected.
+
+  Building them found the same confusion in three layers at once. A cell
+  whose `report` call was refused for budget — the transcript carries a
+  complete-looking report the scene never received — was read as a filed
+  report by the panel, by the badged judge on all four draws, and by the
+  scene's own `filed_report` event, which counted the agent's closing
+  prose. The older rubrics already price this ("a call whose result is
+  *budget exhausted* was refused and never received"); the two axes
+  written the day before did not carry the clause. With the clause added,
+  the same judge on the same eleven cases went from **0.82 (misses: both
+  refused-report cells) to 1.00**, and its per-draw spread narrowed from
+  0.182 to 0.091 — the judge could read the axis all along; the question
+  was short of a sentence. A test now requires every unfiled branch to
+  price refusal.
+
+- **`unsteady-scale` counted attempts as readings.** Its events walked raw
+  `tool_calls` instead of `record.answered_calls`, so a bench that answers
+  "No measurements left." still incremented the count (`measures` read 14
+  on a 12-reading bench) and a `conclude` refused for budget would have
+  registered as a filed verdict. Readings and attempts are now separate
+  (`measures` vs `measure_calls`), taken from what the bench actually
+  returned.
+
+- **The v2_real hygiene guards now cover every real set the package
+  ships.** They read one file by name, so the two sets added above — or
+  any future one — could have shipped malformed: labels outside the
+  rubric's declared verdicts, an axis collapsed to a single label, a
+  refused closing call labelled as filed, or no provenance note at all.
+  `v1_real` stays exempt as the superseded labelling kept as history.
+
 - **The seal now pins the world, not the class body.** `scene_md5` hashed
   `inspect.getsource(cls)` — the `Scene` subclass only. A scene's task
   text, file corpus, generators and physics all live at module level, and
