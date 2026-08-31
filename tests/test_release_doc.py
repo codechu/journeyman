@@ -40,7 +40,8 @@ class TestReleaseDoc(unittest.TestCase):
                             f"which does not exist")
 
     def test_it_names_the_tools_the_release_actually_uses(self):
-        for path in ("tools/bump.py", "tools/pypi_readme.py"):
+        for path in ("tools/bump.py", "tools/pypi_readme.py",
+                     "tools/site.py"):
             self.assertIn(path, self.section,
                           f"{path} is part of cutting a release and the guide "
                           f"does not mention it")

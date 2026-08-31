@@ -1,6 +1,13 @@
 # Changelog
 
-## Unreleased
+## 0.3.0 — 2026-08-31
+
+- **The release guide named one generated file and not the other.** Cutting
+  this release failed the suite on `site/index.html`: the front page states
+  which version PyPI ships, `tools/site.py` regenerates it, and step 3 of
+  the guide only mentioned `tools/pypi_readme.py`. That is precisely the
+  drift the section's own preamble warns about, so the step now names both
+  and the guide's test requires it to.
 
 - **The Unsteady Scale joins the standard set — ten scenes, four grounds.**
   It walked the same four gates Night Alarm did: a teach-leak inventory read

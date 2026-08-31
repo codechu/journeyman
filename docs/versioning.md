@@ -106,15 +106,24 @@ What follows is this repository's shape of them.
    sealed with the wrong version cannot be reproduced. A test asserts the
    four agree, so a mismatch fails CI rather than shipping.
 
-3. **Run what CI runs, before CI does** —
+3. **Regenerate what the version is stamped into** — `tools/pypi_readme.py`
+   and `tools/site.py`. Both outputs are committed and both carry the
+   version: the PyPI description pins every link to the release tag, and
+   the site's front page states which version stamps a report. The suite
+   compares each against a fresh build, so a forgotten run fails the tests
+   rather than shipping a page one release behind. Found the hard way while
+   cutting 0.3.0 — the guide named the first and not the second, which is
+   the drift this section's own preamble warns about.
+
+4. **Run what CI runs, before CI does** —
    `tools/pypi_readme.py --check` (the PyPI copy is generated; a stale one
    ships a description one revision behind), `python -m unittest discover
    -s tests`, and `python -m journeyman selftest`.
 
-4. **Commit and push to the default branch**, and let CI pass — offline selftest and
+5. **Commit and push to the default branch**, and let CI pass — offline selftest and
    suite, stdlib-only, five Python versions.
 
-5. **Tag and push the tag** — `git tag vX.Y.Z && git push origin vX.Y.Z`.
+6. **Tag and push the tag** — `git tag vX.Y.Z && git push origin vX.Y.Z`.
    Pushing `v*` is what triggers publication and nothing else does; the tag
    is the human release signature. **Do not create the GitHub release by
    hand**: the workflow makes it from the tag, using the changelog section
@@ -127,7 +136,7 @@ What follows is this repository's shape of them.
    version, publishes to PyPI through a trusted publisher (no token in the
    repo), and syncs the calibration dataset to the Hub.
 
-6. **Check the artefacts, not the colour of the run — in both
+7. **Check the artefacts, not the colour of the run — in both
    directions.** A green run can leave a half-finished release, and a red
    run can sit above a perfectly good one. v0.2.0 was the second: the
    package published, then the release step 403'd for want of
