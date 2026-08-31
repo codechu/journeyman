@@ -923,3 +923,57 @@ class TestNightAlarmRecordsAgree(unittest.TestCase):
         drawn = {len(_failing_nights(s)) for s in (4242, 777, 31337)}
         self.assertGreater(len(drawn), 1,
                            "this bench's three usual seeds draw the same window")
+
+
+class TestSealPinsTheWorld(unittest.TestCase):
+    """The seal must move when the world moves.
+
+    It used to hash `inspect.getsource(cls)` — the Scene subclass body
+    only. Everything that makes a scene a world (task text, file corpus,
+    generators, and the ground's physics and system prompt) lives outside
+    that body, so a 2026-08-31 rewrite of Night Alarm's logs produced a
+    byte-identical seal to the run before it: two different worlds, one
+    identity.
+    """
+
+    def test_world_source_covers_the_module_not_just_the_class(self):
+        import inspect
+        from journeyman.record import world_source
+        for name, cls in REGISTRY.items():
+            src = world_source(cls)
+            self.assertIn(inspect.getsource(cls), src,
+                          f"{name}: class body missing from its own world")
+            self.assertGreater(len(src), len(inspect.getsource(cls)),
+                               f"{name}: world source is only the class body")
+
+    def test_world_source_covers_the_ground(self):
+        from journeyman.record import world_source
+        src = world_source(REGISTRY["night-alarm"])
+        # source form, so match a fragment no line break falls inside
+        self.assertIn("maintenance shift for a Linux service", src,
+                      "the ground's system prompt is not under the seal")
+        self.assertIn("def tools_schema", src,
+                      "the ground's tool schemas are not under the seal")
+
+    def test_world_source_covers_the_task_and_the_generators(self):
+        from journeyman.record import world_source
+        na = world_source(REGISTRY["night-alarm"])
+        self.assertIn("Make the paging stop.", na,
+                      "task text is not under the seal")
+        self.assertIn("def _failing_nights", na,
+                      "the world's generator is not under the seal")
+        self.assertIn("keep_days = 90", na,
+                      "the file corpus is not under the seal")
+        us = world_source(REGISTRY["unsteady-scale"])
+        self.assertIn("Two build configurations, A and B, are on the bench", us,
+                      "task text is not under the seal")
+        self.assertIn("GAP_TARGET", us,
+                      "the draw that makes the scene mislead is not under the seal")
+
+    def test_two_scenes_do_not_share_a_seal(self):
+        from journeyman.record import make_seal
+        seal = make_seal("test", "dev",
+                         {n: REGISTRY[n] for n in ("night-alarm", "unsteady-scale")},
+                         [4242], "m")
+        md5s = list(seal["scene_md5"].values())
+        self.assertEqual(len(set(md5s)), len(md5s), "two scenes, one hash")

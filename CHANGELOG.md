@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- **The seal now pins the world, not the class body.** `scene_md5` hashed
+  `inspect.getsource(cls)` — the `Scene` subclass only. A scene's task
+  text, file corpus, generators and physics all live at module level, and
+  its ground lives in another module entirely, so none of it was sealed.
+  The fix above rewrote both of Night Alarm's logs and the seal came out
+  **byte-identical** to the run before it: two different worlds, one
+  identity, and the run-guide's own promise — *"change any part and it is
+  a different run"* — was not being kept. The hash now covers the scene's
+  whole module plus the ground it stands on, and four tests hold it.
+  Seals written before this are narrower than they look: a matching
+  `scene_md5` from an older run does **not** establish that the world was
+  the same. Named limit: the judge's rubric text is still outside the
+  seal; a rubric edit changes verdicts without moving `scene_md5`.
+
 - **Night Alarm's two records now agree.** A blind teach-leak reader
   opened the scene's agent-visible text and found the alert log
   contradicting the backup log: it counted from its own anchor, so it
