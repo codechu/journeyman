@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.4.0 — 2026-08-31
 
 - **The progress mark said "no report" about cells that had reported.** It
   read the agent's trailing prose, so a model that ends its turn with the
