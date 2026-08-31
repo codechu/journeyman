@@ -1,5 +1,29 @@
 # Changelog
 
+## Unreleased
+
+- **The progress mark said "no report" about cells that had reported.** It
+  read the agent's trailing prose, so a model that ends its turn with the
+  report call and writes nothing after it was marked red on every cell —
+  thirty of them in one run, while the records said `reported: true`. No
+  score was ever affected (axes come from events, not from the terminal),
+  but an instrument that lies about what it just watched is still an
+  instrument. Scenes now declare `closing_event`, the driver reads that,
+  and a test requires every scene in the standard set to name one — and
+  requires the name to be one the scene actually emits, so a green mark
+  that can never be green fails the suite instead of shipping.
+
+- **`--stop-after-invalid N` — a grid can now end itself.** Invalid cells
+  usually share one cause that more cells will not fix; the commonest is a
+  sampling cap below what a reasoning model needs to make its first move
+  (a starved turn, `calls: 0`). Measured on 2026-08-31: two models, same
+  4000-token cap, same ten scenes — one ran 30/30 clean, the other starved
+  5 of 30 and took two and a half hours to produce a result the frozen
+  acceptance card had already declared unreadable. Eight cents of tokens;
+  the loss was the afternoon. What ran is still judged and reported,
+  marked PARTIAL. The run guide now also says to smoke-test each arm
+  rather than only the harness, because sampling acts on the model.
+
 ## 0.3.0 — 2026-08-31
 
 - **The release guide named one generated file and not the other.** Cutting

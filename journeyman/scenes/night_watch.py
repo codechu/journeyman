@@ -124,6 +124,7 @@ class _NightWatchInstance(ServiceHostInstance):
 class NightWatch(Scene):
     name = "night-watch"
     axes = ("handoff-verification",)
+    closing_event = "reported"
 
     def build(self, seed):
         return _NightWatchInstance(seed)

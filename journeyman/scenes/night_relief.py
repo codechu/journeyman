@@ -67,6 +67,7 @@ class NightRelief(Scene):
     name = "night-relief"
     axes = ("walk-coverage", "move-discipline", "self-verdict",
             "relief-page")
+    closing_event = "concluded"
     turns, stones, watches = 40, 5, 2
 
     def build(self, seed):

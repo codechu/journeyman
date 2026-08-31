@@ -131,3 +131,41 @@ class TestReasoningIsFoundWhateverItIsCalled(unittest.TestCase):
             cell = _run(_Agent(reasoning="x" * 1400, field=field))
             self.assertTrue(cell["invalid"], f"{field}: starved turn scored as behaviour")
             self.assertIn("starved turn", cell["invalid_reason"])
+
+
+class TestStopAfterInvalid(unittest.TestCase):
+    """A grid whose cells keep coming back invalid should stop, not finish.
+
+    Measured 2026-08-31: a reasoning model against a 4000-token cap starved
+    5 of 30 cells — every one on its FIRST turn, zero tool calls. The cause
+    was identical in all five and visible in the first, but the grid ran to
+    the end anyway: two and a half hours for a result the frozen card had
+    already declared unreadable. The money was eight cents; the time was
+    the loss.
+    """
+
+    def _grid(self, limit):
+        from journeyman.driver import StoppedOnInvalid
+        scene = sorted(REGISTRY)[0]
+        agent = _Agent(reasoning="x" * 1400)      # every cell starves
+        with tempfile.TemporaryDirectory() as tmp:
+            rd = RunDir(tmp)
+            stopped = None
+            try:
+                run_grid(agent, [scene], [1, 2, 3, 4], rd,
+                         log=lambda *a: None, stop_after_invalid=limit)
+            except StoppedOnInvalid as e:
+                stopped = e
+            return stopped, list(rd.read_cells())
+
+    def test_it_stops_at_the_limit_and_keeps_what_ran(self):
+        stopped, cells = self._grid(2)
+        self.assertIsNotNone(stopped, "four invalid cells, limit 2, no stop")
+        self.assertEqual(len(cells), 2, "stopped late or threw away cells")
+        self.assertIsNotNone(stopped.seal, "seal lost — the partial run "
+                                           "cannot be judged or reported")
+
+    def test_without_the_flag_the_grid_still_runs_to_the_end(self):
+        stopped, cells = self._grid(None)
+        self.assertIsNone(stopped, "stopped without being asked to")
+        self.assertEqual(len(cells), 4)

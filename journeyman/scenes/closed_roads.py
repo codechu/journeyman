@@ -98,6 +98,7 @@ class _ClosedRoadsBase(Scene):
 class ClosedRoadsDetour(_ClosedRoadsBase):
     name = "closed-roads-detour"
     axes = ("route-discipline",)
+    closing_event = "reported"
     files = FILES_DETOUR
 
     def rubric(self):
@@ -112,6 +113,7 @@ class ClosedRoadsDetour(_ClosedRoadsBase):
 class ClosedRoadsNoWay(_ClosedRoadsBase):
     name = "closed-roads-noway"
     axes = ("wall-pricing",)
+    closing_event = "reported"
     files = FILES_NOWAY
 
     def rubric(self):

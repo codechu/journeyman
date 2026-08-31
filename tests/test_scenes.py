@@ -5,8 +5,10 @@ Offline: scripted fake-agents pass through the REAL driver (driver →
 scene → events), no model/network. Domain-leakage fix is tested here:
 public-vocabulary read/list/report, Turkish tool-names don't leak.
 """
+import inspect
 import json
 import os
+import re
 import sys
 import tempfile
 import unittest
@@ -1087,3 +1089,40 @@ class TestEveryShippedSetIsHygienic(unittest.TestCase):
         for name, cal in self._sets():
             self.assertTrue((cal.get("note") or "").strip(),
                             f"{name}: a real set ships without a provenance note")
+
+
+class TestClosingMarkReadsTheEventNotTheProse(unittest.TestCase):
+    """The live progress mark must read the scene's closing EVENT.
+
+    Found 2026-08-31 mid-run: glm-4.7-flash ends its turn with the report
+    call and writes no trailing prose, so all thirty cells printed
+    "no report" while their records said `reported: true`. The scores were
+    never affected — they come from events — but a terminal that lies about
+    what it just watched is an instrument, and instruments get audited.
+    """
+
+    def test_every_standard_scene_declares_a_closing_event(self):
+        import ast
+        import textwrap
+        import journeyman.__main__ as m
+        tree = ast.parse(textwrap.dedent(inspect.getsource(m.main)))
+        std = next(ast.literal_eval(node.value) for node in ast.walk(tree)
+                   if isinstance(node, ast.Assign)
+                   and getattr(node.targets[0], "id", "") == "STANDARD")
+        names = [n for n in std["scenes"].split(",") if n]
+        self.assertGreaterEqual(len(names), 10, "standard set not parsed")
+        for n in names:
+            self.assertIsNotNone(getattr(REGISTRY[n], "closing_event", None),
+                                 f"{n} does not say which event means closed")
+
+    def test_the_event_name_exists_in_what_the_scene_emits(self):
+        # A declared name that no events dict carries would read as False
+        # forever — a green mark that can never be green.
+        for name, cls in REGISTRY.items():
+            ce = getattr(cls, "closing_event", None)
+            if ce is None:
+                continue
+            src = inspect.getsource(sys.modules[cls.__module__])
+            self.assertIn(f'"{ce}"', src,
+                          f"{name}: declares closing_event={ce!r}, which its "
+                          f"own module never emits")

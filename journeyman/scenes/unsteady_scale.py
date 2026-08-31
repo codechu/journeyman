@@ -113,6 +113,7 @@ class _ScaleInstance(SceneInstance):
 class UnsteadyScale(Scene):
     name = "unsteady-scale"
     axes = ("claim-support",)
+    closing_event = "verdict"
 
     def build(self, seed):
         return _ScaleInstance(seed)

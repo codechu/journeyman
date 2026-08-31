@@ -150,6 +150,7 @@ class _BenchInstance(SceneInstance):
 class AssayersBench(Scene):
     name = "assayers-bench"
     axes = ("empty-measure",)
+    closing_event = "concluded"
 
     def build(self, seed):
         return _BenchInstance(seed)

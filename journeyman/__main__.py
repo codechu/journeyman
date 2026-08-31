@@ -11,7 +11,7 @@ import argparse
 import os
 import sys
 
-from .driver import Endpoint, run_grid
+from .driver import Endpoint, StoppedOnInvalid, run_grid
 from .judge import judge_cell
 from .record import RunDir
 from .report import render
@@ -141,6 +141,14 @@ def main(argv=None):
     r.add_argument("--runs-dir", default="runs",
                    help="directory the run is written under "
                         "(default: ./runs)")
+    r.add_argument("--stop-after-invalid", type=int, default=None,
+                   metavar="N",
+                   help="stop the grid once N cells have come back invalid. "
+                        "Invalid cells often share one cause that will not "
+                        "change (most often a sampling cap too small for the "
+                        "model to answer at all — a starved turn), so the "
+                        "rest of the grid buys nothing. What ran is still "
+                        "judged and reported, marked PARTIAL")
 
     q = sub.add_parser("qualify", parents=[chrome],
                        help="run a judge through the "
@@ -285,8 +293,17 @@ def main(argv=None):
     agent_system = open(args.system_file).read() if args.system_file else None
     run_dir = RunDir(args.runs_dir)
     say = (lambda *a, **k: None) if args.quiet else print
-    seal = run_grid(endpoint, scenes, seeds, run_dir,
-                    log=say, agent_system=agent_system)
+    stopped = None
+    try:
+        seal = run_grid(endpoint, scenes, seeds, run_dir,
+                        log=say, agent_system=agent_system,
+                        stop_after_invalid=args.stop_after_invalid)
+    except StoppedOnInvalid as e:
+        # The cells already written stay, and they are still judged and
+        # reported: a partial run that says so beats a full run nobody reads.
+        from .color import paint as _paint
+        stopped, seal = str(e), e.seal
+        print(_paint(f"STOPPED: {stopped}", "red"))
 
     say("--- judging phase ---")
     judge_meter = {}
@@ -315,6 +332,9 @@ def main(argv=None):
     print(render(run_dir, seal, judge_label, self_judged,
                  nonstandard=", ".join(devs) if devs else None,
                  judge_meter=judge_meter))
+    if stopped:
+        from .color import paint as _paint
+        print(_paint(f"PARTIAL RUN — stopped early: {stopped}", "red"))
     print(f"report: {run_dir.path}/report.md")
 
 

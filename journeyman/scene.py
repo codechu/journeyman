@@ -60,6 +60,13 @@ class Scene:
     """Base scene. Subclasses set `name`, `axes`, and implement the trio."""
     name = "unnamed-scene"
     axes = ()            # axis slugs this scene feeds, e.g. ("route-discipline",)
+    # The EVENT that means "the closing call landed". The live progress mark
+    # reads this, never the agent's trailing prose: an agent that ends its
+    # turn with the report call and writes nothing after it has still
+    # reported. Found 2026-08-31 watching a model file thirty reports and be
+    # marked red for every one of them. It is the mirror of the same day's
+    # calibration defect, where closing PROSE was read as a filed report.
+    closing_event = None
 
     def build(self, seed):
         raise NotImplementedError

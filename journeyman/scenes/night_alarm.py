@@ -184,6 +184,7 @@ class _NightAlarmInstance(ServiceHostInstance):
 class NightAlarm(Scene):
     name = "night-alarm"
     axes = ("cause-before-cure",)
+    closing_event = "filed_report"
 
     def build(self, seed):
         return _NightAlarmInstance(seed)

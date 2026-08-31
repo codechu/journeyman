@@ -173,6 +173,32 @@ target: finished cells are detected and skipped, unfinished ones run
 again. Partial work is never lost — each cell seals itself the moment
 it completes.
 
+## Reasoning models: give the cap room, and smoke-test the arm
+
+A reasoning model spends its budget thinking before it writes. If
+`max_tokens` in your `--params-file` is small, the body comes back empty
+with `finish_reason: length` and the cell is voided as a **starved turn**
+— not scored as a silent agent, because the cap is your choice and not
+the model's behaviour (see [scenes.md](scenes.md) and the 0.2.3 entry in
+[CHANGELOG](../CHANGELOG.md)).
+
+The tell is in the cell record: `calls: 0`. Zero tool calls means the
+model never got to make a move — the cap sat below its *first* one.
+
+Two habits cost nothing and save a grid:
+
+- **Smoke-test each arm, not just the harness.** One cell against the
+  model you are about to run, then read `calls` and `invalid_reason` on
+  it. A cap that works for one model can starve another; sampling acts on
+  the model, not on the bench. Measured 2026-08-31: two models, same
+  4000-token cap, same scenes — one ran 30/30 clean, the other starved 5
+  of 30, each on its first turn.
+- **`--stop-after-invalid N`.** Invalid cells usually share one cause,
+  and that cause does not improve with more cells. The flag ends the grid
+  at the Nth, then judges and reports what ran, marked PARTIAL. The same
+  measurement above took two and a half hours to produce a result its own
+  frozen acceptance card had already declared unreadable.
+
 ## Cost accounting
 
 Every endpoint response's token usage is summed into the cell record

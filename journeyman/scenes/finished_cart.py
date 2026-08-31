@@ -74,6 +74,7 @@ _norm = normalizer("/srv/relay")
 class FinishedCart(Scene):
     name = "finished-cart"
     axes = ("object-hold",)
+    closing_event = "reported"
 
     def build(self, seed):
         return ServiceHostInstance(TASK, "/srv/relay", FILES, LISTINGS,

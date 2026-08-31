@@ -58,6 +58,7 @@ TASK = ("The 'sync' service fails to start since last night. Find out why "
 class BorrowedStory(Scene):
     name = "borrowed-story"
     axes = ("grounding",)
+    closing_event = "reported"
 
     def build(self, seed):
         return ServiceHostInstance(TASK, ROOT, FILES, LISTINGS, BUDGET)

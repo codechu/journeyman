@@ -243,9 +243,28 @@ def run_cell(endpoint, scene, seed, log, agent_system=None):
             "seconds": round(time.time() - t0, 1)}
 
 
+class StoppedOnInvalid(RuntimeError):
+    """Raised when invalid cells cross the operator's declared limit.
+
+    A cell can come back invalid for reasons that will repeat on every
+    remaining cell — most often a sampling cap below what the model needs
+    to answer at all (a starved turn). Left alone, the grid spends the
+    whole budget producing cells nobody will read. Measured 2026-08-31: a
+    reasoning model starved 5 of 30 cells against a 4000-token cap, and
+    the run took two and a half hours to say what its first starved cell
+    already said. Money was not the loss; time was.
+
+    Carries the seal so the caller can still judge and report what ran.
+    """
+
+    def __init__(self, message, seal=None):
+        super().__init__(message)
+        self.seal = seal
+
+
 def run_grid(endpoint, scene_names, seeds, run_dir: RunDir, log=print,
              scene_set="dev", bench_version=__version__,
-             agent_system=None):
+             agent_system=None, stop_after_invalid=None):
     scenes = {n: REGISTRY[n] for n in scene_names}
     seal = make_seal(bench_version, scene_set, scenes, seeds, endpoint.model,
                      agent_system=agent_system,
@@ -253,6 +272,7 @@ def run_grid(endpoint, scene_names, seeds, run_dir: RunDir, log=print,
     run_dir.event("run_start", seal=seal)
     cells = [(n, s) for n in scene_names for s in seeds]
     done_s = []
+    invalid_n = 0
     for i, (name, seed) in enumerate(cells, 1):
         cell_id = f"{name}_s{seed}"
         if run_dir.cell_done(cell_id):
@@ -283,10 +303,27 @@ def run_grid(endpoint, scene_names, seeds, run_dir: RunDir, log=print,
             log(f"[{i:>2}/{len(cells)}] {cell_id} → "
                 f"{paint(f'INVALID ({reason})', 'red')}; "
                 f"see cells/{cell_id}.json")
+            invalid_n += 1
+            if stop_after_invalid and invalid_n >= stop_after_invalid:
+                run_dir.event("run_stopped", invalid=invalid_n,
+                              limit=stop_after_invalid, done=i,
+                              of=len(cells))
+                raise StoppedOnInvalid(
+                    f"{invalid_n} invalid cells (limit {stop_after_invalid}) "
+                    f"after {i}/{len(cells)} — stopping rather than spending "
+                    f"the rest of the grid on cells that will read the same. "
+                    f"Last reason: {reason}", seal=seal)
         else:
             done_s.append(rec["seconds"])
-            mark = (paint("✓ report", "green") if rec["final_text"]
-                    else paint("✗ no report", "red"))
+            # The scene says which event means "closed"; prose is the fallback
+            # only for scenes that declare none (the selftest well). Reading
+            # final_text here called every cell a failure when the agent ended
+            # on the closing tool call and wrote nothing after it.
+            ce = getattr(scene, "closing_event", None)
+            filed = (bool((record["events"] or {}).get(ce)) if ce
+                     else bool(rec["final_text"]))
+            mark = (paint("✓ closed", "green") if filed
+                    else paint("✗ never closed", "red"))
             log(f"[{i:>2}/{len(cells)}] {cell_id}  {rec['calls']} calls · "
                 f"{rec['seconds']}s · {mark}")
             if done_s:

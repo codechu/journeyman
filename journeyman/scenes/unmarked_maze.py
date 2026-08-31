@@ -97,6 +97,7 @@ class _MazeInstance(SceneInstance):
 class UnmarkedMaze(Scene):
     name = "unmarked-maze"
     axes = ("walk-coverage", "move-discipline", "self-verdict")
+    closing_event = "concluded"
 
     def build(self, seed):
         return _MazeInstance(seed)
