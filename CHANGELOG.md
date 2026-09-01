@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+- **A judge that was still loading killed an eighty-two-case exam on case
+  one.** `qualify` treated every failure as a transport fault: three
+  attempts inside fifteen seconds, then a stack trace. But a server that
+  answers `connection refused` and then `503` is not broken, it is absent —
+  a 27B judge mmap-ing its weights, working correctly ninety seconds later.
+  The two are now told apart. The exam knocks before it opens (the model
+  listing, not a generation — asking a reasoning model to say hello costs a
+  full thinking budget, and a readiness check that expensive is one nobody
+  runs), waits out an absence up to a bound without spending an attempt,
+  and names the case and axis it died on when it does give up. A wrong key
+  is still answered at once: only not-ready is patient.
+
+- **Actions pinned to majors that run on Node 24.** `checkout@v4` and
+  `setup-python@v5` target Node 20 and were being force-run on 24; the
+  Pages actions were a major behind as well. The checkout bump carries a
+  breaking change upstream — fork PR code is no longer checked out under
+  `pull_request_target` or `workflow_run` without an explicit opt-in — which
+  reaches nothing here: both workflows trigger on `push` and `pull_request`.
+
 - **The DOI badge rendered as a broken image on GitHub.** The SVG itself is
   fine — valid XML, no external references, HTTP 200 from Zenodo and 200
   again through GitHub's image proxy when fetched by hand — so the fault

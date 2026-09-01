@@ -37,6 +37,61 @@ def load_set(path=None):
     return json.load(open(path))
 
 
+# A server that is still loading its weights answers differently from a
+# server that is broken: connection refused, or 503, and then it works.
+# Told apart, because they deserve opposite treatment — one is waited out,
+# the other is reported at once. (2026-09-01: a 27B judge was still
+# mmap-ing when the exam opened; three attempts inside fifteen seconds
+# spent themselves on case 1 of 82 and the run died with a traceback.)
+NOT_READY = ("connection refused", "503", "service unavailable",
+             "connection reset", "econnrefused", "bağlantı reddedildi")
+
+
+def _not_ready(err):
+    text = str(err).lower()
+    return any(m in text for m in NOT_READY)
+
+
+def await_judge(judge_endpoint, log=print, timeout=300):
+    """Wait for the judge to be reachable, before the exam opens.
+
+    An exam that starts against a warming server does not measure the
+    judge; it measures the clock. The probe is the model listing, not a
+    generation: asking a reasoning model to say hello costs a full
+    thinking budget, and a readiness check that expensive is one nobody
+    runs. The wait is bounded and names what it waits for, so a genuinely
+    absent endpoint still fails — later, and with a sentence rather than a
+    stack trace.
+    """
+    from .driver import list_models
+    # An endpoint object with no URL is not an HTTP endpoint — the test
+    # oracle, or any in-process judge. There is nothing to knock on, and a
+    # readiness probe that invents a failure for those would be a guard
+    # that fires on the wrong thing.
+    url = getattr(judge_endpoint, "url", None)
+    if not url:
+        return True
+    started = time.time()
+    said = False
+    while True:
+        try:
+            list_models(url, getattr(judge_endpoint, "api_key", None),
+                        timeout=10)
+            if said:
+                log(f"[qualify] judge answered after "
+                    f"{int(time.time() - started)}s")
+            return True
+        except Exception as e:
+            waited = time.time() - started
+            if not _not_ready(e) or waited > timeout:
+                raise RuntimeError(
+                    f"judge endpoint unusable after {int(waited)}s: {e}")
+            if not said:
+                log(f"[qualify] judge not ready yet ({e}); waiting up to "
+                    f"{timeout}s")
+                said = True
+            time.sleep(5)
+
 def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False,
             evidence=False):
     """repeats: judge draws per case, majority vote. A badge is a decision;
@@ -50,6 +105,7 @@ def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False,
     never masquerades as a bare one.
     """
     cal = cal or load_set()
+    await_judge(judge_endpoint, log=log)
     rubric = _rubric_index()
     import re
     from collections import Counter
@@ -57,7 +113,7 @@ def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False,
     axis_total = Counter(c["axis"] for c in cal["cases"])
     per_axis = {}
     eliminated = None
-    for case in cal["cases"]:
+    for done, case in enumerate(cal["cases"]):
         item = rubric.get(case["axis"])
         if item is None:
             log(f"[qualify] no registered scene feeds axis "
@@ -75,18 +131,37 @@ def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False,
             # transient network faults must not void a whole exam: one
             # timed-out call killed a 51-case run on its last case
             # (2026-08-20). Three attempts, then the exam fails loudly.
-            for attempt in range(3):
+            attempt = waits = 0
+            while True:
                 try:
                     msg, _ = judge_endpoint.chat(
                         [{"role": "user", "content": prompt}], tools=[])
                     break
                 except Exception as e:
-                    if attempt == 2:
-                        raise
-                    print(f"[qualify] transient judge error, retrying: {e}")
+                    where = (f"case {done + 1}/{len(cal['cases'])} "
+                             f"(axis {case['axis']})")
+                    # A server that went away mid-exam — restarted, or
+                    # reloading — is waited out on the same terms as at the
+                    # door, and the wait does not spend an attempt: it is not
+                    # a fault, it is an absence. A transport fault keeps the
+                    # short, polite backoff and the hard limit of three.
+                    if _not_ready(e):
+                        waits += 1
+                        if waits > 3:
+                            raise RuntimeError(
+                                f"judge kept going away at {where}: {e}") from e
+                        log(f"[qualify] judge not ready at {where}: {e}")
+                        await_judge(judge_endpoint, log=log)
+                        continue
+                    attempt += 1
+                    if attempt >= 3:
+                        raise RuntimeError(
+                            f"judge failed at {where} after 3 attempts: "
+                            f"{e}") from e
+                    log(f"[qualify] transient judge error, retrying: {e}")
                     # 429s answer immediate retries with more 429s — an
                     # unslept retry loop is the impolite one (2026-08-22)
-                    time.sleep(5 * (attempt + 1))
+                    time.sleep(5 * attempt)
             text = msg.get("content") or ""
             m = re.search(r"VERDICT:\s*([a-zA-Z_-]+)", text)
             # labels are declared with hyphens; judges sometimes echo them
