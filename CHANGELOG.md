@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- **The DOI badge rendered as a broken image on GitHub.** The SVG itself is
+  fine — valid XML, no external references, HTTP 200 from Zenodo and 200
+  again through GitHub's image proxy when fetched by hand — so the fault
+  sits between Zenodo's badge endpoint and the proxy, intermittently, and
+  not in anything this repository controls. The badge is now drawn by the
+  same service as the rest of the row, which renders. The link still
+  resolves through `doi.org`, so the archive it names is unchanged.
+
 ## 0.4.0 — 2026-08-31
 
 - **The progress mark said "no report" about cells that had reported.** It
