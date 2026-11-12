@@ -1,12 +1,12 @@
-<p align="center"><img src="https://raw.githubusercontent.com/codechu/journeyman/v0.4.1/assets/banner.jpg" alt="A journeyman raises a lantern over a stone labyrinth — ledger, sounding-stones and a maze-sealed tally on the bench." width="100%"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/codechu/journeyman/v0.5.0/assets/banner.jpg" alt="A journeyman raises a lantern over a stone labyrinth — ledger, sounding-stones and a maze-sealed tally on the bench." width="100%"></p>
 
 # Journeyman
 
 [![ci](https://github.com/codechu/journeyman/actions/workflows/ci.yml/badge.svg)](https://github.com/codechu/journeyman/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/journeyman-bench?color=blue)](https://pypi.org/project/journeyman-bench/)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://pypi.org/project/journeyman-bench/)
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](https://github.com/codechu/journeyman/blob/v0.4.1/LICENSE)
-[![Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](https://github.com/codechu/journeyman/blob/v0.4.1/pyproject.toml)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](https://github.com/codechu/journeyman/blob/v0.5.0/LICENSE)
+[![Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](https://github.com/codechu/journeyman/blob/v0.5.0/pyproject.toml)
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.22085820-blue)](https://doi.org/10.5281/zenodo.22085820)
 
 *A process-quality benchmark for agents.*
@@ -35,14 +35,14 @@ ships the labels to do it with. Journeyman does three things about that:
 - **a judge that has not passed it cannot score** — `journeyman qualify` grants
   or refuses a badge, and an unqualified run is stamped `NOT COMPARABLE`;
 - **the judges that failed are published by name** — the
-  [registry](https://github.com/codechu/journeyman/blob/v0.4.1/docs/judges.md) lists the twenty-odd configurations that did not
+  [registry](https://github.com/codechu/journeyman/blob/v0.5.0/docs/judges.md) lists the twenty-odd configurations that did not
   qualify next to the four that did.
 
 **Where it stands:** eleven agents scored under a qualified judge, 82
 labelled cases behind the badge that let it score — and one axis whose
 noise band is still unmeasured. [Status](#status).
 
-<p align="center"><img src="https://raw.githubusercontent.com/codechu/journeyman/v0.4.1/assets/terminal.svg" alt="A live journeyman run: banner, per-cell progress lines with measured ETA, judging phase, and the final profile." width="760"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/codechu/journeyman/v0.5.0/assets/terminal.svg" alt="A live journeyman run: banner, per-cell progress lines with measured ETA, judging phase, and the final profile." width="760"></p>
 
 ## Install & try
 
@@ -106,10 +106,10 @@ moment. A `NOT COMPARABLE` stamp means the run was self-judged or
 non-standard — track your own progress with it, don't compare it to
 anyone. A full standard run takes 10-60 minutes depending on the model,
 with live progress the whole way. Full anatomy of a run and its files:
-[docs/run-guide.md](https://github.com/codechu/journeyman/blob/v0.4.1/docs/run-guide.md).
+[docs/run-guide.md](https://github.com/codechu/journeyman/blob/v0.5.0/docs/run-guide.md).
 
 To carry a report into another evaluation format, see
-[docs/run-guide.md](https://github.com/codechu/journeyman/blob/v0.4.1/docs/run-guide.md#carrying-a-report-elsewhere).
+[docs/run-guide.md](https://github.com/codechu/journeyman/blob/v0.5.0/docs/run-guide.md#carrying-a-report-elsewhere).
 
 ## Commands
 
@@ -130,27 +130,27 @@ COMPARABLE, because self-judgment has been observed to be lenient
 self-judge called it grounded; a paired self-vs-qualified measurement is
 still owed). The public
 registry of badge holders — and the thirty-plus configurations examined
-across two labellings — is at [docs/judges.md](https://github.com/codechu/journeyman/blob/v0.4.1/docs/judges.md).
+across two labellings — is at [docs/judges.md](https://github.com/codechu/journeyman/blob/v0.5.0/docs/judges.md).
 
 ## Ten scenes
 
 Each puts pressure on ONE expensive, real failure family — and declares
 only its tools and budget, never what good behaviour looks like. Full pages (world, task, trap, counted events, the judge's question
-verbatim, signatures) under [docs/scenes.md](https://github.com/codechu/journeyman/blob/v0.4.1/docs/scenes.md); the shared
-world-engines beneath them are documented under [docs/grounds/](https://github.com/codechu/journeyman/blob/v0.4.1/docs/grounds/service-host.md).
+verbatim, signatures) under [docs/scenes.md](https://github.com/codechu/journeyman/blob/v0.5.0/docs/scenes.md); the shared
+world-engines beneath them are documented under [docs/grounds/](https://github.com/codechu/journeyman/blob/v0.5.0/docs/grounds/service-host.md).
 
 | scene | the failure it filters |
 |---|---|
-| [Closed Roads · detour](https://github.com/codechu/journeyman/blob/v0.4.1/docs/scenes/closed-roads.md) | hammering a wall that already answered |
-| [Closed Roads · no way through](https://github.com/codechu/journeyman/blob/v0.4.1/docs/scenes/closed-roads.md) | burning budget instead of an honest, priced stop |
-| [The Assayer's Bench](https://github.com/codechu/journeyman/blob/v0.4.1/docs/scenes/assayers-bench.md) | measuring long after measurement stopped informing |
-| [The Finished Cart](https://github.com/codechu/journeyman/blob/v0.4.1/docs/scenes/finished-cart.md) | polishing past the finish because budget remained |
-| [The Borrowed Story](https://github.com/codechu/journeyman/blob/v0.4.1/docs/scenes/borrowed-story.md) | asserting a plausible story the evidence contradicts |
-| [The Unmarked Maze](https://github.com/codechu/journeyman/blob/v0.4.1/docs/scenes/unmarked-maze.md) | wandering without coverage, claiming what the world denies |
-| [Night Relief](https://github.com/codechu/journeyman/blob/v0.4.1/docs/scenes/night-relief.md) | leaving a handoff a stranger cannot continue |
-| [Night Watch](https://github.com/codechu/journeyman/blob/v0.4.1/docs/scenes/night-watch.md) | repeating an authoritative note the world contradicts |
-| [Night Alarm](https://github.com/codechu/journeyman/blob/v0.4.1/docs/scenes/night-alarm.md) | ending the symptom and leaving the cause running |
-| [The Unsteady Scale](https://github.com/codechu/journeyman/blob/v0.4.1/docs/scenes/unsteady-scale.md) | naming a winner the instrument's own scatter denies |
+| [Closed Roads · detour](https://github.com/codechu/journeyman/blob/v0.5.0/docs/scenes/closed-roads.md) | hammering a wall that already answered |
+| [Closed Roads · no way through](https://github.com/codechu/journeyman/blob/v0.5.0/docs/scenes/closed-roads.md) | burning budget instead of an honest, priced stop |
+| [The Assayer's Bench](https://github.com/codechu/journeyman/blob/v0.5.0/docs/scenes/assayers-bench.md) | measuring long after measurement stopped informing |
+| [The Finished Cart](https://github.com/codechu/journeyman/blob/v0.5.0/docs/scenes/finished-cart.md) | polishing past the finish because budget remained |
+| [The Borrowed Story](https://github.com/codechu/journeyman/blob/v0.5.0/docs/scenes/borrowed-story.md) | asserting a plausible story the evidence contradicts |
+| [The Unmarked Maze](https://github.com/codechu/journeyman/blob/v0.5.0/docs/scenes/unmarked-maze.md) | wandering without coverage, claiming what the world denies |
+| [Night Relief](https://github.com/codechu/journeyman/blob/v0.5.0/docs/scenes/night-relief.md) | leaving a handoff a stranger cannot continue |
+| [Night Watch](https://github.com/codechu/journeyman/blob/v0.5.0/docs/scenes/night-watch.md) | repeating an authoritative note the world contradicts |
+| [Night Alarm](https://github.com/codechu/journeyman/blob/v0.5.0/docs/scenes/night-alarm.md) | ending the symptom and leaving the cause running |
+| [The Unsteady Scale](https://github.com/codechu/journeyman/blob/v0.5.0/docs/scenes/unsteady-scale.md) | naming a winner the instrument's own scatter denies |
 
 ## How it works
 
@@ -167,7 +167,7 @@ world-engines beneath them are documented under [docs/grounds/](https://github.c
   command. On local llama.cpp with the prompt cache off, reruns are
   bit-exact. Procedural worlds + seed sets resist contamination.
 
-The cohort so far: [docs/leaderboard.md](https://github.com/codechu/journeyman/blob/v0.4.1/docs/leaderboard.md) — eleven
+The cohort so far: [docs/leaderboard.md](https://github.com/codechu/journeyman/blob/v0.5.0/docs/leaderboard.md) — eleven
 agents, judged under v2.4 by the self-hosted qualified judge, with an
 ablation separating rubric from judge.
 
@@ -192,9 +192,9 @@ We would rather you read these here than discover them:
   judging skill. Under the v2 definition every judge screened passes it,
   including one that had scored 0.43. Most of that guillotine was our
   rubric. The v1.3 ledger stays published in
-  [docs/judges.md](https://github.com/codechu/journeyman/blob/v0.4.1/docs/judges.md) as what we believed and why.
+  [docs/judges.md](https://github.com/codechu/journeyman/blob/v0.5.0/docs/judges.md) as what we believed and why.
 - **Who holds a badge now** (the ledger in
-  [docs/judges.md](https://github.com/codechu/journeyman/blob/v0.4.1/docs/judges.md) is the source; this is its summary).
+  [docs/judges.md](https://github.com/codechu/journeyman/blob/v0.5.0/docs/judges.md) is the source; this is its summary).
   Under the v2.4 rubric text: GLM-5.2 and GPT-5.6-Luna in the cloud, and
   two self-hosted, free judges — Qwen3.6-35B-A3B (2026-08-24) and
   Qwen3.8-27B (2026-11-12, on the current 82-case set). Qwen3.6 had
@@ -223,13 +223,13 @@ We would rather you read these here than discover them:
   remaining scene texts contain only tool vocabulary and budgets —
   nothing to ablate — and rest on the floor evidence that weak models
   fail them. The two newest were read by two blind readers before entry.
-  Per-scene notes are on [docs/scenes.md](https://github.com/codechu/journeyman/blob/v0.4.1/docs/scenes.md).
+  Per-scene notes are on [docs/scenes.md](https://github.com/codechu/journeyman/blob/v0.5.0/docs/scenes.md).
 
 ## Status
 
 **v1 engineering complete:** ten sealed scenes/modes on four grounds,
 two scoring layers, the judge qualification exam, sealed reports.
-Reference runs are archived under [runs-archive/](https://github.com/codechu/journeyman/blob/v0.4.1/runs-archive/).
+Reference runs are archived under [runs-archive/](https://github.com/codechu/journeyman/blob/v0.5.0/runs-archive/).
 **Shown since v0.0.5:** multi-model separation (a four-model panel under
 an independent judge — the strong model lifts every "floored" axis,
 proving those axes hard rather than broken); a real calibration set,
@@ -251,21 +251,21 @@ and a harder dial for the two scenes the cohort aced or never triggered
 The write-up is in progress, and arXiv wants an endorsement for a first
 submission in a category we have no affiliation to bypass. What the
 paper would describe, and the ask, are in
-[docs/methodology.md](https://github.com/codechu/journeyman/blob/v0.4.1/docs/methodology.md).
+[docs/methodology.md](https://github.com/codechu/journeyman/blob/v0.5.0/docs/methodology.md).
 
 ## Documentation
 
 | document | when you need it |
 |---|---|
-| [docs/run-guide.md](https://github.com/codechu/journeyman/blob/v0.4.1/docs/run-guide.md) | your first real run: flags, files a run writes, what to read first |
-| [docs/scenes.md](https://github.com/codechu/journeyman/blob/v0.4.1/docs/scenes.md) | what a scene puts pressure on, and the judge's question verbatim |
-| [docs/grounds/](https://github.com/codechu/journeyman/blob/v0.4.1/docs/grounds/service-host.md) | the world-engines under the scenes, if you are writing one |
-| [docs/judges.md](https://github.com/codechu/journeyman/blob/v0.4.1/docs/judges.md) | picking a judge — who holds a badge, and who failed on what |
-| [docs/leaderboard.md](https://github.com/codechu/journeyman/blob/v0.4.1/docs/leaderboard.md) | how eleven agents scored, and which axis moved for which reason |
-| [docs/methodology.md](https://github.com/codechu/journeyman/blob/v0.4.1/docs/methodology.md) | why it is built this way; related work; the arXiv ask |
-| [docs/glossary.md](https://github.com/codechu/journeyman/blob/v0.4.1/docs/glossary.md) | a word here is not being used loosely — judge, scene, axis, walk, cell, band |
-| [docs/faq.md](https://github.com/codechu/journeyman/blob/v0.4.1/docs/faq.md) | the objection you are about to raise |
-| [docs/versioning.md](https://github.com/codechu/journeyman/blob/v0.4.1/docs/versioning.md) | what a version number promises about comparability |
+| [docs/run-guide.md](https://github.com/codechu/journeyman/blob/v0.5.0/docs/run-guide.md) | your first real run: flags, files a run writes, what to read first |
+| [docs/scenes.md](https://github.com/codechu/journeyman/blob/v0.5.0/docs/scenes.md) | what a scene puts pressure on, and the judge's question verbatim |
+| [docs/grounds/](https://github.com/codechu/journeyman/blob/v0.5.0/docs/grounds/service-host.md) | the world-engines under the scenes, if you are writing one |
+| [docs/judges.md](https://github.com/codechu/journeyman/blob/v0.5.0/docs/judges.md) | picking a judge — who holds a badge, and who failed on what |
+| [docs/leaderboard.md](https://github.com/codechu/journeyman/blob/v0.5.0/docs/leaderboard.md) | how eleven agents scored, and which axis moved for which reason |
+| [docs/methodology.md](https://github.com/codechu/journeyman/blob/v0.5.0/docs/methodology.md) | why it is built this way; related work; the arXiv ask |
+| [docs/glossary.md](https://github.com/codechu/journeyman/blob/v0.5.0/docs/glossary.md) | a word here is not being used loosely — judge, scene, axis, walk, cell, band |
+| [docs/faq.md](https://github.com/codechu/journeyman/blob/v0.5.0/docs/faq.md) | the objection you are about to raise |
+| [docs/versioning.md](https://github.com/codechu/journeyman/blob/v0.5.0/docs/versioning.md) | what a version number promises about comparability |
 
 <details>
 <summary>Package layout</summary>
@@ -289,8 +289,8 @@ journeyman/
 
 ---
 
-<p align="center"><img src="https://raw.githubusercontent.com/codechu/journeyman/v0.4.1/assets/icon.jpg" alt="Journeyman guild seal — a maze forming the letter J" width="96"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/codechu/journeyman/v0.5.0/assets/icon.jpg" alt="Journeyman guild seal — a maze forming the letter J" width="96"></p>
 
-Contributing: [CONTRIBUTING.md](https://github.com/codechu/journeyman/blob/v0.4.1/CONTRIBUTING.md) · Versioning: [docs/versioning.md](https://github.com/codechu/journeyman/blob/v0.4.1/docs/versioning.md) · Changelog: [CHANGELOG.md](https://github.com/codechu/journeyman/blob/v0.4.1/CHANGELOG.md) · Licensed under the [Apache License 2.0](https://github.com/codechu/journeyman/blob/v0.4.1/LICENSE).
+Contributing: [CONTRIBUTING.md](https://github.com/codechu/journeyman/blob/v0.5.0/CONTRIBUTING.md) · Versioning: [docs/versioning.md](https://github.com/codechu/journeyman/blob/v0.5.0/docs/versioning.md) · Changelog: [CHANGELOG.md](https://github.com/codechu/journeyman/blob/v0.5.0/CHANGELOG.md) · Licensed under the [Apache License 2.0](https://github.com/codechu/journeyman/blob/v0.5.0/LICENSE).
 
 Part of [Codechu](https://github.com/codechu).

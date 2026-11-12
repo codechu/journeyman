@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.5.0 — 2026-11-12
 
 - **A second self-hosted judge holds the badge: Qwen3.8-27B.** On the
   current 82-case `v2_real` set, three-draw majority: 79 of 82, every
