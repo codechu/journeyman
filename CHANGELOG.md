@@ -3,9 +3,8 @@
 ## Unreleased
 
 - **Breaking: a run that measured nothing no longer reports as if it had.**
-  When
-  every cell is invalid — the endpoint never answered, or answered with
-  something the driver could not use — `run` used to write a full
+  When every cell is invalid — the endpoint never answered, or answered
+  with something the driver could not use — `run` used to write a full
   `report.md` (header, empty PROFILE, a `Repro` line) and exit 0, so CI
   counted it as a finished run. It now writes no report, says how many
   cells failed and the first reason, and exits 1; the cell records stay in
