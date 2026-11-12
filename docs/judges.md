@@ -74,6 +74,7 @@ journeyman qualify --judge <endpoint> --judge-model <model> --repeats 3
 | **Qwen3.6-35B-A3B**, stock | local, free | 0.88 | **QUALIFIED** — grounding 0.86, wall-pricing 0.86, rest 1.00 |
 | **Qwen3.6-35B-A3B**, stock (self-hosted, GGUF IQ4_XS) — re-examined 2026-11-12 on the 82-case set | local, free | 0.88 | **QUALIFIED** — grounding 0.86, object-hold 0.88, relief-page 0.89, wall-pricing 0.93, rest 1.00; MoE, so fast: 23 min for the exam with `--concurrency 4` ([record](../runs-archive/exams/v2_real-2026-11-12/2026-11-12-v2_real-qwen36-35b-a3b-local-QUALIFIED.json)). The set grew after its 2026-08-24 badge; this is a new exam on the new set, not a re-roll of the old one |
 | **Qwen3.8-27B** (self-hosted, GGUF Q4_K_XL) — 2026-11-12, 82-case set | local, free | 0.94 | **QUALIFIED** — relief-page 0.89, wall-pricing 0.93, rest 1.00; dense, so slow: 56 min for the exam with `--concurrency 4` ([record](../runs-archive/exams/v2_real-2026-11-12/2026-11-12-v2_real-qwen38-27b-local-QUALIFIED.json)) |
+| NVIDIA Nemotron-3.5-Lightning-30B-A3B (self-hosted, GGUF Q4_0) — 2026-11-12, 82-case set | local, free | 0.94 | not qualified — wall-pricing 0.75 (early exit after 12 of 14), rest passing; fast per token but long-thinking (13-17k tokens a call), 74 min ([record](../runs-archive/exams/v2_real-2026-11-12/2026-11-12-v2_real-nemotron35-lightning-30b-a3b-local-NOTQUALIFIED.json)) |
 
 **A sentence we had not written was doing the failing.** Under the v2.3
 text three of four judges failed grounding and wall-pricing, and we wrote

@@ -12,6 +12,12 @@
   The exam ran on the 0.5.0 code installed before the version bump, so
   its banner reads 0.4.1.
 
+- **NVIDIA Nemotron-3.5-Lightning-30B-A3B did not qualify.** wall-pricing
+  0.75 with two of its fourteen cases left when the exam stopped early; the
+  other axes were passing. Fast per token, but it thinks at length (13-17k
+  tokens a judgment), so its exam took 74 minutes. Published with the
+  others, as the registry does for every judge examined.
+
 ## 0.5.0 — 2026-11-12
 
 - **A second self-hosted judge holds the badge: Qwen3.8-27B.** On the
