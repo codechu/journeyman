@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+- **The self-hosted Qwen3.6-35B-A3B holds the badge on the current
+  82-case set.** Its 2026-08-24 badge was earned on the set as it stood
+  then; the set has grown since, so it sat a new exam: 75 of 82, every
+  axis at or above the bar (route-discipline and handoff-verification
+  1.00, wall-pricing 0.93, relief-page 0.89, empty-measure and
+  object-hold 0.88, grounding 0.86). It is a MoE, and the exam took 23
+  minutes with `--concurrency 4` against 56 for the dense Qwen3.8-27B.
+  The exam ran on the 0.5.0 code installed before the version bump, so
+  its banner reads 0.4.1.
+
 ## 0.5.0 — 2026-11-12
 
 - **A second self-hosted judge holds the badge: Qwen3.8-27B.** On the
