@@ -21,6 +21,38 @@ these: `kind` became a required field in `report.json`, so reports
 written by 0.0.x no longer validate. When we tag 1.0, this paragraph
 retires and the table above applies as written.
 
+## When we break, and when we don't
+
+The default is don't. Anything a program reads is a contract: CLI flags
+and exit codes, whether `report.json` and `report.md` are written, the
+keys of `report.json` and what their values mean. A change that touches
+one of these is designed so that nobody has to change their code:
+
+1. **Say it where people read.** If the problem is that a result looks
+   like something it isn't, the report text and stderr can say so. That
+   changes nothing a program parses.
+2. **Add, don't change.** A new optional field or an opt-in flag carries
+   the new behaviour; the old meaning stays as it was.
+3. **Deprecate before removing.** One minor release announces the removal
+   (changelog entry and a stderr warning when the old path is used); the
+   next one removes it.
+
+We break only when all three of these hold, and we write down which:
+
+- the current behaviour lets a reader take a wrong result for a right one
+  — a fault in what the numbers mean, not in how they look;
+- no additive form fixes it for the readers who already rely on the old
+  behaviour;
+- the break is announced: first line of the changelog entry, a minor bump
+  before 1.0 (a major after), and integrators we know of told before the
+  release, on their issue or ours.
+
+*Why this is written down:* the first fix for a run whose cells were all
+invalid refused to write `report.json` and exited 1. Its report did look
+like a finished run, but the report could say so itself; the break would
+have cost every script that reads `report.json` after `run`, for nothing
+the additive fix did not also do. It shipped additively instead.
+
 Every release gets a changelog entry, and the changelog entry is the
 release note.
 
