@@ -116,7 +116,7 @@ To carry a report into another evaluation format, see
 | command | what it does |
 |---|---|
 | `journeyman run` | **the exam** — drops your agent into the scenes, counts events, has the judge score the rubrics, writes the report |
-| `journeyman qualify` | **the examiner's exam** — before you trust a model as `--judge`, runs it over labelled cases with known answers and grants (or refuses) a badge |
+| `journeyman qualify` | **the examiner's exam** — before you trust a model as `--judge`, runs it over labelled cases with known answers and grants (or refuses) a badge; `--concurrency N` keeps N draws in flight against servers that batch |
 | `journeyman selftest` | plumbing check: no model, no network — proves the pipeline end to end |
 | `journeyman report runs/<dir>` | re-render a finished run's report (e.g. after re-judging) |
 | `journeyman upgrade report.json` | backfill `kind` into a report written before 0.1.0 — no model, no network, and it refuses to guess |
@@ -171,7 +171,7 @@ The cohort so far: [docs/leaderboard.md](docs/leaderboard.md) — eleven
 agents, judged under v2.4 by the self-hosted qualified judge, with an
 ablation separating rubric from judge.
 
-## Honest limitations (v0)
+## Honest limitations
 
 We would rather you read these here than discover them:
 
@@ -196,8 +196,9 @@ We would rather you read these here than discover them:
 - **Who holds a badge now** (the ledger in
   [docs/judges.md](docs/judges.md) is the source; this is its summary).
   Under the v2.4 rubric text: GLM-5.2 and GPT-5.6-Luna in the cloud, and
-  two self-hosted, free judges — Qwen3.6-35B-A3B (2026-08-24) and
-  Qwen3.8-27B (2026-11-12, on the current 82-case set). Qwen3.6 had
+  two self-hosted, free judges, both examined on the current 82-case set
+  on 2026-11-12 — Qwen3.6-35B-A3B (75 of 82; a MoE, 23 minutes) and
+  Qwen3.8-27B (79 of 82; dense, 56 minutes). Qwen3.6 had
   missed grounding (0.75) under the older v2.2 text; it sat the exam
   again only because a rubric sentence changed — a new text is a new
   exam, not a re-roll of the old one. Claude Sonnet 5 sat on the
@@ -253,6 +254,16 @@ submission in a category we have no affiliation to bypass. What the
 paper would describe, and the ask, are in
 [docs/methodology.md](docs/methodology.md).
 
+## Masterwork, the other half
+
+Journeyman measures how an agent works; it does not change the agent.
+[Masterwork](https://github.com/codechu/masterwork) is the other half:
+a standard-library pipeline that makes a *character* for a model — a
+sealed identity file the model distils from craft tales — and does not
+score it. Scoring is handed to Journeyman, under a rule frozen before the
+run. If you want to test whether an identity changes how a model works,
+that is the pair.
+
 ## Documentation
 
 | document | when you need it |
@@ -293,4 +304,4 @@ journeyman/
 
 Contributing: [CONTRIBUTING.md](CONTRIBUTING.md) · Versioning: [docs/versioning.md](docs/versioning.md) · Changelog: [CHANGELOG.md](CHANGELOG.md) · Licensed under the [Apache License 2.0](LICENSE).
 
-Part of [Codechu](https://github.com/codechu).
+Part of [Codechu](https://github.com/codechu) · sister project: [Masterwork](https://github.com/codechu/masterwork).

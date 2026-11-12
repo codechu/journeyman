@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **README: Masterwork is named, and the badge summary caught up again.**
+  The README never mentioned Masterwork, the pipeline that makes a
+  character for a model and hands the scoring to Journeyman; it now has a
+  short section and a footer link. The badge paragraph still dated the
+  self-hosted Qwen3.6 badge to 2026-08-24 after its re-examination on the
+  82-case set; it now gives both self-hosted judges' scores and exam times.
+  `qualify --concurrency` is named in the command table, and the
+  limitations heading lost a stale "(v0)".
+
 - **The self-hosted Qwen3.6-35B-A3B holds the badge on the current
   82-case set.** Its 2026-08-24 badge was earned on the set as it stood
   then; the set has grown since, so it sat a new exam: 75 of 82, every
