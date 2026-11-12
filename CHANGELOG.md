@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-- **A run that measured nothing no longer reports as if it had.** When
+- **Breaking: a run that measured nothing no longer reports as if it had.**
+  When
   every cell is invalid — the endpoint never answered, or answered with
   something the driver could not use — `run` used to write a full
   `report.md` (header, empty PROFILE, a `Repro` line) and exit 0, so CI
@@ -10,6 +11,10 @@
   cells failed and the first reason, and exits 1; the cell records stay in
   the run dir. `report` refuses to re-render such a run the same way. A
   partial run with at least one valid cell still reports as before.
+  What breaks: a script that ran `journeyman run` and read `report.json`
+  regardless of the exit code now finds neither a zero exit nor the file
+  when every cell is invalid. Reports that are written keep their shape;
+  `schema_version` stays 1. Pre-1.0, so this ships in a minor (0.5.0).
 
 - **A mistyped scene name lists the scenes instead of a traceback.**
   `--scenes echo-well` ended in `KeyError: 'echo-well'`. Names are now
