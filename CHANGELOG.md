@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.5.1 — 2026-11-13
 
 - **The README terminal image is drawn from a real run again.** It had
   been hand-drawn at v0.0.5 — seven scenes, 21 cells, status words the CLI
