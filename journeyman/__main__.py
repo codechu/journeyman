@@ -70,6 +70,25 @@ def resolve_model(endpoint, api_key):
     return None
 
 
+def _refuse_if_nothing_measured(run_dir, stopped=None):
+    """Exit 1 without writing a report when no cell is valid (see
+    report.nothing_measured). The cell records stay in the run dir."""
+    from .report import nothing_measured
+    empty = nothing_measured(run_dir.read_cells())
+    if empty is None:
+        return
+    from .color import paint as _paint
+    n, why = empty
+    msg = f"NO REPORT — all {n} cells invalid; nothing was measured."
+    if why:
+        msg += f"\nfirst reason: {why}"
+    if stopped:
+        msg += f"\nstopped early: {stopped}"
+    print(_paint(msg, "red"), file=sys.stderr)
+    print(f"cell records: {run_dir.path}", file=sys.stderr)
+    sys.exit(1)
+
+
 def main(argv=None):
     # never crash on console encoding (legacy Windows consoles cannot
     # print ✓/✗/box-drawing): degrade characters, keep running
@@ -248,6 +267,7 @@ def main(argv=None):
         if first is None:
             sys.exit("no cells in run dir")
         seal = first["seal"]
+        _refuse_if_nothing_measured(rd)
         judged_self = True   # re-render cannot know; stamp conservatively
         print(render(rd, seal, "(re-rendered — judge per cell records)",
                      self_judged=judged_self))
@@ -267,6 +287,13 @@ def main(argv=None):
     if args.scenes is None:
         args.scenes = STANDARD["scenes"]
     scenes = args.scenes.split(",")
+    unknown = [n for n in scenes if n not in scene_mod.REGISTRY]
+    if unknown:
+        # Checked before the model is resolved, so a typo costs no call.
+        print(f"unknown scene: {', '.join(unknown)}\n"
+              f"available: {', '.join(sorted(scene_mod.REGISTRY))}",
+              file=sys.stderr)
+        sys.exit(2)
     import json as _json
     if args.model is None:
         args.model = resolve_model(args.endpoint, args.api_key)
@@ -327,6 +354,7 @@ def main(argv=None):
     # grounded in any measurement; an invented weight is a fabricated
     # number. Composite lands with the reference runs (TODO).
 
+    _refuse_if_nothing_measured(run_dir, stopped)
     devs = [f"{key}={getattr(args, key)}" for key, std in STANDARD.items()
             if getattr(args, key) != std]
     print(render(run_dir, seal, judge_label, self_judged,

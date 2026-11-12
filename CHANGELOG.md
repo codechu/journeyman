@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- **A run that measured nothing no longer reports as if it had.** When
+  every cell is invalid — the endpoint never answered, or answered with
+  something the driver could not use — `run` used to write a full
+  `report.md` (header, empty PROFILE, a `Repro` line) and exit 0, so CI
+  counted it as a finished run. It now writes no report, says how many
+  cells failed and the first reason, and exits 1; the cell records stay in
+  the run dir. `report` refuses to re-render such a run the same way. A
+  partial run with at least one valid cell still reports as before.
+
+- **A mistyped scene name lists the scenes instead of a traceback.**
+  `--scenes echo-well` ended in `KeyError: 'echo-well'`. Names are now
+  checked before the model is resolved, so a typo costs no call: the
+  unknown names and the available ones are printed and the exit is 2.
+
 - **A judge that was still loading killed an eighty-two-case exam on case
   one.** `qualify` treated every failure as a transport fault: three
   attempts inside fifteen seconds, then a stack trace. But a server that

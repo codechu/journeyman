@@ -137,6 +137,20 @@ def public_label(label):
     return WIN_PATH.sub("<path>", out)
 
 
+def nothing_measured(cells):
+    """None if at least one cell is valid; otherwise (cell count, first reason).
+
+    A run in which every cell is invalid measured nothing: the model never
+    answered, or answered with something the driver could not use. Rendering
+    a report for it — a header, an empty PROFILE and a Repro line — reads as
+    a finished run, and exit 0 lets CI count it as one."""
+    cells = list(cells)
+    if any(not c["invalid"] for c in cells):
+        return None
+    first = next((c.get("invalid_reason") for c in cells if c.get("invalid_reason")), None)
+    return len(cells), first
+
+
 def render(run_dir, seal, judge_label, self_judged, nonstandard=None,
            judge_meter=None):
     cells = list(run_dir.read_cells())
