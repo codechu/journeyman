@@ -121,6 +121,16 @@ as `none`. Events say what happened; verdicts say what it was worth.)
 [`journeyman/schema/report.schema.json`](../journeyman/schema/report.schema.json)
 (JSON Schema, shipped in the package, validated in CI).
 
+### Carrying a report elsewhere
+
+[journeyman-openeval-adapter](https://github.com/adhabnr-ux/evalport/tree/af1cadcb359d/adapters/journeyman-openeval-adapter)
+turns a run's cell records and `report.json` into
+[EvalPort](https://github.com/adhabnr-ux/evalport) test cases and results.
+It refuses a report that lacks its seal, judge or `self_judged`, and marks
+a self-judged or non-standard run `NOT_COMPARABLE` — the conditions the
+numbers were true under travel with them. Third-party; checked against a
+real 0.4.0 run at the commit linked.
+
 ## Upgrading a report written before 0.1.0
 
 `kind` (counted vs judged, per axis) became required in 0.1.0, so an older
