@@ -42,7 +42,7 @@ ships the labels to do it with. Journeyman does three things about that:
 labelled cases behind the badge that let it score — and one axis whose
 noise band is still unmeasured. [Status](#status).
 
-<p align="center"><img src="https://raw.githubusercontent.com/codechu/journeyman/v0.5.0/assets/terminal.svg" alt="A live journeyman run: banner, per-cell progress lines with measured ETA, judging phase, and the final profile." width="760"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/codechu/journeyman/v0.5.0/assets/terminal.svg" alt="A real journeyman run, abridged: banner, per-cell progress lines with measured ETA, judging phase, and the start of the profile — a bare local model judging itself, so stamped NOT COMPARABLE." width="760"></p>
 
 ## Install & try
 

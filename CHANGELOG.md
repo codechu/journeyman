@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **The README terminal image is drawn from a real run again.** It had
+  been hand-drawn at v0.0.5 — seven scenes, 21 cells, status words the CLI
+  no longer prints. `tools/terminal_svg.py` now renders it from a console
+  log; the new image is an abridged 0.5.0 standard run of a bare local
+  model (Qwen3.6-35B-A3B), judging itself and therefore stamped NOT
+  COMPARABLE, which the image shows. `tests/test_terminal_svg.py` fails
+  when the image was not rendered by the tool or its banner is a major or
+  minor version behind the package.
+
 - **README: Masterwork is named, and the badge summary caught up again.**
   The README never mentioned Masterwork, the pipeline that makes a
   character for a model and hands the scoring to Journeyman; it now has a
