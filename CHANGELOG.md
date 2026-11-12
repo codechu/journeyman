@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+- **`qualify --concurrency N` asks a case's draws at once.** A dense 27B
+  judge took about three and a half minutes a case one call at a time,
+  with three of the server's four slots idle — eighty-two cases came to
+  five hours. Above 1, a case's three draws go out together; cases are
+  still scored, logged and early-exited one by one in set order, so the
+  verdict logic is the sequential one. The default stays 1. A badge rests
+  on the majority of three draws, not on bit-exact replay, so batching on
+  the server does not change what the exam measures. Tests hold both
+  halves: same verdicts, misses and early exit as the sequential exam,
+  and the draws really in flight together.
+
 ## 0.4.1 — 2026-11-12
 
 - **A run that measured nothing now says so in its report.** When every

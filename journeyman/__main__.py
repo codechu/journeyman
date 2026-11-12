@@ -193,6 +193,11 @@ def main(argv=None):
     q.add_argument("--set", dest="cal_set", default=None,
                    help="path to a labelled calibration set (default: the "
                         "bundled v0 synthetic set — grants only PROVISIONAL)")
+    q.add_argument("--concurrency", type=int, default=1,
+                   help="judge calls in flight at once (default 1: sequential). "
+                        "A case's draws are asked together; cases are still "
+                        "scored in order, so the verdict logic does not change. "
+                        "Use when the judge serves several slots")
     q.add_argument("--evidence", action="store_true",
                    help="hand the judge deterministic event-counts computed "
                         "from each record (prepared facts; the verdict stays "

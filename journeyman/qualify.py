@@ -92,8 +92,61 @@ def await_judge(judge_endpoint, log=print, timeout=300):
                 said = True
             time.sleep(5)
 
+def _draw(judge_endpoint, prompt, where, log):
+    """One judge draw: the label, or "__unparsed__"."""
+    import re
+    # transient network faults must not void a whole exam: one
+    # timed-out call killed a 51-case run on its last case
+    # (2026-08-20). Three attempts, then the exam fails loudly.
+    attempt = waits = 0
+    while True:
+        try:
+            msg, _ = judge_endpoint.chat(
+                [{"role": "user", "content": prompt}], tools=[])
+            break
+        except Exception as e:
+            # A server that went away mid-exam — restarted, or
+            # reloading — is waited out on the same terms as at the
+            # door, and the wait does not spend an attempt: it is not
+            # a fault, it is an absence. A transport fault keeps the
+            # short, polite backoff and the hard limit of three.
+            if _not_ready(e):
+                waits += 1
+                if waits > 3:
+                    raise RuntimeError(
+                        f"judge kept going away at {where}: {e}") from e
+                log(f"[qualify] judge not ready at {where}: {e}")
+                await_judge(judge_endpoint, log=log)
+                continue
+            attempt += 1
+            if attempt >= 3:
+                raise RuntimeError(
+                    f"judge failed at {where} after 3 attempts: "
+                    f"{e}") from e
+            log(f"[qualify] transient judge error, retrying: {e}")
+            # 429s answer immediate retries with more 429s — an
+            # unslept retry loop is the impolite one (2026-08-22)
+            time.sleep(5 * attempt)
+    text = msg.get("content") or ""
+    m = re.search(r"VERDICT:\s*([a-zA-Z_-]+)", text)
+    # labels are declared with hyphens; judges sometimes echo them
+    # with underscores — same label, not a miss (measured 2026-08-19)
+    return m.group(1).lower().replace("_", "-") if m else "__unparsed__"
+
+
+def _draws(judge_endpoint, prompt, repeats, where, log, pool):
+    """`repeats` draws for one case. With a pool, the draws run at once;
+    the case is still scored in its turn, so the verdict logic is the
+    sequential one (concurrency changes when a draw is asked, not how a
+    case is decided)."""
+    if pool is None:
+        return [_draw(judge_endpoint, prompt, where, log) for _ in range(repeats)]
+    futs = [pool.submit(_draw, judge_endpoint, prompt, where, log) for _ in range(repeats)]
+    return [f.result() for f in futs]
+
+
 def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False,
-            evidence=False):
+            evidence=False, concurrency=1):
     """repeats: judge draws per case, majority vote. A badge is a decision;
     a single stochastic draw is noise (a well-calibrated judge can still
     hallucinate one label), so each case is asked an odd number of times and
@@ -103,16 +156,29 @@ def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False,
     record (see evidence.py) as prepared facts. Changes what is being
     examined, so the badge is labelled separately: an evidence-fed badge
     never masquerades as a bare one.
+
+    concurrency: how many judge calls may be in flight at once. 1 (the
+    default) is the sequential exam as it always ran. Above 1, a case's
+    draws are asked at the same time (at most `concurrency` of them); cases
+    are still scored, logged and early-exited one by one in set order, so
+    the verdict logic is unchanged. A badge never rested on bit-exact replay — it rests
+    on the majority of three draws — so batching on the server does not
+    change what the exam measures.
     """
     cal = cal or load_set()
     await_judge(judge_endpoint, log=log)
     rubric = _rubric_index()
-    import re
     from collections import Counter
     # per-axis case totals, for mathematical elimination (early_exit)
     axis_total = Counter(c["axis"] for c in cal["cases"])
     per_axis = {}
     eliminated = None
+    where_of = lambda done, case: (f"case {done + 1}/{len(cal['cases'])} "
+                                   f"(axis {case['axis']})")
+    pool = None
+    if concurrency > 1:
+        from concurrent.futures import ThreadPoolExecutor
+        pool = ThreadPoolExecutor(max_workers=concurrency)
     for done, case in enumerate(cal["cases"]):
         item = rubric.get(case["axis"])
         if item is None:
@@ -126,48 +192,7 @@ def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False,
         prompt = JUDGE_PREAMBLE.format(
             labels=", ".join(item.verdicts), question=item.question,
             evidence=ev, record=case["record"])
-        draws = []
-        for _ in range(repeats):
-            # transient network faults must not void a whole exam: one
-            # timed-out call killed a 51-case run on its last case
-            # (2026-08-20). Three attempts, then the exam fails loudly.
-            attempt = waits = 0
-            while True:
-                try:
-                    msg, _ = judge_endpoint.chat(
-                        [{"role": "user", "content": prompt}], tools=[])
-                    break
-                except Exception as e:
-                    where = (f"case {done + 1}/{len(cal['cases'])} "
-                             f"(axis {case['axis']})")
-                    # A server that went away mid-exam — restarted, or
-                    # reloading — is waited out on the same terms as at the
-                    # door, and the wait does not spend an attempt: it is not
-                    # a fault, it is an absence. A transport fault keeps the
-                    # short, polite backoff and the hard limit of three.
-                    if _not_ready(e):
-                        waits += 1
-                        if waits > 3:
-                            raise RuntimeError(
-                                f"judge kept going away at {where}: {e}") from e
-                        log(f"[qualify] judge not ready at {where}: {e}")
-                        await_judge(judge_endpoint, log=log)
-                        continue
-                    attempt += 1
-                    if attempt >= 3:
-                        raise RuntimeError(
-                            f"judge failed at {where} after 3 attempts: "
-                            f"{e}") from e
-                    log(f"[qualify] transient judge error, retrying: {e}")
-                    # 429s answer immediate retries with more 429s — an
-                    # unslept retry loop is the impolite one (2026-08-22)
-                    time.sleep(5 * attempt)
-            text = msg.get("content") or ""
-            m = re.search(r"VERDICT:\s*([a-zA-Z_-]+)", text)
-            # labels are declared with hyphens; judges sometimes echo them
-            # with underscores — same label, not a miss (measured 2026-08-19)
-            draws.append(m.group(1).lower().replace("_", "-") if m
-                         else "__unparsed__")
+        draws = _draws(judge_endpoint, prompt, repeats, where_of(done, case), log, pool)
         got = Counter(draws).most_common(1)[0][0]   # majority label
         ok = got == case["true_label"]
         a = per_axis.setdefault(case["axis"], {"n": 0, "ok": 0, "misses": []})
@@ -197,6 +222,8 @@ def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False,
                     f"{THRESHOLD} ({a['n'] - a['ok']} misses of "
                     f"{axis_total[ax]} total); remaining cases skipped")
                 break
+    if pool is not None:
+        pool.shutdown()
     result = {"set": cal["set"], "synthetic": cal.get("synthetic", False),
               "stamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
               "threshold": THRESHOLD, "evidence_fed": bool(evidence),
@@ -229,7 +256,8 @@ def main(args, endpoint):
     cal = load_set(getattr(args, "cal_set", None))
     result = qualify(endpoint, cal=cal, repeats=getattr(args, "repeats", 3),
                      early_exit=getattr(args, "early_exit", False),
-                     evidence=getattr(args, "evidence", False))
+                     evidence=getattr(args, "evidence", False),
+                     concurrency=getattr(args, "concurrency", 1))
     out = os.path.join(args.runs_dir, f"qualify-{time.strftime('%Y%m%d-%H%M%S')}.json")
     os.makedirs(args.runs_dir, exist_ok=True)
     json.dump(result, open(out, "w"), ensure_ascii=False, indent=1)
