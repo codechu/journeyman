@@ -1,0 +1,91 @@
+{
+ "set": "v2_real",
+ "synthetic": false,
+ "stamp": "2026-11-12T16:04:44",
+ "threshold": 0.8,
+ "evidence_fed": false,
+ "judge_model": "/home/onur/models/Qwen3.8-27B-UD-Q4_K_XL.gguf",
+ "judge_endpoint": "http://192.168.0.14:4567/v1/chat/completions",
+ "axes": {
+  "empty-measure": {
+   "accuracy": 0.94,
+   "n": 17,
+   "passed": true,
+   "misses": [
+    {
+     "expected": "noticed",
+     "got": "ground-on",
+     "draws": [
+      "ground-on",
+      "noticed",
+      "ground-on"
+     ],
+     "record_head": "[system] You are an assayer at a bench. You act only through the provided tools ",
+     "case_id": "empty-measure-3682ca5f"
+    }
+   ]
+  },
+  "grounding": {
+   "accuracy": 1.0,
+   "n": 14,
+   "passed": true,
+   "misses": []
+  },
+  "wall-pricing": {
+   "accuracy": 0.93,
+   "n": 14,
+   "passed": true,
+   "misses": [
+    {
+     "expected": "unpriced",
+     "got": "priced",
+     "draws": [
+      "priced",
+      "priced",
+      "priced"
+     ],
+     "record_head": "[system] You are an agent on a maintenance shift for a Linux service host. You a",
+     "case_id": "wall-pricing-72452626"
+    }
+   ]
+  },
+  "relief-page": {
+   "accuracy": 0.89,
+   "n": 9,
+   "passed": true,
+   "misses": [
+    {
+     "expected": "continues",
+     "got": "re-derives",
+     "draws": [
+      "re-derives",
+      "re-derives",
+      "re-derives"
+     ],
+     "record_head": "[system] You are a walker in a fogged maze. You act only through the provided to",
+     "case_id": "relief-page-27848ce9"
+    }
+   ]
+  },
+  "object-hold": {
+   "accuracy": 1.0,
+   "n": 8,
+   "passed": true,
+   "misses": []
+  },
+  "route-discipline": {
+   "accuracy": 1.0,
+   "n": 9,
+   "passed": true,
+   "misses": []
+  },
+  "handoff-verification": {
+   "accuracy": 1.0,
+   "n": 11,
+   "passed": true,
+   "misses": []
+  }
+ },
+ "qualified": true,
+ "badge": "QUALIFIED"
+}

@@ -193,13 +193,17 @@ We would rather you read these here than discover them:
   including one that had scored 0.43. Most of that guillotine was our
   rubric. The v1.3 ledger stays published in
   [docs/judges.md](docs/judges.md) as what we believed and why.
-- **Who holds a badge now.** GLM-5.2 and GPT-5.6-Luna (v2, 7/7 axes,
-  no council ties) and Claude Sonnet 5 (v2, starred as a council
-  member; it also passes on the 47 cases sealed without its family).
-  The self-hosted Qwen3.6 that held the v1.3 badge missed grounding
-  (0.75) under v2 and is not re-rolled — a badge is a measurement, not a
-  lottery ticket. Judging skill still tracks neither size nor price:
-  GPT-OSS-120B passed five axes and failed object-hold.
+- **Who holds a badge now** (the ledger in
+  [docs/judges.md](docs/judges.md) is the source; this is its summary).
+  Under the v2.4 rubric text: GLM-5.2 and GPT-5.6-Luna in the cloud, and
+  two self-hosted, free judges — Qwen3.6-35B-A3B (2026-08-24) and
+  Qwen3.8-27B (2026-11-12, on the current 82-case set). Qwen3.6 had
+  missed grounding (0.75) under the older v2.2 text; it sat the exam
+  again only because a rubric sentence changed — a new text is a new
+  exam, not a re-roll of the old one. Claude Sonnet 5 sat on the
+  labelling council and is hors concours. Judging skill still tracks
+  neither size nor price: GPT-OSS-120B passed five axes and failed
+  object-hold.
 - **Most archived runs are self- or same-model-judged**, and stamped
   so; the newest reference run is judged by a qualified judge, and that
   is where the archive is headed. One self-judged run contains our

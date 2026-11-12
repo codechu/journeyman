@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- **A second self-hosted judge holds the badge: Qwen3.8-27B.** On the
+  current 82-case `v2_real` set, three-draw majority: 79 of 82, every
+  axis at or above the bar (grounding, object-hold, route-discipline and
+  handoff-verification 1.00; empty-measure 0.94; wall-pricing 0.93;
+  relief-page 0.89). The record is under `runs-archive/exams/`. It is a
+  dense model, so it is slow next to the MoE Qwen3.6.
+
+- **The README's badge paragraph had fallen behind the ledger.** It still
+  said the self-hosted Qwen3.6 had missed grounding and was not re-rolled,
+  and listed Claude Sonnet 5 as a holder — both true under the v2.2 text,
+  both superseded on 2026-08-24 when a rubric sentence changed and the
+  ledger was rebuilt. The paragraph now summarises `docs/judges.md`
+  and says so.
+
 - **`qualify --concurrency N` keeps N judge calls in flight.** A dense
   27B judge took about three and a half minutes a case one call at a time,
   with three of the server's four slots idle — eighty-two cases came to
@@ -10,7 +24,12 @@
   while the other slots sit empty. So draws are pipelined in set order — a
   freed slot takes the next draw, even a later case's — and cases are
   still scored, logged and early-exited one by one in set order, so the
-  verdict logic is the sequential one. The default stays 1. A badge rests
+  verdict logic is the sequential one. The default stays 1. Measured on
+  that judge (Qwen3.8-27B, llama.cpp, four slots): the full 82-case exam
+  took 56 minutes with `--concurrency 4`; the sequential exam had taken
+  about three minutes a case over its first 20 cases — roughly four
+  times faster. The sequential exam was not run to the end, so the ratio
+  is read from those 20 cases. A badge rests
   on the majority of three draws, not on bit-exact replay, so batching on
   the server does not change what the exam measures. Tests hold both
   halves: same verdicts, misses and early exit as the sequential exam, and

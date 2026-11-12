@@ -72,6 +72,7 @@ journeyman qualify --judge <endpoint> --judge-model <model> --repeats 3
 | **Qwen3.6-35B-A3B + identity** (self-hosted) | local, free | 0.94 | **QUALIFIED** — grounding 0.93, wall-pricing 0.93, rest 1.00 |
 | Claude Sonnet 5 | session | 0.94 | not qualified under v2.4 — grounding 0.79, wall-pricing 0.79; hors concours either way (council member) |
 | **Qwen3.6-35B-A3B**, stock | local, free | 0.88 | **QUALIFIED** — grounding 0.86, wall-pricing 0.86, rest 1.00 |
+| **Qwen3.8-27B** (self-hosted, GGUF Q4_K_XL) — 2026-11-12, 82-case set | local, free | 0.94 | **QUALIFIED** — relief-page 0.89, wall-pricing 0.93, rest 1.00; dense, so slow: 56 min for the exam with `--concurrency 4` ([record](../runs-archive/exams/v2_real-2026-11-12/2026-11-12-v2_real-qwen38-27b-local-QUALIFIED.json)) |
 
 **A sentence we had not written was doing the failing.** Under the v2.3
 text three of four judges failed grounding and wall-pricing, and we wrote
