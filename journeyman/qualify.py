@@ -134,15 +134,14 @@ def _draw(judge_endpoint, prompt, where, log):
     return m.group(1).lower().replace("_", "-") if m else "__unparsed__"
 
 
-def _draws(judge_endpoint, prompt, repeats, where, log, pool):
-    """`repeats` draws for one case. With a pool, the draws run at once;
-    the case is still scored in its turn, so the verdict logic is the
-    sequential one (concurrency changes when a draw is asked, not how a
-    case is decided)."""
-    if pool is None:
-        return [_draw(judge_endpoint, prompt, where, log) for _ in range(repeats)]
-    futs = [pool.submit(_draw, judge_endpoint, prompt, where, log) for _ in range(repeats)]
-    return [f.result() for f in futs]
+def _prompt(case, item, evidence):
+    ev = ""
+    if evidence:
+        from .evidence import event_counts, render_block
+        ev = render_block(event_counts(case["record"]))
+    return JUDGE_PREAMBLE.format(
+        labels=", ".join(item.verdicts), question=item.question,
+        evidence=ev, record=case["record"])
 
 
 def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False,
@@ -158,10 +157,10 @@ def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False,
     never masquerades as a bare one.
 
     concurrency: how many judge calls may be in flight at once. 1 (the
-    default) is the sequential exam as it always ran. Above 1, a case's
-    draws are asked at the same time (at most `concurrency` of them); cases
-    are still scored, logged and early-exited one by one in set order, so
-    the verdict logic is unchanged. A badge never rested on bit-exact replay — it rests
+    default) is the sequential exam as it always ran. Above 1, draws are
+    pipelined in set order — a slot that frees takes the next draw, even
+    one of a later case — while cases are still scored, logged and
+    early-exited one by one in set order, so the verdict logic is unchanged. A badge never rested on bit-exact replay — it rests
     on the majority of three draws — so batching on the server does not
     change what the exam measures.
     """
@@ -179,20 +178,29 @@ def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False,
     if concurrency > 1:
         from concurrent.futures import ThreadPoolExecutor
         pool = ThreadPoolExecutor(max_workers=concurrency)
+        # Every draw is queued up front, in set order: the pool runs at most
+        # `concurrency` of them and starts the next as soon as a slot frees,
+        # so a long draw no longer leaves the other slots idle while its
+        # case waits. Scoring below still takes the cases one by one.
+        queued = {}
+        for done, case in enumerate(cal["cases"]):
+            item = rubric.get(case["axis"])
+            if item is not None:
+                prompt = _prompt(case, item, evidence)
+                queued[done] = [pool.submit(_draw, judge_endpoint, prompt,
+                                            where_of(done, case), log)
+                                for _ in range(repeats)]
     for done, case in enumerate(cal["cases"]):
         item = rubric.get(case["axis"])
         if item is None:
             log(f"[qualify] no registered scene feeds axis "
                 f"{case['axis']!r} — case skipped")
             continue
-        ev = ""
-        if evidence:
-            from .evidence import event_counts, render_block
-            ev = render_block(event_counts(case["record"]))
-        prompt = JUDGE_PREAMBLE.format(
-            labels=", ".join(item.verdicts), question=item.question,
-            evidence=ev, record=case["record"])
-        draws = _draws(judge_endpoint, prompt, repeats, where_of(done, case), log, pool)
+        if pool is None:
+            draws = [_draw(judge_endpoint, _prompt(case, item, evidence),
+                           where_of(done, case), log) for _ in range(repeats)]
+        else:
+            draws = [f.result() for f in queued[done]]
         got = Counter(draws).most_common(1)[0][0]   # majority label
         ok = got == case["true_label"]
         a = per_axis.setdefault(case["axis"], {"n": 0, "ok": 0, "misses": []})
@@ -223,7 +231,9 @@ def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False,
                     f"{axis_total[ax]} total); remaining cases skipped")
                 break
     if pool is not None:
-        pool.shutdown()
+        # after an early exit, draws not yet started are dropped; the few
+        # already in flight finish and are discarded
+        pool.shutdown(wait=False, cancel_futures=True)
     result = {"set": cal["set"], "synthetic": cal.get("synthetic", False),
               "stamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
               "threshold": THRESHOLD, "evidence_fed": bool(evidence),

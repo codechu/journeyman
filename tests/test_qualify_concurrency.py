@@ -90,6 +90,35 @@ class TestConcurrency(unittest.TestCase):
         _, judge = _exam(3, n=6)
         self.assertEqual(judge.peak, 3)
 
+    def test_a_long_draw_does_not_idle_the_other_slots(self):
+        # The first call of the exam is slow (a judge thinking at length);
+        # while it runs, the freed slots must take the following cases'
+        # draws instead of waiting for it. Per-case batching starts only
+        # the case's own three calls before that draw ends.
+        cal = q.load_set()
+        cal = dict(cal, cases=cal["cases"][:6])
+        judge = Judge(cal["cases"], delay=0.01)
+        first = {"end": None, "starts": []}
+        lock = threading.Lock()
+        plain = judge.chat
+
+        def chat(messages, tools, seed=None):
+            with lock:
+                first["starts"].append(time.monotonic())
+                slow = len(first["starts"]) == 1
+            out = plain(messages, tools)
+            if slow:
+                time.sleep(0.3)
+                first["end"] = time.monotonic()
+            return out
+
+        judge.chat = chat
+        with mock.patch("journeyman.driver.list_models", lambda *a, **k: ["m"]):
+            q.qualify(judge, cal=cal, log=lambda *a: None, repeats=3,
+                      concurrency=3)
+        started_meanwhile = sum(t < first["end"] for t in first["starts"])
+        self.assertGreater(started_meanwhile, 3)
+
     def test_sequential_stays_one_call_at_a_time(self):
         _, judge = _exam(1, n=6)
         self.assertEqual(judge.peak, 1)
