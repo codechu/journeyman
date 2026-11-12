@@ -108,6 +108,15 @@ anyone. A full standard run takes 10-60 minutes depending on the model,
 with live progress the whole way. Full anatomy of a run and its files:
 [docs/run-guide.md](docs/run-guide.md).
 
+**Carrying a report elsewhere.**
+[journeyman-openeval-adapter](https://github.com/adhabnr-ux/evalport/tree/af1cadcb359d/adapters/journeyman-openeval-adapter)
+turns a run's cell records and `report.json` into
+[EvalPort](https://github.com/adhabnr-ux/evalport) test cases and results.
+It refuses a report that lacks its seal, judge or `self_judged`, and marks
+a self-judged or non-standard run `NOT_COMPARABLE` — the conditions the
+numbers were true under travel with them. Third-party; checked against a
+real 0.4.0 run.
+
 ## Commands
 
 | command | what it does |
