@@ -143,7 +143,7 @@ def nothing_measured(cells):
     A run in which every cell is invalid measured nothing: the model never
     answered, or answered with something the driver could not use. Rendering
     a report for it — a header, an empty PROFILE and a Repro line — reads as
-    a finished run, and exit 0 lets CI count it as one."""
+    a finished run. render() says so in report.md instead."""
     cells = list(cells)
     if any(not c["invalid"] for c in cells):
         return None
@@ -171,8 +171,18 @@ def render(run_dir, seal, judge_label, self_judged, nonstandard=None,
     cost = (f"Cost: {calls} calls · {tin} in / {tout} out tok" if usage_ok else
             f"Cost: {calls} calls · tokens UNREPORTED by endpoint")
     lines += [f"Seal  : {json.dumps(seal, ensure_ascii=False)}", stamp,
-              f"Cells : {len(cells)} ({invalid} invalid) · {cost}", "",
-              "PROFILE                     score   per-seed           n"]
+              f"Cells : {len(cells)} ({invalid} invalid) · {cost}", ""]
+    empty = nothing_measured(cells)
+    if empty is not None:
+        # No PROFILE and no Repro line: an empty table and a "reproduce
+        # this" footer are what made a dead run read as a finished one.
+        lines += [f"⚠ NOTHING MEASURED — all {empty[0]} cells invalid; no axis was scored."]
+        if empty[1]:
+            lines += [f"  first reason: {empty[1]}"]
+        lines += ["  The cell records are in the run dir."]
+        return _write(run_dir, lines, seal, judge_label, self_judged, nonstandard,
+                      axes, judge_meter, calls, tin, tout, invalid)
+    lines += ["PROFILE                     score   per-seed           n"]
     for axis, a in sorted(axes.items()):
         seeds = " ".join(f"{v:.2f}" for _, v in sorted(a["per_seed"].items()))
         if a["score"] is None:
@@ -186,6 +196,12 @@ def render(run_dir, seal, judge_label, self_judged, nonstandard=None,
         lines += [f"WHERE IT BROKE  {broke}"]
     lines += ["", "Repro : journeyman run … (same seal, same seeds; "
               "bit-exact on local llama.cpp with cache_prompt off)"]
+    return _write(run_dir, lines, seal, judge_label, self_judged, nonstandard,
+                  axes, judge_meter, calls, tin, tout, invalid)
+
+
+def _write(run_dir, lines, seal, judge_label, self_judged, nonstandard,
+           axes, judge_meter, calls, tin, tout, invalid):
     text = "\n".join(lines) + "\n"
 
     open(os.path.join(run_dir.path, "report.md"), "w").write(text)

@@ -2,13 +2,17 @@
 """A run that measured nothing must not look like a run that did.
 
 Both behaviours here shipped in 0.4.0 and were reproduced against it:
-`journeyman run` against an endpoint that never answered wrote a full
-report.md (header, empty PROFILE, Repro line) and exited 0, so CI counted
-it as a finished run; and a mistyped scene name ended in a Python
-traceback (`KeyError: 'echo-well'`) instead of the list of scenes.
+`journeyman run` against an endpoint that never answered wrote a report.md
+shaped like a finished run (header, empty PROFILE, a Repro line); and a
+mistyped scene name ended in a Python traceback (`KeyError: 'echo-well'`)
+instead of the list of scenes.
+
+The first is fixed without breaking anything: the exit code and the shape
+of report.json stay as they were; report.md says what happened instead.
 """
 import contextlib
 import io
+import json
 import os
 import sys
 import tempfile
@@ -48,29 +52,36 @@ class TestNothingMeasured(unittest.TestCase):
         cells = [{"invalid": True, "invalid_reason": "x"}, {"invalid": False}]
         self.assertIsNone(nothing_measured(cells))
 
-    def test_a_run_against_a_dead_endpoint_writes_no_report_and_fails(self):
+    def test_a_run_against_a_dead_endpoint_says_so_in_the_report(self):
         with tempfile.TemporaryDirectory() as runs:
             code, _, err = _run(["run", "--endpoint", DEAD, "--model", "none",
                                  "--scenes", "assayers-bench", "--seeds", "1",
                                  "--runs-dir", runs, "--quiet"])
-            self.assertEqual(code, 1)
-            self.assertIn("NO REPORT", err)
-            self.assertIn("first reason:", err)
             (run,) = os.listdir(runs)
-            self.assertFalse(os.path.exists(os.path.join(runs, run, "report.md")))
-            self.assertFalse(os.path.exists(os.path.join(runs, run, "report.json")))
-            # the cell records stay, so the failure can be read
-            self.assertTrue(os.listdir(os.path.join(runs, run, "cells")))
+            md = open(os.path.join(runs, run, "report.md")).read()
+            rep = json.load(open(os.path.join(runs, run, "report.json")))
+        self.assertEqual(code, 0, "exit code changed — that would break callers")
+        self.assertIn("NOTHING MEASURED — all 1 cells invalid", md)
+        self.assertIn("first reason:", md)
+        self.assertNotIn("PROFILE", md)
+        self.assertNotIn("Repro", md)
+        self.assertIn("NOTHING MEASURED", err)
+        # report.json keeps its shape: same keys as before, nothing added
+        self.assertEqual(sorted(rep), sorted(["schema_version", "seal", "judge",
+                         "self_judged", "nonstandard", "axes", "judge_cost",
+                         "cost", "invalid_cells"]))
+        self.assertEqual(rep["invalid_cells"], 1)
 
-    def test_rerendering_a_run_that_measured_nothing_also_fails(self):
+    def test_rerendering_it_says_the_same(self):
         with tempfile.TemporaryDirectory() as runs:
             _run(["run", "--endpoint", DEAD, "--model", "none",
                   "--scenes", "assayers-bench", "--seeds", "1",
                   "--runs-dir", runs, "--quiet"])
             (run,) = os.listdir(runs)
-            code, _, err = _run(["report", os.path.join(runs, run)])
-            self.assertEqual(code, 1)
-            self.assertIn("NO REPORT", err)
+            code, out, _ = _run(["report", os.path.join(runs, run)])
+        self.assertEqual(code, 0)
+        self.assertIn("NOTHING MEASURED", out)
+        self.assertNotIn("PROFILE", out)
 
 
 class TestUnknownScene(unittest.TestCase):
