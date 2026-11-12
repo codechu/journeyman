@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.4.1 — 2026-11-12
 
 - **A run that measured nothing now says so in its report.** When every
   cell is invalid — the endpoint never answered, or answered with something
