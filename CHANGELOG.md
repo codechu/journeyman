@@ -11,6 +11,13 @@
   `qualify --concurrency` is named in the command table, and the
   limitations heading lost a stale "(v0)".
 
+- **The README's badge summary can no longer fall behind the ledger
+  silently.** `tests/test_readme_badge_sync.py` reads the current ledger
+  section of `docs/judges.md` and fails when a badge holder is not named in
+  the README's badge paragraph, or when an exam date from its ledger row is
+  not written beside its name. It fires on the drift it was written for
+  (the Qwen3.6 re-exam the README missed), and on two tampered copies.
+
 - **The self-hosted Qwen3.6-35B-A3B holds the badge on the current
   82-case set.** Its 2026-08-24 badge was earned on the set as it stood
   then; the set has grown since, so it sat a new exam: 75 of 82, every

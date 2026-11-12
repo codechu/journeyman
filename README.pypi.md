@@ -196,9 +196,9 @@ We would rather you read these here than discover them:
 - **Who holds a badge now** (the ledger in
   [docs/judges.md](https://github.com/codechu/journeyman/blob/v0.5.0/docs/judges.md) is the source; this is its summary).
   Under the v2.4 rubric text: GLM-5.2 and GPT-5.6-Luna in the cloud, and
-  two self-hosted, free judges, both examined on the current 82-case set
-  on 2026-11-12 — Qwen3.6-35B-A3B (75 of 82; a MoE, 23 minutes) and
-  Qwen3.8-27B (79 of 82; dense, 56 minutes). Qwen3.6 had
+  two self-hosted, free judges on the current 82-case set —
+  Qwen3.6-35B-A3B (re-examined 2026-11-12: 75 of 82; a MoE, 23 minutes)
+  and Qwen3.8-27B (2026-11-12: 79 of 82; dense, 56 minutes). Qwen3.6 had
   missed grounding (0.75) under the older v2.2 text; it sat the exam
   again only because a rubric sentence changed — a new text is a new
   exam, not a re-roll of the old one. Claude Sonnet 5 sat on the
