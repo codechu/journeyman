@@ -105,7 +105,7 @@ No judge — including ours — is exempt, and under v2 ours did not pass.
   local llama.cpp with the prompt cache off can replay a run exactly; a
   server with several slots or a warm cache does not (measured
   2026-11-14: one cell, same seal, five reruns, 8 to 14 tool calls), and
-  in the cloud it never holds. Read a difference between two runs
+  a cloud endpoint gives it only if its provider guarantees it. Read a difference between two runs
   against the spread of repeated runs, not against one run.
 - **Compare runs only under identical agent params, the output cap
   included.** The seal carries the params so a difference in them is

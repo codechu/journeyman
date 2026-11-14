@@ -35,7 +35,7 @@
 - **Comparability no longer leans on bit-exact replay.** README, FAQ,
   methodology and the report's Repro line said reruns on local llama.cpp
   are bit-exact. That holds only on a single-session server with the
-  prompt cache off, and never in the cloud; one cell rerun five times
+  prompt cache off, or where a cloud provider guarantees it; one cell rerun five times
   under the same seal took 8 to 14 tool calls. The text now says a
   difference is read against repeated runs, and that runs compare only
   under identical agent params (the seal carries them).

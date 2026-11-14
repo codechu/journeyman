@@ -59,7 +59,8 @@ The bare name was already taken on PyPI. The import name is still
 Re-run, yes: the seal in every report carries the scene md5s, seeds,
 params and model, plus the command to re-run. Bit-exact, only on a
 single-session local server with the prompt cache off — and nothing
-here relies on it: in the cloud it never holds, so a score is read
+here relies on it: a cloud endpoint gives it only if its provider
+guarantees it, so a score is read
 against the spread of repeated runs. Single-seed runs are never
 published as results.
 
