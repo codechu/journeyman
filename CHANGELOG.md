@@ -27,6 +27,11 @@
   cell has one. Scoring is unchanged; report.json is unchanged.
   `tests/test_late_closing.py`.
 
+- **README: a badge is about grading, not working.** The badge paragraph
+  now says that the same Qwen3.6 open weights that hold a judge badge score
+  0.22 as an agent on the leaderboard — the two were read as one in the
+  house.
+
 - **Comparability names the agent params.** `docs/methodology.md` and the
   report's Repro line now say runs compare only under identical agent
   params, the output cap included: a cap no answer reached was once seen to

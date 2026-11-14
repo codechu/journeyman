@@ -204,7 +204,10 @@ We would rather you read these here than discover them:
   exam, not a re-roll of the old one. Claude Sonnet 5 sat on the
   labelling council and is hors concours. Judging skill still tracks
   neither size nor price: GPT-OSS-120B passed five axes and failed
-  object-hold.
+  object-hold. And a badge is about grading, not working: the same
+  Qwen3.6 open weights score 0.22 as an agent on the
+  [leaderboard](https://github.com/codechu/journeyman/blob/v0.5.1/docs/leaderboard.md) (cloud deployment). A badge says a
+  model may sit as `--judge`; it says nothing about the model as an agent.
 - **Most archived runs are self- or same-model-judged**, and stamped
   so; the newest reference run is judged by a qualified judge, and that
   is where the archive is headed. One self-judged run contains our
