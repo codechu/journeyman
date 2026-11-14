@@ -1,5 +1,28 @@
 # Changelog
 
+## Unreleased
+
+- **A starved turn's advice now follows why the body is empty.** The guard
+  voids a closing turn that comes back empty after more than 200
+  characters of reasoning, and it told the operator to raise `max_tokens`
+  every time — also when the model had stopped on its own
+  (`finish_reason: stop`) well under the cap, where a larger cap changes
+  nothing. Only `finish_reason: length` now gets that advice; the cell is
+  still invalid and still named a starved turn. Test in
+  `tests/test_starved_turn.py`.
+
+- **`run` says when the agent is uncapped.** With no positive `max_tokens`
+  (none set, or llama.cpp's `-1`), a runaway answer runs to the 300 s
+  transport timeout and is re-sent as a transport fault; on a
+  deterministic local server each attempt repeats it (seen: one cell 14+
+  minutes, 35k tokens). The run is not stopped or changed — a line before
+  the first cell says so. `tests/test_uncapped_warning.py`.
+
+- **Comparability names the agent params.** `docs/methodology.md` and the
+  report's Repro line now say runs compare only under identical agent
+  params, the output cap included: a cap no answer reached was once seen to
+  change the first cells of a walk.
+
 ## 0.5.1 — 2026-11-13
 
 - **The README terminal image is drawn from a real run again.** It had

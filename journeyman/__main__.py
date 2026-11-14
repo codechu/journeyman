@@ -82,6 +82,23 @@ def _warn_if_nothing_measured(run_dir):
                  "see the report for the first reason", "red"), file=sys.stderr)
 
 
+def uncapped_warning(params, timeout):
+    """A note when the agent runs with no output cap, else None.
+
+    Uncapped, a runaway generation ends only at the transport timeout, and a
+    timeout is retried as a transport fault. On a deterministic local server
+    each retry reproduces the same runaway (2026-11-14: one cell 14+ minutes,
+    35k tokens). The run is not stopped; the operator is told."""
+    caps = [(params or {}).get(k) for k in
+            ("max_tokens", "max_completion_tokens")]
+    if any(isinstance(c, int) and c > 0 for c in caps):
+        return None
+    return (f"params: no max_tokens — uncapped. A runaway answer runs to the "
+            f"{timeout}s timeout and is re-sent up to 3 times; on a "
+            f"deterministic local server every attempt repeats it. Set "
+            f"max_tokens in --params-file to bound a cell.")
+
+
 def main(argv=None):
     # never crash on console encoding (legacy Windows consoles cannot
     # print ✓/✗/box-drawing): degrade characters, keep running
@@ -315,6 +332,9 @@ def main(argv=None):
     if self_judged:
         print("judge: SELF — scores will be marked NOT COMPARABLE; "
               "use --judge for a reference judge")
+    warn = uncapped_warning(params, endpoint.timeout)
+    if warn:
+        print(warn)
     agent_system = open(args.system_file).read() if args.system_file else None
     run_dir = RunDir(args.runs_dir)
     say = (lambda *a, **k: None) if args.quiet else print

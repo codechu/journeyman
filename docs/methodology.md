@@ -101,6 +101,12 @@ No judge — including ours — is exempt, and under v2 ours did not pass.
   md5, seeds, model, agent-system md5, agent params verbatim — and its
   own reproduction command. On a local llama.cpp with the prompt cache
   off, reruns are bit-exact.
+- **Compare runs only under identical agent params, the output cap
+  included.** A cap is part of the agent even when no answer reaches
+  it: observed once (2026-11-14, local llama.cpp, same system text and
+  seeds), adding `max_tokens` changed the first cells of the walk. The
+  mechanism was not measured; the seal carries the params so the
+  difference is visible.
 - Scenes are procedural where it matters (the labyrinth and the bench
   generate fresh worlds per seed). Public seed sets let anyone verify;
   held-out seed sets arrive with the leaderboard phase.

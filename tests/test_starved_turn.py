@@ -133,6 +133,19 @@ class TestReasoningIsFoundWhateverItIsCalled(unittest.TestCase):
             self.assertIn("starved turn", cell["invalid_reason"])
 
 
+    def test_advice_follows_finish_reason(self):
+        # Only a cut-off is cured by a larger cap; a model that stopped on
+        # its own after thinking must not be told to raise max_tokens.
+        cut = _run(_Agent(reasoning="x" * 1400, finish_reason="length"))
+        self.assertIn("raise max_tokens", cut["invalid_reason"])
+        for fr in ("stop", None):
+            cell = _run(_Agent(reasoning="x" * 1400, finish_reason=fr))
+            self.assertTrue(cell["invalid"])
+            self.assertIn("starved turn", cell["invalid_reason"])
+            self.assertNotIn("raise max_tokens", cell["invalid_reason"],
+                             f"finish_reason={fr}: cap advice on an uncapped stop")
+            self.assertIn("cap was not reached", cell["invalid_reason"])
+
 class TestStopAfterInvalid(unittest.TestCase):
     """A grid whose cells keep coming back invalid should stop, not finish.
 

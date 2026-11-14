@@ -201,14 +201,25 @@ def run_cell(endpoint, scene, seed, log, agent_system=None):
                 starved = (msg.get("finish_reason") == "length"
                            or len(thought) > 200)
                 if starved:
+                    # The advice depends on why the body is empty. Only a
+                    # cut-off (length) is cured by a larger cap; a model that
+                    # stopped on its own after thinking would stop again.
+                    # (2026-11-14: the guard fired with finish_reason=stop and
+                    # still said "raise max_tokens".)
+                    fr = msg.get("finish_reason")
+                    if fr == "length":
+                        advice = (" (finish_reason: length) — raise "
+                                  "max_tokens in --params-file")
+                    else:
+                        advice = ((f" (finish_reason: {fr})" if fr else
+                                   " (no finish_reason)")
+                                  + " — the cap was not reached, so a larger "
+                                    "max_tokens will not change it")
                     raise Starved(
                         f"the closing turn came back empty after "
-                        f"{len(thought)} "
-                        f"characters of reasoning"
-                        + (" (finish_reason: length)"
-                           if msg.get("finish_reason") == "length" else "")
-                        + " — raise max_tokens in --params-file; this is a "
-                          "starved turn, not a silent agent")
+                        f"{len(thought)} characters of reasoning"
+                        + advice
+                        + "; this is a starved turn, not a silent agent")
             break
         for tc in tool_calls:
             calls += 1
