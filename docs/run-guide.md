@@ -167,6 +167,11 @@ The interesting fields of `cells/<id>.json`:
 - `invalid` / `invalid_reason` — a cell that failed to run (timeout,
   endpoint error) is INVALID with its reason and excluded from scores;
   it is never silently retried.
+- `late_closing` (since 0.6) — closing calls the agent sent after the
+  tool budget ran out. They were refused, so the judge scores them as no
+  report; this count is what separates "reported too late" from "never
+  tried". `report.md` shows a `Late` line when any cell has one. Absent in
+  older records, which means not counted, not zero.
 
 ## Re-judging and re-rendering
 
@@ -194,6 +199,18 @@ the model's behaviour (see [scenes.md](scenes.md) and the 0.2.3 entry in
 
 The tell is in the cell record: `calls: 0`. Zero tool calls means the
 model never got to make a move — the cap sat below its *first* one.
+
+Not every empty body is the cap. A model can think and then stop on its
+own (`finish_reason: stop`) with nothing written; the cell is voided the
+same way, but its reason says the cap was not reached — a larger
+`max_tokens` will not change it.
+
+The opposite end has its own cost. With no cap (none set, or llama.cpp's
+`-1`), a runaway answer runs until the transport timeout (300 s) and is
+re-sent as a transport fault; on a deterministic local server every
+attempt repeats it. `run` prints a line before the first cell when the
+agent is uncapped. A cap is part of the agent: compare runs only under
+the same params (see [methodology.md](methodology.md)).
 
 Two habits cost nothing and save a grid:
 
