@@ -7,7 +7,11 @@ rendered FROM the records written here.
 Cell record (cells/<cell_id>.json):
   {"cell_id", "scene", "seed", "seal", "messages", "final_text",
    "budget", "invalid", "invalid_reason", "events", "event_axes",
-   "verdicts", "calls", "tokens_in", "tokens_out", "seconds"}
+   "verdicts", "calls", "tokens_in", "tokens_out", "seconds",
+   "late_closing"}
+
+  "late_closing" (since 0.6, optional): closing calls refused for budget.
+  Absent in older records — absent means not counted, not zero.
 
   The two scoring layers arrive under SEPARATE keys, and the difference
   is load-bearing: "verdicts" holds judged axes (a model answered a
