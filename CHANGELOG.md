@@ -18,6 +18,15 @@
   minutes, 35k tokens). The run is not stopped or changed — a line before
   the first cell says so. `tests/test_uncapped_warning.py`.
 
+- **A closing call refused for budget is counted.** A report sent one
+  call after the tool budget is refused and scored as no report, and the
+  axis score could not tell it from an agent that never tried to close
+  (seen: three such verdicts in one local run). The driver now asks a copy
+  of the world whether each refused call would have closed the job; the
+  cell record carries `late_closing` and report.md a `Late` line when any
+  cell has one. Scoring is unchanged; report.json is unchanged.
+  `tests/test_late_closing.py`.
+
 - **Comparability names the agent params.** `docs/methodology.md` and the
   report's Repro line now say runs compare only under identical agent
   params, the output cap included: a cap no answer reached was once seen to

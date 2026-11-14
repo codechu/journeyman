@@ -11,6 +11,7 @@ Progress rules (release requirements, not polish):
   * a failing cell is named INVALID with its reason, live — no silent retry
   * silence is never "still working": heartbeat every 60s inside a cell
 """
+import copy
 import json
 import time
 import urllib.error
@@ -152,6 +153,22 @@ def list_models(url, api_key=None, timeout=15):
     return [m.get("id") for m in data.get("data", []) if m.get("id")]
 
 
+def refused_call_would_close(inst, name, args):
+    """Would this call, refused for budget, have closed the job?
+
+    Asked of a copy of the world, so the cell itself is untouched. A report
+    that arrives one call too late is scored as no report, and the axis
+    score alone cannot tell it from an agent that never tried to report
+    (2026-11-14: three of a run's 'no report' verdicts were late reports).
+    """
+    try:
+        probe = copy.deepcopy(inst)
+        probe.tool_result(name, args)
+    except Exception:
+        return False
+    return bool(probe.done)
+
+
 def run_cell(endpoint, scene, seed, log, agent_system=None):
     """One cell: drive the tool loop until report, budget death, or error.
 
@@ -173,7 +190,7 @@ def run_cell(endpoint, scene, seed, log, agent_system=None):
                                + f"\n\nTool budget: {inst.budget} calls.")
     archive = []
     episode_starts = [0]
-    calls = tin = tout = 0
+    calls = tin = tout = late_closing = 0
     usage_seen = False
     t0 = last_beat = time.time()
     final_text = None
@@ -228,8 +245,12 @@ def run_cell(endpoint, scene, seed, log, agent_system=None):
                 args = json.loads(fn.get("arguments") or "{}")
             except ValueError:
                 args = {"_unparsed": fn.get("arguments")}
-            result = (inst.tool_result(fn["name"], args)
-                      if calls <= inst.budget else BUDGET_REFUSED)
+            if calls <= inst.budget:
+                result = inst.tool_result(fn["name"], args)
+            else:
+                result = BUDGET_REFUSED
+                if refused_call_would_close(inst, fn["name"], args):
+                    late_closing += 1
             convo.append({"role": "tool", "tool_call_id": tc["id"],
                           "content": result})
         if inst.done:
@@ -250,6 +271,7 @@ def run_cell(endpoint, scene, seed, log, agent_system=None):
     return {"messages": archive + convo, "episode_starts": episode_starts,
             "final_text": final_text, "budget": inst.budget,
             "calls": calls, "tokens_in": tin, "tokens_out": tout,
+            "late_closing": late_closing,
             "usage_reported": usage_seen,   # 0 tokens != unknown tokens
             "seconds": round(time.time() - t0, 1)}
 

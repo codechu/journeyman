@@ -172,6 +172,13 @@ def render(run_dir, seal, judge_label, self_judged, nonstandard=None,
             f"Cost: {calls} calls · tokens UNREPORTED by endpoint")
     lines += [f"Seal  : {json.dumps(seal, ensure_ascii=False)}", stamp,
               f"Cells : {len(cells)} ({invalid} invalid) · {cost}", ""]
+    # A refused closing call is scored as no report; the axis cannot tell it
+    # from an agent that never tried. Counted only where the record has the
+    # field — a run written before it existed says nothing, not zero.
+    late = sum(1 for c in cells if not c["invalid"] and c.get("late_closing"))
+    if late:
+        lines.insert(-1, f"Late  : {late} cell(s) sent the closing call after "
+                         f"the budget — refused, so scored as no report")
     empty = nothing_measured(cells)
     if empty is not None:
         # No PROFILE and no Repro line: an empty table and a "reproduce
