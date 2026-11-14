@@ -99,14 +99,17 @@ No judge — including ours — is exempt, and under v2 ours did not pass.
   reproduced bit-exact, name included).
 - Every report carries its **seal**: bench version, per-scene source
   md5, seeds, model, agent-system md5, agent params verbatim — and its
-  own reproduction command. On a local llama.cpp with the prompt cache
-  off, reruns are bit-exact.
+  own reproduction command. A rerun under the same seal is the same
+  experiment, not the same walk.
+- **Comparability does not rest on bit-exact replay.** A single-session
+  local llama.cpp with the prompt cache off can replay a run exactly; a
+  server with several slots or a warm cache does not (measured
+  2026-11-14: one cell, same seal, five reruns, 8 to 14 tool calls), and
+  in the cloud it never holds. Read a difference between two runs
+  against the spread of repeated runs, not against one run.
 - **Compare runs only under identical agent params, the output cap
-  included.** A cap is part of the agent even when no answer reaches
-  it: observed once (2026-11-14, local llama.cpp, same system text and
-  seeds), adding `max_tokens` changed the first cells of the walk. The
-  mechanism was not measured; the seal carries the params so the
-  difference is visible.
+  included.** The seal carries the params so a difference in them is
+  visible.
 - Scenes are procedural where it matters (the labyrinth and the bench
   generate fresh worlds per seed). Public seed sets let anyone verify;
   held-out seed sets arrive with the leaderboard phase.

@@ -164,8 +164,9 @@ world-engines beneath them are documented under [docs/grounds/](https://github.c
   qualified judge. Even ours sits the exam.
 - **Reproducible & seal-stamped.** Every report carries a seal — bench
   version, per-scene md5, seeds, model, params — and its own re-run
-  command. On local llama.cpp with the prompt cache off, reruns are
-  bit-exact. Procedural worlds + seed sets resist contamination.
+  command. Comparability rests on the seal and on repeated runs, not on
+  bit-exact replay (possible only on a single-session local server).
+  Procedural worlds + seed sets resist contamination.
 
 The cohort so far: [docs/leaderboard.md](https://github.com/codechu/journeyman/blob/v0.5.1/docs/leaderboard.md) — eleven
 agents, judged under v2.4 by the self-hosted qualified judge, with an

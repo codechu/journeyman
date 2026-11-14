@@ -32,10 +32,13 @@
   0.22 as an agent on the leaderboard — the two were read as one in the
   house.
 
-- **Comparability names the agent params.** `docs/methodology.md` and the
-  report's Repro line now say runs compare only under identical agent
-  params, the output cap included: a cap no answer reached was once seen to
-  change the first cells of a walk.
+- **Comparability no longer leans on bit-exact replay.** README, FAQ,
+  methodology and the report's Repro line said reruns on local llama.cpp
+  are bit-exact. That holds only on a single-session server with the
+  prompt cache off, and never in the cloud; one cell rerun five times
+  under the same seal took 8 to 14 tool calls. The text now says a
+  difference is read against repeated runs, and that runs compare only
+  under identical agent params (the seal carries them).
 
 ## 0.5.1 — 2026-11-13
 

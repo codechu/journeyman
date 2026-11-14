@@ -56,9 +56,12 @@ The bare name was already taken on PyPI. The import name is still
 `journeyman` — avoid co-installing the unrelated `journeyman` package.
 
 **Can my score be reproduced?**
-On a local llama.cpp with the prompt cache off, bit-exactly: the seal
-in every report carries the scene md5s, seeds, params and model, plus
-the command to re-run. Single-seed runs are never published as results.
+Re-run, yes: the seal in every report carries the scene md5s, seeds,
+params and model, plus the command to re-run. Bit-exact, only on a
+single-session local server with the prompt cache off — and nothing
+here relies on it: in the cloud it never holds, so a score is read
+against the spread of repeated runs. Single-seed runs are never
+published as results.
 
 **Which servers is it tested against?**
 Developed and verified against llama.cpp (`--jinja`, OpenAI-compatible

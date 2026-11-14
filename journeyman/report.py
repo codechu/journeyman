@@ -202,7 +202,7 @@ def render(run_dir, seal, judge_label, self_judged, nonstandard=None,
     if broke:
         lines += [f"WHERE IT BROKE  {broke}"]
     lines += ["", "Repro : journeyman run … (same seal — agent params included —, same seeds; "
-              "bit-exact on local llama.cpp with cache_prompt off)"]
+              "read differences against repeated runs, not one)"]
     return _write(run_dir, lines, seal, judge_label, self_judged, nonstandard,
                   axes, judge_meter, calls, tin, tout, invalid)
 
