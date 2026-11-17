@@ -11,7 +11,12 @@
   scenes, seeds, judge) is listed and the pair stamped NOT PAIRED. Two
   runs with the same system text read as the spread of a repeat. Hints
   for a side effect are printed under the table: invalid cells, late
-  closing calls, tool calls. Tests in `tests/test_compare.py`.
+  closing calls, tool calls. An arm may be several repeats (comma-
+  separated run dirs): scores pool every cell, each axis shows the range
+  of the per-run scores, and a movement inside overlapping ranges is
+  called `within repeat spread`. `journeyman uplift --system-file X
+  [--repeats R] -- <run arguments>` runs both arms (interleaved) and
+  prints the comparison. Tests in `tests/test_compare.py`.
 
 - **Scoring change: a verdict can earn part of the credit, and
   wall-pricing `unpriced` now counts 0.5.** A report that says access is

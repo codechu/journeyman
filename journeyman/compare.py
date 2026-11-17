@@ -14,6 +14,11 @@ never bound still changed behaviour in the same measurement — so every
 other difference is listed and the pair is stamped NOT PAIRED. One run per
 arm is a small sample: a difference smaller than one cell is called
 unchanged, and n is printed on every row.
+
+An arm may be several runs (repeats of the same seal). Then each axis also
+shows the range of the per-run scores, and a movement is only named when
+the two ranges do not overlap: a repeat that reaches into the other arm's
+range is the noise the difference would have to beat.
 """
 import json
 import os
@@ -69,21 +74,48 @@ def _hints(cells):
             "calls": sum(c["calls"] for c in valid)}
 
 
+def _arm(paths):
+    """One arm: its runs pooled, each run's own scores kept for the range."""
+    paths = [paths] if isinstance(paths, str) else list(paths)
+    loaded = [_load(p) for p in paths]
+    cells = [c for run in loaded for c in run[0]]
+    seal, judge = loaded[0][1], loaded[0][2]
+    inner = sorted({k for run in loaded[1:] for k in pairing(seal, run[1], judge, run[2])}
+                   | ({"agent_system_md5"} if any(run[1].get("agent_system_md5") != seal.get("agent_system_md5")
+                                                  for run in loaded[1:]) else set()))
+    return {"paths": paths, "cells": cells, "seal": seal, "judge": judge, "inner": inner,
+            "axes": axis_scores(cells), "per_run": [axis_scores(run[0]) for run in loaded]}
+
+
+def _range(arm, axis):
+    v = [r[axis]["score"] for r in arm["per_run"] if axis in r and r[axis].get("score") is not None]
+    return (min(v), max(v)) if len(arm["per_run"]) > 1 and v else None
+
+
 def compare(path_a, path_b):
-    cells_a, seal_a, judge_a = _load(path_a)
-    cells_b, seal_b, judge_b = _load(path_b)
-    ax_a, ax_b = axis_scores(cells_a), axis_scores(cells_b)
+    A, B = _arm(path_a), _arm(path_b)
+    cells_a, seal_a, judge_a = A["cells"], A["seal"], A["judge"]
+    cells_b, seal_b, judge_b = B["cells"], B["seal"], B["judge"]
+    ax_a, ax_b = A["axes"], B["axes"]
     rows = []
     for axis in sorted(set(ax_a) | set(ax_b)):
         a, b = ax_a.get(axis, {}), ax_b.get(axis, {})
         n = min(a.get("n", 0), b.get("n", 0))
         sa, sb = a.get("score"), b.get("score")
-        rows.append({"axis": axis, "a": sa, "b": sb, "n": n,
+        ra, rb = _range(A, axis), _range(B, axis)
+        lab = label(sa, sb, n)
+        if ra and rb and lab in ("opened", "moved up, still low", "improved", "side effect") \
+                and not (ra[1] < rb[0] or rb[1] < ra[0]):
+            lab = "within repeat spread"
+        rows.append({"axis": axis, "a": sa, "b": sb, "n": n, "range_a": ra, "range_b": rb,
                      "delta": (round(sb - sa, 2) if sa is not None and sb is not None else None),
-                     "label": label(sa, sb, n)})
-    return {"a": path_a, "b": path_b,
+                     "label": lab})
+    path_a, path_b = ", ".join(A["paths"]), ", ".join(B["paths"])
+    inner = [f"arm A runs differ in {', '.join(A['inner'])}"] * bool(A["inner"]) + \
+            [f"arm B runs differ in {', '.join(B['inner'])}"] * bool(B["inner"])
+    return {"a": path_a, "b": path_b, "runs": [len(A["paths"]), len(B["paths"])], "inner": inner,
             "system_a": seal_a.get("agent_system_md5"), "system_b": seal_b.get("agent_system_md5"),
-            "not_paired": pairing(seal_a, seal_b, judge_a, judge_b),
+            "not_paired": pairing(seal_a, seal_b, judge_a, judge_b) + inner,
             "same_system": seal_a.get("agent_system_md5") == seal_b.get("agent_system_md5"),
             "rows": rows, "hints": {"a": _hints(cells_a), "b": _hints(cells_b)}}
 
@@ -105,14 +137,21 @@ def render(result):
         out.append("Pair: same system text in both runs — this reads the spread of a repeat, not an instruction")
     else:
         out.append("Pair: seals match except the agent's system text")
+    rng = lambda v: "" if not v else f" [{v[0]:.2f}–{v[1]:.2f}]"   # noqa: E731
     out += ["", f"{'AXIS':<24}{'A':>6}{'B':>6}{'Δ':>7}{'n':>4}  reading"]
     for r in result["rows"]:
         d = "—" if r["delta"] is None else f"{r['delta']:+.2f}"
-        out.append(f"{r['axis']:<24}{f(r['a']):>6}{f(r['b']):>6}{d:>7}{r['n']:>4}  {r['label']}")
+        spread = (f"  · A{rng(r.get('range_a'))} B{rng(r.get('range_b'))}"
+                  if r.get("range_a") or r.get("range_b") else "")
+        out.append(f"{r['axis']:<24}{f(r['a']):>6}{f(r['b']):>6}{d:>7}{r['n']:>4}  {r['label']}{spread}")
     ha, hb = result["hints"]["a"], result["hints"]["b"]
     out += ["", "Where a side effect may come from (A → B):",
             f"  invalid cells {ha['invalid']} → {hb['invalid']} · "
             f"late closing calls {_n(ha['late'])} → {_n(hb['late'])} · tool calls {ha['calls']} → {hb['calls']}",
-            "", "One run per arm: a difference under one cell is called unchanged; "
-            "repeat the pair before resting anything on a single row."]
+            "", ("One run per arm: a difference under one cell is called unchanged; "
+                 "repeat the pair before resting anything on a single row."
+                 if result.get("runs", [1, 1]) == [1, 1] else
+                 f"Runs per arm: {result['runs'][0]} and {result['runs'][1]} — scores pool every cell; "
+                 "[min–max] is the range of the per-run scores, and a movement inside "
+                 "overlapping ranges is called within repeat spread.")]
     return "\n".join(out)

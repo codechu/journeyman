@@ -119,7 +119,7 @@ To carry a report into another evaluation format, see
 | `journeyman qualify` | **the examiner's exam** — before you trust a model as `--judge`, runs it over labelled cases with known answers and grants (or refuses) a badge; `--concurrency N` keeps N draws in flight against servers that batch |
 | `journeyman selftest` | plumbing check: no model, no network — proves the pipeline end to end |
 | `journeyman report runs/<dir>` | re-render a finished run's report (e.g. after re-judging) |
-| `journeyman compare runA runB` | **what an instruction buys** — two runs of the same agent (without / with `--system-file`) read axis by axis: opened, still low, side effect; stamped NOT PAIRED if the seals differ in anything else |
+| `journeyman compare runA runB` | **what an instruction buys** — two runs of the same agent (without / with `--system-file`) read axis by axis: opened, still low, side effect; stamped NOT PAIRED if the seals differ in anything else; `journeyman uplift --system-file X -- <run args>` runs both arms and compares |
 | `journeyman upgrade report.json` | backfill `kind` into a report written before 0.1.0 — no model, no network, and it refuses to guess |
 
 In `run` the student sits the exam; in `qualify` the teacher does. The

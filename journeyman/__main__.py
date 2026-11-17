@@ -82,6 +82,21 @@ def _warn_if_nothing_measured(run_dir):
                  "see the report for the first reason", "red"), file=sys.stderr)
 
 
+def _run_arm(run_args, runs_dir, system_file):
+    """One `run` as its own process; returns the run dir it wrote."""
+    import subprocess
+    os.makedirs(runs_dir, exist_ok=True)
+    before = set(os.listdir(runs_dir))
+    cmd = [sys.executable, "-m", "journeyman", "run", *run_args, "--runs-dir", runs_dir]
+    if system_file:
+        cmd += ["--system-file", system_file]
+    subprocess.run(cmd)   # a failing arm still leaves its cells; compare reads what exists
+    new = sorted(set(os.listdir(runs_dir)) - before)
+    if not new:
+        sys.exit(f"uplift: the run wrote nothing under {runs_dir}")
+    return os.path.join(runs_dir, new[-1])
+
+
 def uncapped_warning(params, timeout):
     """A note when the agent runs with no output cap, else None.
 
@@ -248,9 +263,23 @@ def main(argv=None):
                         "pair — typically without and with --system-file — "
                         "axis by axis: what the instruction opened, what "
                         "stayed low, what it cost")
-    cp.add_argument("run_a", help="run dir of the first arm (e.g. no system text)")
-    cp.add_argument("run_b", help="run dir of the second arm")
+    cp.add_argument("run_a", help="run dir of the first arm (e.g. no system "
+                    "text); several repeats as a comma-separated list")
+    cp.add_argument("run_b", help="run dir(s) of the second arm")
     cp.add_argument("--json", action="store_true", help="print the comparison as JSON")
+    ul = sub.add_parser("uplift", help="run the same agent without and with a "
+                        "system text, then `compare` the two arms. Everything "
+                        "after `--` is passed to `run` unchanged for both arms")
+    ul.add_argument("--system-file", required=True,
+                    help="the instruction under test (arm B's --system-file)")
+    ul.add_argument("--repeats", type=int, default=1, metavar="R",
+                    help="runs per arm (default 1); with 2 or more, compare "
+                         "shows the per-run range and calls a movement inside "
+                         "overlapping ranges 'within repeat spread'")
+    ul.add_argument("--runs-dir", default="runs",
+                    help="arms are written under <runs-dir>/uplift-A and -B")
+    ul.add_argument("run_args", nargs=argparse.REMAINDER,
+                    help="-- followed by the `run` arguments (endpoint, model, …)")
     sub.add_parser("selftest", help="offline end-to-end pipeline check")
 
     from . import scenes  # noqa: F401 — official scenes register on import
@@ -290,9 +319,23 @@ def main(argv=None):
                   file=sys.stderr)
             sys.exit(2)
         sys.exit(0)
+    if args.cmd == "uplift":
+        from .compare import compare, render as render_pair
+        rest = [a for a in args.run_args if a != "--"]
+        for banned in ("--system-file", "--runs-dir"):
+            if banned in rest:
+                sys.exit(f"uplift sets {banned} itself; drop it from the run arguments")
+        arms = {"A": [], "B": []}
+        for r in range(args.repeats):
+            for arm in ("A", "B"):   # interleaved: drift over time lands on both arms
+                print(f"[uplift] arm {arm} · repeat {r + 1}/{args.repeats}", flush=True)
+                arms[arm].append(_run_arm(rest, os.path.join(args.runs_dir, f"uplift-{arm}"),
+                                          args.system_file if arm == "B" else None))
+        print(render_pair(compare(arms["A"], arms["B"])))
+        sys.exit(0)
     if args.cmd == "compare":
         from .compare import compare, render as render_pair
-        result = compare(args.run_a, args.run_b)
+        result = compare(args.run_a.split(","), args.run_b.split(","))
         print(__import__("json").dumps(result, ensure_ascii=False, indent=1) if args.json
               else render_pair(result))
         sys.exit(0)
