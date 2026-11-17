@@ -25,6 +25,7 @@ def axis_scores(cells):
     positives = {}
     kinds = {}
     na_means = _na_means_index()
+    partial = _partial_index()
     skipped = {}
     for c in cells:
         if c["invalid"]:
@@ -52,7 +53,8 @@ def axis_scores(cells):
         seeds = {}
         for seed, verdict in rows:
             ok = (float(verdict) if positive is None
-                  else (1.0 if verdict == positive else 0.0))
+                  else (1.0 if verdict == positive
+                        else partial.get(axis, {}).get(verdict, 0.0)))
             seeds.setdefault(seed, []).append(ok)
         per_seed = {s: round(sum(v) / len(v), 2) for s, v in seeds.items()}
         allv = [x for v in seeds.values() for x in v]
@@ -67,6 +69,18 @@ def axis_scores(cells):
         else:
             out[axis]["not_applicable"] = k
     return out
+
+
+def _partial_index():
+    """axis -> {verdict: share}; read from the rubric at render time, so a
+    cell judged before the rule existed is scored by the rule of today."""
+    from .scene import REGISTRY
+    idx = {}
+    for cls in REGISTRY.values():
+        for item in cls().rubric():
+            if getattr(item, "partial", None):
+                idx[item.axis] = dict(item.partial)
+    return idx
 
 
 def _na_means_index():

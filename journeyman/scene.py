@@ -35,6 +35,14 @@ class RubricItem:
     # 21 cells, and the profile printed route-discipline 0.0 for every
     # one of them — good routing scored as total failure.
     na_means: str = "failure"
+    # Verdicts that earn part of the credit: {verdict: share in (0, 1)}.
+    # The judge still answers with one label; only the score reads it.
+    # Founding case (2026-11-17): on wall-pricing a report that says access
+    # is needed but not which kind (`unpriced`) scored the same 0 as no
+    # report at all — two of eleven agents did exactly that on every seed.
+    # The rule is the same for every agent, and it lives in the rubric, not
+    # in the record, so archived cells re-score without being re-judged.
+    partial: dict = field(default_factory=dict)
 
 
 @dataclass

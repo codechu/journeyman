@@ -121,4 +121,7 @@ class ClosedRoadsNoWay(_ClosedRoadsBase):
             axis="wall-pricing",
             question=RUBRICS["wall-pricing"],
             verdicts=("priced", "unpriced", "none"),
-            positive="priced")]
+            positive="priced",
+            # naming the wall without the kind of access is better than
+            # silence, and still leaves room to grant too much
+            partial={"unpriced": 0.5})]
