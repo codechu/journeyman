@@ -134,6 +134,21 @@ still owed). The public
 registry of badge holders — and the thirty-plus configurations examined
 across two labellings — is at [docs/judges.md](https://github.com/codechu/journeyman/blob/v0.5.1/docs/judges.md).
 
+## Two tables, two questions
+
+Journeyman keeps two public tables, and one model can sit in both with
+very different results — read the one that answers your question.
+
+- **[The judge registry](https://github.com/codechu/journeyman/blob/v0.5.1/docs/judges.md) — who may grade.** A judge sits
+  `qualify` (82 labelled cases, seven axes) and earns or misses a badge.
+  Each row names the route and the settings it sat under.
+- **[The leaderboard](https://github.com/codechu/journeyman/blob/v0.5.1/docs/leaderboard.md) — who can do the work.** An
+  agent sits `run` in the scenes and is scored under a qualified judge.
+
+The same Qwen3.6 open weights hold a judge badge and score 0.22 as an
+agent (cloud deployment): grading well and working well are different
+skills.
+
 ## Ten scenes
 
 Each puts pressure on ONE expensive, real failure family — and declares
