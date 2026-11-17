@@ -169,6 +169,46 @@ def refused_call_would_close(inst, name, args):
     return bool(probe.done)
 
 
+class Ledger:
+    """Per-call budget tracking for run_cell.
+
+    One rule set for every transport: the HTTP driver and a future CLI
+    agent reaching the scene through an MCP server both use the same
+    budget/refusal logic.
+    """
+
+    def __init__(self, inst):
+        self.inst = inst
+        self.calls = 0
+        self.late_closing = 0
+
+    def answer(self, name, raw_arguments):
+        """Process one tool call and return the result string.
+
+        If raw_arguments is already a dict, use it directly (MCP transport);
+        otherwise parse it with json.loads (HTTP transport), falling back to
+        {"_unparsed": raw} on ValueError. None or "" is treated as "{}".
+        """
+        self.calls += 1
+        if isinstance(raw_arguments, dict):
+            arguments = raw_arguments
+        else:
+            try:
+                arguments = json.loads(raw_arguments or "{}")
+            except ValueError:
+                arguments = {"_unparsed": raw_arguments}
+        if self.calls <= self.inst.budget:
+            return self.inst.tool_result(name, arguments)
+        result = BUDGET_REFUSED
+        if refused_call_would_close(self.inst, name, arguments):
+            self.late_closing += 1
+        return result
+
+    @property
+    def runaway(self):
+        return self.calls > self.inst.budget + 2
+
+
 def run_cell(endpoint, scene, seed, log, agent_system=None):
     """One cell: drive the tool loop until report, budget death, or error.
 
@@ -190,7 +230,8 @@ def run_cell(endpoint, scene, seed, log, agent_system=None):
                                + f"\n\nTool budget: {inst.budget} calls.")
     archive = []
     episode_starts = [0]
-    calls = tin = tout = late_closing = 0
+    tin = tout = 0
+    ledger = Ledger(inst)
     usage_seen = False
     t0 = last_beat = time.time()
     final_text = None
@@ -201,7 +242,7 @@ def run_cell(endpoint, scene, seed, log, agent_system=None):
         tout += usage.get("completion_tokens", 0)
         convo.append({k: v for k, v in msg.items() if v is not None})
         if time.time() - last_beat > HEARTBEAT_S:
-            log(f"    still working · {calls} calls · {int(time.time()-t0)}s")
+            log(f"    still working · {ledger.calls} calls · {int(time.time()-t0)}s")
             last_beat = time.time()
         tool_calls = msg.get("tool_calls") or []
         if not tool_calls:
@@ -239,18 +280,8 @@ def run_cell(endpoint, scene, seed, log, agent_system=None):
                         + "; this is a starved turn, not a silent agent")
             break
         for tc in tool_calls:
-            calls += 1
             fn = tc["function"]
-            try:
-                args = json.loads(fn.get("arguments") or "{}")
-            except ValueError:
-                args = {"_unparsed": fn.get("arguments")}
-            if calls <= inst.budget:
-                result = inst.tool_result(fn["name"], args)
-            else:
-                result = BUDGET_REFUSED
-                if refused_call_would_close(inst, fn["name"], args):
-                    late_closing += 1
+            result = ledger.answer(fn["name"], fn.get("arguments"))
             convo.append({"role": "tool", "tool_call_id": tc["id"],
                           "content": result})
         if inst.done:
@@ -266,12 +297,12 @@ def run_cell(endpoint, scene, seed, log, agent_system=None):
                 convo = fresh_conversation(opening)
                 continue
             break
-        if calls > inst.budget + 2:   # hard stop: runaway loop guard
+        if ledger.runaway:   # hard stop: runaway loop guard
             break
     return {"messages": archive + convo, "episode_starts": episode_starts,
             "final_text": final_text, "budget": inst.budget,
-            "calls": calls, "tokens_in": tin, "tokens_out": tout,
-            "late_closing": late_closing,
+            "calls": ledger.calls, "tokens_in": tin, "tokens_out": tout,
+            "late_closing": ledger.late_closing,
             "usage_reported": usage_seen,   # 0 tokens != unknown tokens
             "seconds": round(time.time() - t0, 1)}
 
