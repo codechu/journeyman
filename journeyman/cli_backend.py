@@ -71,7 +71,7 @@ class CliEndpoint:
             except (OSError, subprocess.SubprocessError):
                 version = "unknown"
             import hashlib
-            self._settings = {"cli": version, "flags": " ".join(self._flags()),
+            self._settings = {"route": self.via, "cli": version, "flags": " ".join(self._flags()),
                               "effort": "cli default (not set)", "seed": "not sent",
                               "tool_protocol_md5": hashlib.md5(TOOL_PROTOCOL.encode()).hexdigest()[:12]}
         return self._settings

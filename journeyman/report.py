@@ -165,6 +165,12 @@ def render(run_dir, seal, judge_label, self_judged, nonstandard=None,
     stamp = f"Judge : {public_label(judge_label)}"
     if self_judged:
         stamp += "  ⚠ NOT COMPARABLE — self-judged scores"
+    av = (seal or {}).get("agent_via")
+    if av:
+        # the model reached through a CLI: same scenes and rules, not the same
+        # conditions as an API route (hidden CLI context, no sampling control)
+        stamp += (f"\nAgent : via {av.get('route', 'cli')} ({av.get('cli', '?')}) · "
+                  f"effort {av.get('effort', '?')} · seed {av.get('seed', '?')}")
     if nonstandard:
         stamp += f"\nRun   : ⚠ NON-STANDARD ({nonstandard}) — not comparable to standard runs"
     usage_ok = all(c.get("usage_reported", True) for c in cells if not c["invalid"])

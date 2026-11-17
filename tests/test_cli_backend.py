@@ -364,3 +364,21 @@ class TestCliModelCell(unittest.TestCase):
         self.assertEqual(rec["tokens_in"], 20)
         self.assertEqual([m["role"] for m in rec["messages"]][-3:], ["assistant", "tool", "assistant"])
 
+    def test_report_names_the_cli_route(self):
+        """A run through the CLI says so in the report header; the seal carries the settings."""
+        from journeyman.driver import run_grid
+        from journeyman.record import RunDir
+        from journeyman.report import render
+        tmpdir = tempfile.mkdtemp()
+        exe = _make_fake_exe(tmpdir)
+        os.environ["FAKE_MODE"] = "agent"
+        ep = CliEndpoint("claude", "claude-haiku-5-5", exe=exe)
+        rd = RunDir(os.path.join(tmpdir, "runs"))
+        seal = run_grid(ep, ["finished-cart"], [4242], rd, log=lambda *a, **k: None) or \
+            json.loads(open(os.path.join(rd.path, "events.jsonl")).readline())["seal"]
+        self.assertEqual(seal["agent_via"]["route"], "cli:claude --safe-mode")
+        self.assertEqual(seal["agent_via"]["seed"], "not sent")
+        render(rd, seal, "x", True)
+        md = open(os.path.join(rd.path, "report.md")).read()
+        self.assertIn("Agent : via cli:claude --safe-mode (9.9.9 (Fake Code))", md)
+
