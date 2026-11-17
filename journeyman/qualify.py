@@ -259,6 +259,13 @@ def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False,
                        "QUALIFIED" if result["qualified"] else "NOT QUALIFIED")
     if evidence and result["qualified"] and not cal.get("synthetic"):
         result["badge"] = "QUALIFIED (evidence-fed)"
+    # CLI endpoints carry a ``via`` marker so their badge is never
+    # mistaken for an API endpoint (2026-11-17).
+    via = getattr(judge_endpoint, "via", None)
+    if via is not None:
+        result["judge_via"] = via
+        if result["badge"] != "NOT QUALIFIED":
+            result["badge"] += f" (via {via})"
     return result
 
 

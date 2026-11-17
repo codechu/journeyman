@@ -183,8 +183,9 @@ def main(argv=None):
                        help="run a judge through the "
                        "qualification exam (labelled calibration set)")
     q.add_argument("--judge", required=True,
-                   help="OpenAI-compatible base URL of the judge "
-                        "sitting the exam")
+                   help="OpenAI-compatible base URL of the judge sitting "
+                        "the exam, or cli:claude (Claude Code CLI in "
+                        "--safe-mode; badge stamped 'via')")
     q.add_argument("--judge-model", required=True,
                    help="model id on that endpoint — the badge is "
                         "granted to the endpoint+model pair")
@@ -295,7 +296,12 @@ def main(argv=None):
             from .color import paint
             print(paint(banner(__version__), "amber"))
         params = _json.load(open(args.params_file)) if args.params_file else None
-        ep = Endpoint(args.judge, args.judge_model, args.api_key, params=params)
+        if args.judge.startswith("cli:"):
+            from .cli_backend import CliEndpoint
+            ep = CliEndpoint(args.judge[4:], args.judge_model)
+        else:
+            ep = Endpoint(args.judge, args.judge_model, args.api_key,
+                          params=params)
         sys.exit(qmain(args, ep))
 
     seeds = [int(s) for s in args.seeds.split(",")]

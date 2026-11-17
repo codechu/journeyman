@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- **A judge can sit the exam through the Claude Code CLI.**
+  `journeyman qualify --judge cli:claude --judge-model <full model id>`
+  runs the judge as `claude -p` in its barest mode (`--safe-mode`, empty
+  system prompt, no tools, no session), so a subscription can sit the
+  exam without an API key. Plain `claude -p` would hand the judge about
+  5k tokens of the operator's own instructions; `--safe-mode` leaves
+  about 0.7k of the tool's own context, which the model will not show.
+  The badge is stamped `(via cli:claude --safe-mode)` and the record
+  gains `judge_via`, so a CLI badge is never read as an API badge; HTTP
+  judges keep exactly the same record and badge. The asked model must
+  appear among the models the tool reports having run: an alias can
+  resolve to another version (`fable` ran claude-fable-5-1), so aliases
+  are refused. Tests in `tests/test_cli_backend.py`.
+
 - **A starved turn's advice now follows why the body is empty.** The guard
   voids a closing turn that comes back empty after more than 200
   characters of reasoning, and it told the operator to raise `max_tokens`
