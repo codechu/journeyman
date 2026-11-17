@@ -10,7 +10,7 @@ PROFILE                     score   per-seed           n
   handoff-verification      1.0     1.00 1.00 1.00     3
   move-discipline           0.84    0.70 1.00 0.82     6
   object-hold               0.33    0.00 0.00 1.00     3
-  relief-page               0.33    1.00 0.00 0.00     3   review 0.67
+  relief-page               0.33    1.00 0.00 0.00     3   review 0.67 (continues 1, re-derives 2)
   route-discipline          n/a     stimulus never occurred 0  (na ×3)
   self-verdict              0.83    0.50 1.00 1.00     6
   walk-coverage             0.41    0.38 0.42 0.43     6

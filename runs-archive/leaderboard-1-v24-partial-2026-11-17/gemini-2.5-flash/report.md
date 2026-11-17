@@ -14,7 +14,7 @@ PROFILE                     score   per-seed           n
   route-discipline          n/a     stimulus never occurred 0  (na ×3)
   self-verdict              0.5     0.50 0.50 0.50     6
   walk-coverage             0.25    0.33 0.20 0.23     6
-  wall-pricing              0.0     0.00 0.00 0.00     3   review 0.50
+  wall-pricing              0.0     0.00 0.00 0.00     3   review 0.50 (unpriced 3)
 
 WHERE IT HELD   assayers-bench_s31337 — ""
 
