@@ -316,18 +316,41 @@ def main(argv=None):
               file=sys.stderr)
         sys.exit(2)
     import json as _json
-    if args.model is None:
-        args.model = resolve_model(args.endpoint, args.api_key)
+    cli_agent = args.endpoint.startswith("cli:")
+    if cli_agent:
+        # a CLI agent brings its own loop; journeyman serves the scene over MCP
         if args.model is None:
-            sys.exit(1)
-    params = _json.load(open(args.params_file)) if args.params_file else None
-    endpoint = Endpoint(args.endpoint, args.model, args.api_key, params=params)
+            print("--endpoint cli:… needs --model with a full model id "
+                  "(an alias can resolve to another version)", file=sys.stderr)
+            sys.exit(2)
+        if args.params_file:
+            print("--params-file has no effect on a CLI agent (it sends no "
+                  "sampling parameters); drop it", file=sys.stderr)
+            sys.exit(2)
+        from .cli_agent import CliAgent
+        params = None
+        endpoint = CliAgent(args.endpoint[4:], args.model)
+    else:
+        if args.model is None:
+            args.model = resolve_model(args.endpoint, args.api_key)
+            if args.model is None:
+                sys.exit(1)
+        params = _json.load(open(args.params_file)) if args.params_file else None
+        endpoint = Endpoint(args.endpoint, args.model, args.api_key, params=params)
     self_judged = args.judge is None
     jparams = (_json.load(open(args.judge_params_file))
                if args.judge_params_file else None)
-    judge_ep = (endpoint if self_judged else
-                Endpoint(args.judge, args.judge_model or args.model,
-                         args.judge_api_key, params=jparams))
+
+    def _judge(url, model):
+        if url.startswith("cli:"):
+            from .cli_backend import CliEndpoint
+            return CliEndpoint(url[4:], model)
+        return Endpoint(url, model, args.judge_api_key, params=jparams)
+
+    if self_judged:
+        judge_ep = (_judge(args.endpoint, args.model) if cli_agent else endpoint)
+    else:
+        judge_ep = _judge(args.judge, args.judge_model or args.model)
     judge_label = "SELF (default)" if self_judged else args.judge
 
     if not args.quiet:
@@ -338,7 +361,7 @@ def main(argv=None):
     if self_judged:
         print("judge: SELF — scores will be marked NOT COMPARABLE; "
               "use --judge for a reference judge")
-    warn = uncapped_warning(params, endpoint.timeout)
+    warn = None if cli_agent else uncapped_warning(params, endpoint.timeout)   # the CLI caps its own output
     if warn:
         print(warn)
     agent_system = open(args.system_file).read() if args.system_file else None
