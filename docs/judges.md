@@ -214,6 +214,15 @@ Disclosed, not denied:
 ## Qualify your own
 
 Any OpenAI-compatible endpoint can sit the exam with the command above.
+A model you reach only through a subscription CLI can sit it too:
+`journeyman qualify --judge cli:claude --judge-model <full model id>` runs
+the judge as `claude -p` in its barest mode (`--safe-mode`, empty system
+prompt, no tools). The CLI still adds a small context of its own that the
+model will not show, so the unit examined is the model *through that
+CLI*: the badge reads `QUALIFIED (via cli:claude --safe-mode)`, the record
+carries `judge_via`, and a registry row from that route says so in its
+route column. Use a full model id — an alias can resolve to another
+version, and the exam refuses one that does not run what was asked.
 If your judge clears 0.8 on all axes, it is qualified in the only sense
 this project recognizes: measured, on labelled cases, with the records
 kept. Exam records behind this page (per-axis accuracies, misses with case

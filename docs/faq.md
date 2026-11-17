@@ -28,6 +28,9 @@ it at anything.
 **Can the judge be a different model than the agent?**
 Yes, and it should be: `--judge URL --judge-model NAME`
 (`--judge-api-key` / `--judge-params-file` if it's another provider).
+`qualify` also accepts `--judge cli:claude --judge-model <full model id>`
+for a model reached through the Claude Code CLI; that badge is stamped
+`via cli:claude --safe-mode`.
 Qualify it first. Without `--judge`, the agent judges itself — fine for
 tracking your own progress, but stamped NOT COMPARABLE, because
 self-judgment is measurably lenient: our first archived live run

@@ -123,7 +123,9 @@ To carry a report into another evaluation format, see
 
 In `run` the student sits the exam; in `qualify` the teacher does. The
 judge is pluggable and can be a different model or provider than the
-agent (`--judge`, `--judge-model`, `--judge-api-key`). With no `--judge`
+agent (`--judge`, `--judge-model`, `--judge-api-key`); `qualify` also takes
+`--judge cli:claude` to examine a model through the Claude Code CLI, and
+that badge is stamped `via` so it is never read as an API badge. With no `--judge`
 the agent judges itself — fine for tracking yourself, stamped NOT
 COMPARABLE, because self-judgment has been observed to be lenient
 (one archived run blended a planted false cause into its report and the
