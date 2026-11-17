@@ -56,8 +56,8 @@ def world_source(cls):
 
 
 def make_seal(bench_version, scene_set, scenes, seeds, model,
-              agent_system=None, agent_params=None):
-    return {
+              agent_system=None, agent_params=None, agent_via=None):
+    seal = {
         # the submitter's system text is part of the AGENT definition:
         # hashed so the run stays reproducible (None = agent adds none)
         "agent_system_md5": md5(agent_system) if agent_system else None,
@@ -74,6 +74,11 @@ def make_seal(bench_version, scene_set, scenes, seeds, model,
         "seeds": seeds,
         "model": model,
     }
+    if agent_via is not None:
+        # a CLI agent brings its own loop and hidden context: the route, the
+        # CLI version and its flags are part of what sat the exam
+        seal["agent_via"] = agent_via
+    return seal
 
 
 class RunDir:

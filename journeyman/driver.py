@@ -332,7 +332,8 @@ def run_grid(endpoint, scene_names, seeds, run_dir: RunDir, log=print,
     scenes = {n: REGISTRY[n] for n in scene_names}
     seal = make_seal(bench_version, scene_set, scenes, seeds, endpoint.model,
                      agent_system=agent_system,
-                     agent_params=getattr(endpoint, "params", None) or None)
+                     agent_params=getattr(endpoint, "params", None) or None,
+                     agent_via=getattr(endpoint, "settings", None) if getattr(endpoint, "via", None) else None)
     run_dir.event("run_start", seal=seal)
     cells = [(n, s) for n in scene_names for s in seeds]
     done_s = []
@@ -345,8 +346,9 @@ def run_grid(endpoint, scene_names, seeds, run_dir: RunDir, log=print,
         scene = scenes[name]()
         run_dir.event("cell_start", cell=cell_id)
         try:
-            rec = run_cell(endpoint, scene, seed, log,
-                           agent_system=agent_system)
+            own_loop = getattr(endpoint, "run_cell", None)   # a CLI agent runs its own loop
+            rec = (own_loop(scene, seed, log, agent_system=agent_system) if own_loop
+                   else run_cell(endpoint, scene, seed, log, agent_system=agent_system))
             invalid, reason = False, None
         except Exception as e:
             rec = {"messages": [], "final_text": None, "budget": 0, "calls": 0,
