@@ -30,7 +30,7 @@ REPO = _repo()
 SITE = os.path.join(REPO, "site")
 NOTES = os.path.join(REPO, "notes")
 SRC = os.path.join(REPO, "site-src")   # everything under site/ is generated
-BOARD = "runs-archive/leaderboard-1-v24-2026-08-24"
+BOARD = "runs-archive/leaderboard-1-v24-partial-2026-11-17"
 GH = "https://github.com/codechu/journeyman"
 BASE = "https://codechu.github.io/journeyman"
 

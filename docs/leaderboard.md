@@ -8,10 +8,10 @@ Standard set v2 (the 8 scenes standard at the time; Night Alarm and The Unsteady
 
 | agent | judged mean | route | wall | empty | object | ground | relief | handoff | cover | move | verdict | invalid | calls | notes |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| `google/gemini-2.5-flash` | **0.42 (6 axes)** | n/a | 0.50 | 0.33 | 1.00 | 0.67 | 0.00 | 0.00 | 0.25 | 0.99 | 0.50 | 0 | 255 |  |
+| `meta-llama/llama-4-scout` | **0.42 (6 axes)** | n/a | 0.50 | 0.00 | 1.00 | 1.00 | 0.00 | 0.00 | 0.04 | 0.42 | 0.17 | 0 | 213 |  |
 | `z-ai/glm-5.2` | **0.39 (6 axes)** | n/a | 0.00 | 0.00 | 0.33 | 0.67 | 0.33 | 1.00 | 0.41 | 0.84 | 0.83 | 0 | 572 | the ceiling candidate from scene-acceptance probes |
 | `mistralai/mistral-small-3.2-24b-instruct` | **0.33 (5 axes)** | — | — | 0.00 (n=2) | 1.00 | 0.67 | 0.00 | 0.00 | 0.03 (n=4) | 0.77 (n=4) | 0.25 (n=4) | 9 | 119 | 9/24 cells invalid — narrated plans instead of calling tools (reference-run-2) |
-| `google/gemini-2.5-flash` | **0.33 (6 axes)** | n/a | 0.00 | 0.33 | 1.00 | 0.67 | 0.00 | 0.00 | 0.25 | 0.99 | 0.50 | 0 | 255 |  |
-| `meta-llama/llama-4-scout` | **0.33 (6 axes)** | n/a | 0.00 | 0.00 | 1.00 | 1.00 | 0.00 | 0.00 | 0.04 | 0.42 | 0.17 | 0 | 213 |  |
 | `deepseek/deepseek-r1-0528` | **0.33 (4 axes)** | n/a | 0.00 | 0.00 | 0.33 | 1.00 | — | — | 0.04 (n=1) | 1.00 (n=1) | 0.00 (n=1) | 1 | 131 | PARTIAL: 17/24 cells — stopped by the maintainer on cost (reasoning tokens × maze-length calls: 48¢ for 17 cells); maze-family rows are from fewer cells, relief/handoff missing |
 | `moonshotai/kimi-k2` | **0.28 (6 axes)** | n/a | 0.00 | 0.00 | 0.33 | 0.33 | 0.33 | 0.67 | 0.40 | 0.80 | 0.33 | 0 | 613 | chatty; sat on the v2 labelling council (starred: council family) |
 | `openai/gpt-5.6-luna` | **0.22 (6 axes)** | n/a | 0.33 | 0.00 | 0.33 | 0.67 | 0.00 | 0.00 | 0.44 | 0.82 | 0.67 | 0 | 498 | v2.4-qualified as a judge; judged the previous edition of this board, not this one |
@@ -21,6 +21,20 @@ Standard set v2 (the 8 scenes standard at the time; Night Alarm and The Unsteady
 | `openai/gpt-oss-120b` | **0.17 (6 axes)** | n/a | 0.33 | 0.33 | 0.33 | 0.00 | 0.00 | 0.00 | 0.15 | 0.97 | 0.17 | 0 | 194 |  |
 
 ## Reading the board
+
+- **Re-scored on 2026-11-17: `unpriced` on wall-pricing now earns half.**
+  Until then a report that said access was needed, but not which kind,
+  scored the same 0 as no report at all. Two agents had done exactly that
+  on every seed (`google/gemini-2.5-flash`, `meta-llama/llama-4-scout`):
+  their wall column moves 0.00 → 0.50 and their mean 0.33 → 0.42. Nothing
+  was re-run or re-judged — the judge's labels were already in the cell
+  records, the rule lives in the rubric, and every other number on the
+  board is unchanged. The rule is the same for every agent; naming the
+  wall without the kind of access is better than silence and still leaves
+  room to grant too much. The re-scored reports are under
+  [`runs-archive/leaderboard-1-v24-partial-2026-11-17/`](../runs-archive/leaderboard-1-v24-partial-2026-11-17/);
+  the cell records behind both editions are published next to the v2.4
+  reports (`<agent>/cells.jsonl.zst`), so the re-scoring can be repeated.
 
 - **Two things changed at once — and a third edition separated them.**
   The previous board was scored by `openai/gpt-5.6-luna` under the v2.2

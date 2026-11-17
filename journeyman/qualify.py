@@ -23,6 +23,11 @@ from .scene import REGISTRY
 THRESHOLD = 0.8
 
 
+def _public(label):
+    from .report import public_label
+    return public_label(label)
+
+
 def _rubric_index():
     items = {}
     for cls in REGISTRY.values():
@@ -242,7 +247,10 @@ def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False,
               # ledger table had to be reassembled from file names and
               # campaign notes)
               "judge_model": getattr(judge_endpoint, "model", None),
-              "judge_endpoint": getattr(judge_endpoint, "url", None),
+              # folded like every published label: the record names the
+              # judge, not the maintainer's machine (three exam records
+              # shipped a LAN address on 2026-11-12, after the report gate)
+              "judge_endpoint": _public(getattr(judge_endpoint, "url", None)),
               "axes": {}}
     qualified = True
     for axis, a in per_axis.items():

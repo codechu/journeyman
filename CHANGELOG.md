@@ -2,6 +2,29 @@
 
 ## Unreleased
 
+- **Scoring change: a verdict can earn part of the credit, and
+  wall-pricing `unpriced` now counts 0.5.** A report that says access is
+  needed but not which kind used to score the same 0 as no report at all.
+  The rule is `RubricItem.partial`, lives in the rubric and is read when a
+  report is rendered, so archived cells re-score without being re-judged.
+  The cohort board was re-scored from its cell records: two agents move
+  (wall 0.00 → 0.50, mean 0.33 → 0.42), every other number is unchanged;
+  the edition is `runs-archive/leaderboard-1-v24-partial-2026-11-17/`.
+  Runs scored before and after this change are not comparable on
+  wall-pricing. Test in `tests/test_partial_credit.py`.
+
+- **The cohort's cell records are published.**
+  `runs-archive/leaderboard-1-v24-2026-08-24/<agent>/cells.jsonl.zst`
+  holds every cell's transcript and judge verdicts, written by
+  `tools/archive_cells.py` (private hosts and absolute paths folded,
+  opaque provider blobs removed).
+
+- **The archive is read for machine details.** `qualify` now folds the
+  judge endpoint in the exam record, and `tests/test_archive_is_public.py`
+  fails when a new file under `runs-archive/` names a private host or a
+  home path. Files that shipped before the gate are listed in
+  `tests/archive_founding.txt` and stay as they are.
+
 - **A model can sit the scenes through the Claude Code CLI.**
   `journeyman run --endpoint cli:claude --model <full model id>` scores
   the model like any API model: journeyman's own driver runs the turns

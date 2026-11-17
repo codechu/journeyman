@@ -19,7 +19,7 @@ import unittest
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = os.path.join(ROOT, "site")
-BOARD = os.path.join(ROOT, "runs-archive", "leaderboard-1-v24-2026-08-24")
+BOARD = os.path.join(ROOT, "runs-archive", "leaderboard-1-v24-partial-2026-11-17")
 
 
 class SiteIsGenerated(unittest.TestCase):
