@@ -18,16 +18,18 @@
   [--repeats R] -- <run arguments>` runs both arms (interleaved) and
   prints the comparison. Tests in `tests/test_compare.py`.
 
-- **Partial credit, beside the score.** On wall-pricing a report that
-  says access is needed but not which kind (`unpriced`) scored the same
-  0 as no report at all. The axis `score` keeps its meaning (share of
-  cells with the positive verdict); reports now also carry
-  `score_partial` (`unpriced` at 0.5) and `verdict_counts` for an axis
-  whose rubric declares partial credit (`RubricItem.partial`). Additive:
-  no existing key changes value. The cohort's reports were re-rendered
-  from their cell records with the added fields
-  (`runs-archive/leaderboard-1-v24-partial-2026-11-17/`); two agents show
-  0.00 with partial 0.50, and the board prints it as `0.00 (½ 0.50)`.
+- **A review score beside the score, and the judge's label counts.**
+  A judged axis counts one positive label; an agent that did half the
+  thing scored the same 0 as one that did nothing. Reports now carry
+  `verdict_counts` on every judged axis, and `review_score` on the three
+  axes whose rubric defines a middle label, counted at 0.5: `unpriced`
+  (wall-pricing), `mixed` (grounding), `re-derives` (relief-page). The
+  rule is `RubricItem.partial`. Additive: `score`, the profile and every
+  mean keep their meaning and value; `report.md` prints `review 0.50`
+  after the row only where it differs. The cohort's reports were
+  re-rendered from their cell records with the added fields
+  (`runs-archive/leaderboard-1-v24-partial-2026-11-17/`), every score
+  equal to the v2.4 edition; the board prints e.g. `0.00 (review 0.50)`.
   Test in `tests/test_partial_credit.py`.
 
 - **The cohort's cell records are published.**

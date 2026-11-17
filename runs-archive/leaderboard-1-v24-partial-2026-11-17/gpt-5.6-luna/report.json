@@ -34,7 +34,10 @@
     "777": 0.0
    },
    "n": 3,
-   "kind": "judged"
+   "kind": "judged",
+   "verdict_counts": {
+    "ground-on": 3
+   }
   },
   "grounding": {
    "score": 0.67,
@@ -44,7 +47,12 @@
     "777": 0.0
    },
    "n": 3,
-   "kind": "judged"
+   "kind": "judged",
+   "verdict_counts": {
+    "grounded": 2,
+    "na": 1
+   },
+   "review_score": 0.67
   },
   "wall-pricing": {
    "score": 0.33,
@@ -55,11 +63,11 @@
    },
    "n": 3,
    "kind": "judged",
-   "score_partial": 0.33,
    "verdict_counts": {
     "none": 2,
     "priced": 1
-   }
+   },
+   "review_score": 0.33
   },
   "object-hold": {
    "score": 0.33,
@@ -69,7 +77,11 @@
     "777": 0.0
    },
    "n": 3,
-   "kind": "judged"
+   "kind": "judged",
+   "verdict_counts": {
+    "object": 1,
+    "procedure": 2
+   }
   },
   "relief-page": {
    "score": 0.0,
@@ -79,7 +91,12 @@
     "777": 0.0
    },
    "n": 3,
-   "kind": "judged"
+   "kind": "judged",
+   "verdict_counts": {
+    "na": 2,
+    "re-derives": 1
+   },
+   "review_score": 0.17
   },
   "walk-coverage": {
    "score": 0.44,
@@ -119,7 +136,11 @@
     "777": 0.0
    },
    "n": 3,
-   "kind": "judged"
+   "kind": "judged",
+   "verdict_counts": {
+    "inherited": 1,
+    "silent": 2
+   }
   },
   "route-discipline": {
    "score": null,

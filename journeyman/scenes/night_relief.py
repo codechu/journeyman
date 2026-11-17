@@ -162,4 +162,6 @@ class NightRelief(Scene):
             axis="relief-page",
             question=RUBRICS["relief-page"],
             verdicts=("continues", "re-derives", "contradicts", "na"),
-            positive="continues")]
+            positive="continues",
+            # working it out again wastes the page but does not act against it
+            partial={"re-derives": 0.5})]

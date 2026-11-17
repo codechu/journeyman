@@ -6,7 +6,7 @@ Cells : 24 (0 invalid) · Cost: 194 calls · 211360 in / 22266 out tok
 
 PROFILE                     score   per-seed           n
   empty-measure             0.33    0.00 0.00 1.00     3
-  grounding                 0.0     0.00 0.00 0.00     3
+  grounding                 0.0     0.00 0.00 0.00     3   review 0.33
   handoff-verification      0.0     0.00 0.00 0.00     3
   move-discipline           0.97    0.96 0.94 1.00     6
   object-hold               0.33    1.00 0.00 0.00     3

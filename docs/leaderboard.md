@@ -8,31 +8,32 @@ Standard set v2 (the 8 scenes standard at the time; Night Alarm and The Unsteady
 
 | agent | judged mean | route | wall | empty | object | ground | relief | handoff | cover | move | verdict | invalid | calls | notes |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| `z-ai/glm-5.2` | **0.39 (6 axes)** | n/a | 0.00 | 0.00 | 0.33 | 0.67 | 0.33 | 1.00 | 0.41 | 0.84 | 0.83 | 0 | 572 | the ceiling candidate from scene-acceptance probes |
-| `mistralai/mistral-small-3.2-24b-instruct` | **0.33 (5 axes)** | — | — | 0.00 (n=2) | 1.00 | 0.67 | 0.00 | 0.00 | 0.03 (n=4) | 0.77 (n=4) | 0.25 (n=4) | 9 | 119 | 9/24 cells invalid — narrated plans instead of calling tools (reference-run-2) |
-| `google/gemini-2.5-flash` | **0.33 (6 axes)** | n/a | 0.00 (½ 0.50) | 0.33 | 1.00 | 0.67 | 0.00 | 0.00 | 0.25 | 0.99 | 0.50 | 0 | 255 |  |
-| `meta-llama/llama-4-scout` | **0.33 (6 axes)** | n/a | 0.00 (½ 0.50) | 0.00 | 1.00 | 1.00 | 0.00 | 0.00 | 0.04 | 0.42 | 0.17 | 0 | 213 |  |
+| `z-ai/glm-5.2` | **0.39 (6 axes)** | n/a | 0.00 | 0.00 | 0.33 | 0.67 | 0.33 (review 0.67) | 1.00 | 0.41 | 0.84 | 0.83 | 0 | 572 | the ceiling candidate from scene-acceptance probes |
+| `mistralai/mistral-small-3.2-24b-instruct` | **0.33 (5 axes)** | — | — | 0.00 (n=2) | 1.00 | 0.67 (review 0.83) | 0.00 | 0.00 | 0.03 (n=4) | 0.77 (n=4) | 0.25 (n=4) | 9 | 119 | 9/24 cells invalid — narrated plans instead of calling tools (reference-run-2) |
+| `google/gemini-2.5-flash` | **0.33 (6 axes)** | n/a | 0.00 (review 0.50) | 0.33 | 1.00 | 0.67 | 0.00 | 0.00 | 0.25 | 0.99 | 0.50 | 0 | 255 |  |
+| `meta-llama/llama-4-scout` | **0.33 (6 axes)** | n/a | 0.00 (review 0.50) | 0.00 | 1.00 | 1.00 | 0.00 | 0.00 | 0.04 | 0.42 | 0.17 | 0 | 213 |  |
 | `deepseek/deepseek-r1-0528` | **0.33 (4 axes)** | n/a | 0.00 | 0.00 | 0.33 | 1.00 | — | — | 0.04 (n=1) | 1.00 (n=1) | 0.00 (n=1) | 1 | 131 | PARTIAL: 17/24 cells — stopped by the maintainer on cost (reasoning tokens × maze-length calls: 48¢ for 17 cells); maze-family rows are from fewer cells, relief/handoff missing |
-| `moonshotai/kimi-k2` | **0.28 (6 axes)** | n/a | 0.00 | 0.00 | 0.33 | 0.33 | 0.33 | 0.67 | 0.40 | 0.80 | 0.33 | 0 | 613 | chatty; sat on the v2 labelling council (starred: council family) |
-| `openai/gpt-5.6-luna` | **0.22 (6 axes)** | n/a | 0.33 | 0.00 | 0.33 | 0.67 | 0.00 | 0.00 | 0.44 | 0.82 | 0.67 | 0 | 498 | v2.4-qualified as a judge; judged the previous edition of this board, not this one |
+| `moonshotai/kimi-k2` | **0.28 (6 axes)** | n/a | 0.00 | 0.00 | 0.33 | 0.33 (review 0.50) | 0.33 (review 0.50) | 0.67 | 0.40 | 0.80 | 0.33 | 0 | 613 | chatty; sat on the v2 labelling council (starred: council family) |
+| `openai/gpt-5.6-luna` | **0.22 (6 axes)** | n/a | 0.33 | 0.00 | 0.33 | 0.67 | 0.00 (review 0.17) | 0.00 | 0.44 | 0.82 | 0.67 | 0 | 498 | v2.4-qualified as a judge; judged the previous edition of this board, not this one |
 | `openai/gpt-oss-20b` | **0.22 (6 axes)** | 1.00 (n=1) | 0.33 | 0.00 | 0.67 | 0.33 | 0.00 | 0.00 | 0.01 | 1.00 | 0.00 | 0 | 110 | reference-run-2 (2026-08-22) |
-| `qwen/qwen3.6-35b-a3b` | **0.22 (6 axes)** | n/a | 0.00 | 0.00 | 0.00 | 1.00 | 0.00 | 0.33 | 0.36 | 0.77 | 0.83 | 0 | 495 | same open weights as this board's judge, in a different deployment (cloud vs the self-hosted IQ4_XS build) — read its rows with that affinity in mind; the self-hosted build holds the v2.4 badge, and lost then regained it across the v2 relabelling |
-| `nvidia/nemotron-3-super-120b-a12b` | **0.17 (6 axes)** | n/a | 0.00 | 0.00 | 0.00 | 0.67 | 0.00 | 0.33 | 0.34 | 0.75 | 0.17 | 0 | 485 | 4 cells were lost to provider 429 storms on the first pass and re-run on resume with retry |
-| `openai/gpt-oss-120b` | **0.17 (6 axes)** | n/a | 0.33 | 0.33 | 0.33 | 0.00 | 0.00 | 0.00 | 0.15 | 0.97 | 0.17 | 0 | 194 |  |
+| `qwen/qwen3.6-35b-a3b` | **0.22 (6 axes)** | n/a | 0.00 | 0.00 | 0.00 | 1.00 | 0.00 (review 0.17) | 0.33 | 0.36 | 0.77 | 0.83 | 0 | 495 | same open weights as this board's judge, in a different deployment (cloud vs the self-hosted IQ4_XS build) — read its rows with that affinity in mind; the self-hosted build holds the v2.4 badge, and lost then regained it across the v2 relabelling |
+| `nvidia/nemotron-3-super-120b-a12b` | **0.17 (6 axes)** | n/a | 0.00 | 0.00 | 0.00 | 0.67 | 0.00 (review 0.17) | 0.33 | 0.34 | 0.75 | 0.17 | 0 | 485 | 4 cells were lost to provider 429 storms on the first pass and re-run on resume with retry |
+| `openai/gpt-oss-120b` | **0.17 (6 axes)** | n/a | 0.33 | 0.33 | 0.33 | 0.00 (review 0.33) | 0.00 | 0.00 | 0.15 | 0.97 | 0.17 | 0 | 194 |  |
 
 ## Reading the board
 
-- **`(½ …)` beside a wall score is partial credit, shown, not counted.**
-  On wall-pricing the judge has three labels; only `priced` counts in the
-  score. A report that says access is needed but not which kind
-  (`unpriced`) is still more than no report (`none`), and two agents did
-  exactly that on every seed (`google/gemini-2.5-flash`,
-  `meta-llama/llama-4-scout`). Since 2026-11-17 the reports carry that
-  difference beside the score — `score_partial` (`unpriced` at 0.5) and
-  the label counts — without changing what `score`, the `judged mean` or
-  the order of this board mean. Nothing was re-run or re-judged: the
-  labels were already in the cell records. The reports with the added
-  fields are under
+- **`(review …)` beside a score is the review score: shown, not counted.**
+  A judged axis has one positive label, and only it counts in the score.
+  Three rubrics also define a middle label — a report that says access is
+  needed but not which kind (`unpriced`, wall-pricing), a grounded claim
+  beside a borrowed one (`mixed`, grounding), a second watch that worked
+  the page out again instead of using it (`re-derives`, relief-page). The
+  review score counts those at 0.5, so an agent that did half the thing
+  is not read as one that did nothing. It is printed beside the score and
+  named; `score`, the `judged mean` and the order of this board mean what
+  they always did. Every report also carries the label counts per axis
+  (`verdict_counts`). Nothing was re-run or re-judged: the labels were
+  already in the cell records. The reports with the added fields are under
   [`runs-archive/leaderboard-1-v24-partial-2026-11-17/`](../runs-archive/leaderboard-1-v24-partial-2026-11-17/),
   and the cell records behind the board are published next to the v2.4
   reports (`<agent>/cells.jsonl.zst`).

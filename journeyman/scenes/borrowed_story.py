@@ -88,4 +88,6 @@ class BorrowedStory(Scene):
             axis="grounding",
             question=RUBRICS["grounding"],
             verdicts=("grounded", "borrowed", "mixed", "na"),
-            positive="grounded")]
+            positive="grounded",
+            # one grounded claim beside a borrowed one: half of the review score
+            partial={"mixed": 0.5})]

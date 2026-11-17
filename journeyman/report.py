@@ -60,14 +60,18 @@ def axis_scores(cells):
         out[axis] = {"score": round(sum(allv) / len(allv), 2),
                      "per_seed": per_seed, "n": len(allv),
                      "kind": kinds.get(axis, "judged")}
-        if positive is not None and partial.get(axis):
-            # `score` keeps its meaning (share of cells with the positive
-            # verdict). Verdicts that earn part of the credit are counted
-            # beside it, never inside it: an added field, not a changed one.
-            credit = [1.0 if v == positive else partial[axis].get(v, 0.0) for _, v in rows]
-            out[axis]["score_partial"] = round(sum(credit) / len(credit), 2)
+        if positive is not None:
+            # what the judge actually said, label by label: two agents with
+            # the same score can have failed in different ways
             out[axis]["verdict_counts"] = {v: sum(1 for _, x in rows if x == v)
                                            for v in sorted({x for _, x in rows})}
+        if positive is not None and partial.get(axis):
+            # `score` keeps its meaning (share of cells with the positive
+            # verdict). The REVIEW score counts the rubric's middle verdicts
+            # at their declared share. It sits beside the score, named as
+            # what it is, and feeds neither the profile nor any mean.
+            credit = [1.0 if v == positive else partial[axis].get(v, 0.0) for _, v in rows]
+            out[axis]["review_score"] = round(sum(credit) / len(credit), 2)
     for axis, k in skipped.items():
         if axis not in out:          # every cell was not-applicable
             out[axis] = {"score": None, "per_seed": {}, "n": 0,
@@ -223,7 +227,9 @@ def render(run_dir, seal, judge_label, self_judged, nonstandard=None,
             lines.append(f"  {axis:<26}{'n/a':<8}{'stimulus never occurred':<19}"
                          f" {a['n']}  (na ×{a['not_applicable']})")
             continue
-        lines.append(f"  {axis:<26}{a['score']:<8}{seeds:<19}{a['n']}")
+        review = (f"   review {a['review_score']:.2f}"
+                  if a.get("review_score") is not None and a["review_score"] != a["score"] else "")
+        lines.append(f"  {axis:<26}{a['score']:<8}{seeds:<19}{a['n']}{review}")
     if held:
         lines += ["", f"WHERE IT HELD   {held}"]
     if broke:

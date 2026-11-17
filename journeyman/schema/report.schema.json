@@ -46,7 +46,12 @@
           "kind": {"type": "string", "enum": ["counted", "judged"],
                    "description": "how the axis was scored. counted: computed programmatically from replayed events (Scene.event_axes), no judge involved \u2014 the score is a fact. judged: a model answered the rubric question and its verdict was matched against the positive label. Anything carrying a score into another system must keep this apart: a counted fact presented as a model's opinion, or the reverse, misstates what was measured."},
           "not_applicable": {"type": "integer", "minimum": 1,
-                             "description": "cells excluded because the judge returned na and the axis declares na as not-applicable"}
+                             "description": "cells excluded because the judge returned na and the axis declares na as not-applicable"},
+          "verdict_counts": {"type": "object",
+                             "additionalProperties": {"type": "integer", "minimum": 0},
+                             "description": "judged axes only: how many cells got each judge label"},
+          "review_score": {"type": "number", "minimum": 0, "maximum": 1,
+                           "description": "only on axes whose rubric defines a middle label: the score with those labels counted at their declared share (0.5). Shown beside `score`, which keeps its meaning; feeds no mean"}
         }
       }
     },

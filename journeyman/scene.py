@@ -37,7 +37,7 @@ class RubricItem:
     na_means: str = "failure"
     # Verdicts that earn part of the credit: {verdict: share in (0, 1)}.
     # The judge still answers with one label, and the axis `score` keeps
-    # its meaning; the credit is reported beside it as `score_partial`.
+    # its meaning; the credit is reported beside it as `review_score`.
     # Founding case (2026-11-17): on wall-pricing a report that says access
     # is needed but not which kind (`unpriced`) scored the same 0 as no
     # report at all — two of eleven agents did exactly that on every seed.
