@@ -2,6 +2,33 @@
 
 ## Unreleased
 
+- **A model can sit the scenes through the Claude Code CLI.**
+  `journeyman run --endpoint cli:claude --model <full model id>` scores
+  the model like any API model: journeyman's own driver runs the turns
+  and applies the same budget rules; the CLI gets no tools of its own, so
+  each call is one model turn. The conversation and the tool list go in as
+  text, and tool calls come back as trailing `CALL <name> <json>` lines.
+  The seal carries `agent_via` (CLI version, flags, the protocol's md5,
+  effort left at the CLI default, no sampling seed) and the report header
+  an `Agent : via …` line; HTTP runs keep the same seal and report. A
+  self-judged CLI run judges through the CLI too, and `run` accepts
+  `--judge cli:claude`. Tests in `tests/test_cli_backend.py`.
+
+- **`cli-agent:claude` runs Claude Code as an agent with its own loop.**
+  The scene's tools reach it over MCP from an in-process server on a
+  random localhost port (`journeyman/mcp_server.py`, one path and one
+  pinned session per cell); every call goes through the same per-call
+  rules (`driver.Ledger`), and the transcript the CLI streams is checked
+  call by call against what the server answered. This measures the model
+  plus that CLI's harness; no dedicated tests yet beyond the server's
+  (`tests/test_mcp_server.py`), so treat it as experimental.
+
+- **`run --concurrency N`.** Cells are independent worlds and may run in
+  parallel; the default, 1, is the standard sequential run, unchanged
+  (a golden test, `tests/test_http_golden.py`, freezes the HTTP path).
+  A parallel run is stamped non-standard. Test in
+  `tests/test_concurrency.py`.
+
 - **A judge can sit the exam through the Claude Code CLI.**
   `journeyman qualify --judge cli:claude --judge-model <full model id>`
   runs the judge as `claude -p` in its barest mode (`--safe-mode`, empty

@@ -38,8 +38,10 @@ file in the run directory means.
    (e.g. the `report` tool), the budget dies, or the agent stops
    calling tools. Multi-episode scenes (Night Relief) end the
    conversation at the bell and wake a fresh one — the world persists,
-   the wire does not. Cells run strictly one at a time: parallel
-   batching measurably perturbs local-model numerics.
+   the wire does not. Cells run one at a time by default: parallel
+   batching measurably perturbs local-model numerics. `--concurrency N`
+   runs independent cells in parallel (stamped non-standard) — meant for
+   slow remote agents, not for a local server.
 3. **Events.** The moment a cell ends, its facts are computed — counts,
    flags, and for the maze family a full REPLAY: the world is rebuilt
    from the seed and the recorded calls re-run through the same engine.

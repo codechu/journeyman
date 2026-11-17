@@ -93,10 +93,12 @@ No judge — including ours — is exempt, and under v2 ours did not pass.
 
 ## Reproducibility and contamination
 
-- Runs are **sequential by design**: concurrent batching perturbs
+- The standard run is **sequential**: concurrent batching perturbs
   local-model numerics (measured: prompt-cache reuse alone breaks
   bit-level reproducibility; with the cache off, a 15-turn ceremony
-  reproduced bit-exact, name included).
+  reproduced bit-exact, name included). Cells are independent worlds, so
+  `run --concurrency N` may run them in parallel for slow remote agents;
+  such a run is stamped non-standard.
 - Every report carries its **seal**: bench version, per-scene source
   md5, seeds, model, agent-system md5, agent params verbatim — and its
   own reproduction command. A rerun under the same seal is the same

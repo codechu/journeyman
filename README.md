@@ -125,7 +125,9 @@ In `run` the student sits the exam; in `qualify` the teacher does. The
 judge is pluggable and can be a different model or provider than the
 agent (`--judge`, `--judge-model`, `--judge-api-key`); `qualify` also takes
 `--judge cli:claude` to examine a model through the Claude Code CLI, and
-that badge is stamped `via` so it is never read as an API badge. With no `--judge`
+that badge is stamped `via` so it is never read as an API badge; `run`
+takes `--endpoint cli:claude --model <full model id>` to score a model
+through the CLI the same way, stamped in the seal and the report header. With no `--judge`
 the agent judges itself — fine for tracking yourself, stamped NOT
 COMPARABLE, because self-judgment has been observed to be lenient
 (one archived run blended a planted false cause into its report and the

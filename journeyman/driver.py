@@ -1,9 +1,11 @@
-"""Grid driver: scene × seed, sequential, crash-safe, honestly noisy.
+"""Grid driver: scene × seed, sequential by default, crash-safe, honestly noisy.
 
-Sequential by design: parallel batching perturbs local-model numerics
-(measured in the house, 2026-08-11 — cache/batch effects break bit-level
-reproducibility). Flexibility is allowed but stamped; comparability only
-from the standard run.
+The standard run is sequential: on a local server, concurrent requests
+perturb the numerics (measured in the house, 2026-08-11 — cache/batch
+effects). Comparability no longer rests on bit-level replay but on the seal
+and the spread of repeated runs (2026-11-14), so cells — independent worlds —
+may also run in parallel (`concurrency`), stamped non-standard. Flexibility
+is allowed but stamped; comparability only from the standard run.
 
 Progress rules (release requirements, not polish):
   * every line meaningful, line-buffered, timestamped in events.jsonl
