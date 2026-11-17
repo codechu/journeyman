@@ -264,6 +264,7 @@ def qualify(judge_endpoint, cal=None, log=print, repeats=3, early_exit=False,
     via = getattr(judge_endpoint, "via", None)
     if via is not None:
         result["judge_via"] = via
+        result["judge_settings"] = getattr(judge_endpoint, "settings", None)
         if result["badge"] != "NOT QUALIFIED":
             result["badge"] += f" (via {via})"
     return result

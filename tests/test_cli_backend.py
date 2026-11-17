@@ -23,6 +23,9 @@ import json, os, sys
 fake_mode = os.environ.get("FAKE_MODE", "ok")
 log_path = os.environ.get("FAKE_LOG", "")
 argv = sys.argv[1:]
+if argv == ["--version"]:
+    print("9.9.9 (Fake Code)")
+    sys.exit(0)
 cwd = os.getcwd()
 if log_path:
     with open(log_path, "w") as lf:
@@ -282,3 +285,16 @@ class TestMainWiring(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestCliSettings(unittest.TestCase):
+    def test_settings_name_version_flags_and_default_effort(self):
+        """The record says what sat the exam: CLI version, flags, effort left
+        at the CLI default."""
+        tmpdir = tempfile.mkdtemp()
+        exe = _make_fake_exe(tmpdir)
+        st = CliEndpoint("claude", "m", exe=exe).settings
+        self.assertEqual(st["cli"], "9.9.9 (Fake Code)")
+        self.assertIn("--safe-mode", st["flags"])
+        self.assertEqual(st["effort"], "cli default (not set)")
+

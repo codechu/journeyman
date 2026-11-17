@@ -54,6 +54,32 @@ class CliEndpoint:
         self.url = None
         self.api_key = None
         self.via = "cli:claude --safe-mode"
+        self._settings = None
+
+    @property
+    def settings(self):
+        """What the judge ran under, for the record and the registry row.
+
+        A badge is granted to a configuration, not to a model name: the CLI
+        version and the flags are part of what sat the exam, and effort is
+        left at the CLI's own default on purpose (measured as shipped, not
+        tuned)."""
+        if self._settings is None:
+            try:
+                out = subprocess.run([self.exe, "--version"], text=True,
+                                     capture_output=True, timeout=30)
+                version = (out.stdout.strip().splitlines() or ["unknown"])[0]
+            except (OSError, subprocess.SubprocessError):
+                version = "unknown"
+            self._settings = {"cli": version, "flags": " ".join(self._flags()),
+                              "effort": "cli default (not set)"}
+        return self._settings
+
+    def _flags(self):
+        return ["-p", "--safe-mode", "--exclude-dynamic-system-prompt-sections",
+                "--model", self.model, "--system-prompt", "", "--tools", "",
+                "--no-session-persistence", "--strict-mcp-config",
+                "--output-format", "json"]
 
     def chat(self, messages, tools, seed=None):
         """Ask the judge one question.
@@ -84,18 +110,7 @@ class CliEndpoint:
 
         prompt = "\n\n".join(m["content"] for m in messages)
 
-        cmd = [
-            self.exe,
-            "-p",
-            "--safe-mode",
-            "--exclude-dynamic-system-prompt-sections",
-            "--model", self.model,
-            "--system-prompt", "",
-            "--tools", "",
-            "--no-session-persistence",
-            "--strict-mcp-config",
-            "--output-format", "json",
-        ]
+        cmd = [self.exe, *self._flags()]
 
         tmpdir = tempfile.mkdtemp()
         try:

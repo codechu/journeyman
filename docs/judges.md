@@ -62,6 +62,11 @@ journeyman qualify --judge <endpoint> --judge-model <model> --repeats 3
   0.125 to 0.038 once the branch held six.
 - **The badge** is per model *and* per route: a quantized local build and
   a cloud deployment of the same weights are examined separately.
+- **And per settings.** A row names what sat the exam, not just the model:
+  sampling parameters for an API route, and for a CLI route the tool's
+  version and flags (the record's `judge_settings`). Models are examined
+  as shipped — reasoning effort and similar knobs are left at the
+  provider's or tool's default, never raised for the exam.
 
 ## The ledger — v2.4 (2026-08-24)
 
@@ -71,6 +76,7 @@ journeyman qualify --judge <endpoint> --judge-model <model> --repeats 3
 | **GPT-5.6-Luna** (`openai/gpt-5.6-luna`) | cloud, OpenRouter | 1.0 | **QUALIFIED** — grounding 0.86, rest 1.00 |
 | **Qwen3.6-35B-A3B + identity** (self-hosted) | local, free | 0.94 | **QUALIFIED** — grounding 0.93, wall-pricing 0.93, rest 1.00 |
 | Claude Sonnet 5 | session | 0.94 | not qualified under v2.4 — grounding 0.79, wall-pricing 0.79; hors concours either way (council member) |
+| Claude Fable 5.2 (`claude-fable-5-2`) — 2026-11-17, 82-case set | Claude Code CLI 2.1.301, `--safe-mode`, default effort (subscription) | 1.0 | not qualified — wall-pricing 0.79 (two of three misses `priced` on all three draws); grounding 1.00, relief-page 0.89, rest 1.00; Claude family, like the council member |
 | **Qwen3.6-35B-A3B**, stock | local, free | 0.88 | **QUALIFIED** — grounding 0.86, wall-pricing 0.86, rest 1.00 |
 | **Qwen3.6-35B-A3B**, stock (self-hosted, GGUF IQ4_XS) — re-examined 2026-11-12 on the 82-case set | local, free | 0.88 | **QUALIFIED** — grounding 0.86, object-hold 0.88, relief-page 0.89, wall-pricing 0.93, rest 1.00; MoE, so fast: 23 min for the exam with `--concurrency 4` ([record](../runs-archive/exams/v2_real-2026-11-12/2026-11-12-v2_real-qwen36-35b-a3b-local-QUALIFIED.json)). The set grew after its 2026-08-24 badge; this is a new exam on the new set, not a re-roll of the old one |
 | **Qwen3.8-27B** (self-hosted, GGUF Q4_K_XL) — 2026-11-12, 82-case set | local, free | 0.94 | **QUALIFIED** — relief-page 0.89, wall-pricing 0.93, rest 1.00; dense, so slow: 56 min for the exam with `--concurrency 4` ([record](../runs-archive/exams/v2_real-2026-11-12/2026-11-12-v2_real-qwen38-27b-local-QUALIFIED.json)) |
