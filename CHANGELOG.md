@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- **`journeyman compare <run A> <run B>` reads two runs as a pair.**
+  Run an agent without and with `--system-file`, then compare: each axis
+  is named `opened`, `moved up, still low`, `improved`, `still low`,
+  `unchanged` or `side effect`, with A, B, Δ and n. A difference under
+  one cell is unchanged. The seals have to match in everything but the
+  agent's system text; any other difference (sampling parameters, model,
+  scenes, seeds, judge) is listed and the pair stamped NOT PAIRED. Two
+  runs with the same system text read as the spread of a repeat. Hints
+  for a side effect are printed under the table: invalid cells, late
+  closing calls, tool calls. Tests in `tests/test_compare.py`.
+
 - **Scoring change: a verdict can earn part of the credit, and
   wall-pricing `unpriced` now counts 0.5.** A report that says access is
   needed but not which kind used to score the same 0 as no report at all.

@@ -244,6 +244,13 @@ def main(argv=None):
     up.add_argument("--write", action="store_true",
                     help="edit the file in place (default: print to stdout)")
 
+    cp = sub.add_parser("compare", help="read two runs of the same agent as a "
+                        "pair — typically without and with --system-file — "
+                        "axis by axis: what the instruction opened, what "
+                        "stayed low, what it cost")
+    cp.add_argument("run_a", help="run dir of the first arm (e.g. no system text)")
+    cp.add_argument("run_b", help="run dir of the second arm")
+    cp.add_argument("--json", action="store_true", help="print the comparison as JSON")
     sub.add_parser("selftest", help="offline end-to-end pipeline check")
 
     from . import scenes  # noqa: F401 — official scenes register on import
@@ -282,6 +289,12 @@ def main(argv=None):
                   "dir instead): " + ", ".join(sorted(unclassified)),
                   file=sys.stderr)
             sys.exit(2)
+        sys.exit(0)
+    if args.cmd == "compare":
+        from .compare import compare, render as render_pair
+        result = compare(args.run_a, args.run_b)
+        print(__import__("json").dumps(result, ensure_ascii=False, indent=1) if args.json
+              else render_pair(result))
         sys.exit(0)
     if args.cmd == "report":
         rd = RunDir.attach(args.run_dir)
