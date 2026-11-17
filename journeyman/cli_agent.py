@@ -50,6 +50,7 @@ class CliAgent:
         self.kind, self.model = kind, model
         self.exe = exe or "claude"
         self.timeout, self.grace = timeout, grace
+        self.bind_wait = 5          # how long a call may wait for its stream event
         self.params = {}            # sampling is the CLI's; nothing is sent
         self.via = f"cli:{kind}"
         self._settings = None
@@ -145,7 +146,7 @@ class _Episode:
     # --- server side -----------------------------------------------------
     def answer(self, name, args, meta):
         tid = meta.get("claudecode/toolUseId")
-        deadline = time.time() + 5
+        deadline = time.time() + self.a.bind_wait
         while tid not in self.tid_msg and time.time() < deadline:
             time.sleep(0.02)   # the stream announces the call first (measured)
         with self.lock:
@@ -233,11 +234,9 @@ class _Episode:
                 if u:
                     self._usage[mid] = u
                 if cur is None or cur["_id"] != mid:
-                    if self._past_close():
-                        cur = None
-                        continue
                     cur = {"_id": mid, "role": "assistant", "_text": [], "tool_calls": []}
-                    self.messages.append(cur)
+                    if not self._past_close():   # what follows the close is not the cell
+                        self.messages.append(cur)
                 for b in m.get("content", []):
                     if b.get("type") == "text":
                         cur["_text"].append(b.get("text", ""))

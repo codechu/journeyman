@@ -43,8 +43,12 @@
   pinned session per cell); every call goes through the same per-call
   rules (`driver.Ledger`), and the transcript the CLI streams is checked
   call by call against what the server answered. This measures the model
-  plus that CLI's harness; no dedicated tests yet beyond the server's
-  (`tests/test_mcp_server.py`), so treat it as experimental.
+  plus that CLI's harness. Tests in `tests/test_cli_agent.py` drive it
+  with a scripted stand-in for the CLI over real MCP: the same moves leave
+  the same record as the HTTP path (late closing and two episodes
+  included), and a call the server never saw, a call the stream never
+  announced, talk after the close, model drift, a CLI error and a hung CLI
+  are each refused or kept out of the cell.
 
 - **`run --concurrency N`.** Cells are independent worlds and may run in
   parallel; the default, 1, is the standard sequential run, unchanged
