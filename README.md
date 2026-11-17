@@ -128,7 +128,8 @@ agent (`--judge`, `--judge-model`, `--judge-api-key`); `qualify` also takes
 `--judge cli:claude` to examine a model through the Claude Code CLI, and
 that badge is stamped `via` so it is never read as an API badge; `run`
 takes `--endpoint cli:claude --model <full model id>` to score a model
-through the CLI the same way, stamped in the seal and the report header. With no `--judge`
+through the CLI the same way, stamped in the seal and the report header
+(`cli-agent:claude` scores the CLI itself as an agent, with its own loop). With no `--judge`
 the agent judges itself — fine for tracking yourself, stamped NOT
 COMPARABLE, because self-judgment has been observed to be lenient
 (one archived run blended a planted false cause into its report and the

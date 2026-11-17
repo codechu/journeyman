@@ -13,6 +13,13 @@ Cell record (cells/<cell_id>.json):
   "late_closing" (since 0.6, optional): closing calls refused for budget.
   Absent in older records — absent means not counted, not zero.
 
+  "post_close" (since 0.6, optional, cli-agent route only): tool calls a
+  CLI agent sent after the scene had closed. They were answered with a
+  "cell closed" line, are not counted and are not in "messages".
+
+  The seal gains "agent_via" (since 0.6) only when the agent was reached
+  through a CLI: the route, the CLI's version and flags, effort and seed.
+
   The two scoring layers arrive under SEPARATE keys, and the difference
   is load-bearing: "verdicts" holds judged axes (a model answered a
   rubric question; each entry carries the `positive` label it is scored

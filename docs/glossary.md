@@ -38,3 +38,16 @@ does with it.
 - **held / invalid** — a cell that could not be measured is recorded as
   invalid rather than scored as zero, because an absence and a failure are
   different facts and only one of them is about the agent.
+- **review score** — beside a judged axis's score: the same ratio with the
+  rubric's middle label counted at 0.5. Named where printed, in no mean.
+  The score still counts only the positive label.
+- **verdict counts** — per judged axis, how many cells got each label; two
+  agents with the same score can have failed in different ways.
+- **via** — a stamp on anything measured through a CLI instead of an API:
+  `QUALIFIED (via cli:claude --safe-mode)` on a judge badge, `agent_via`
+  in a seal, `Agent : via …` in a report header.
+- **compare / uplift** — two runs of the same agent read as a pair, usually
+  without and with a system text: which axes the instruction opened, left
+  low, or cost (`side effect`). `uplift` runs both arms.
+- **cell records** — the per-cell transcripts and verdicts behind a report;
+  the cohort's are published as `cells.jsonl.zst` beside its reports.

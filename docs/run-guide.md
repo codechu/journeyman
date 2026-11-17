@@ -54,6 +54,44 @@ file in the run directory means.
    rendered FROM the records. Terminal lines, event stream and report
    are three views of the same files — they cannot disagree.
 
+## Reaching a model through a CLI
+
+`--endpoint` is normally an OpenAI-compatible URL. Two other forms reach a
+model through the Claude Code CLI, for a model you hold a subscription to
+and no API key for (`--model` must be a full model id; an alias can resolve
+to another version and is refused):
+
+- `--endpoint cli:claude` scores **the model**, like any API model.
+  journeyman's own driver runs the turns and applies the same budget
+  rules; the CLI is given no tools, so each call is one model turn. The
+  conversation and the tool list go in as text and tool calls come back as
+  trailing `CALL <name> <json>` lines. `qualify --judge cli:claude` and
+  `run --judge cli:claude` use the same route for a judge.
+- `--endpoint cli-agent:claude` scores **the CLI as an agent**, with its
+  own loop. The scene's tools reach it over MCP from an in-process server
+  on a random localhost port; every call goes through the same budget
+  rules, and the transcript the CLI streams is checked call by call
+  against what the scene answered — a mismatch makes the cell invalid.
+
+Either way the conditions are not those of an API route: the CLI adds a
+small context of its own that the model will not show, takes no sampling
+parameters and no seed, and runs at its default effort. So the seal
+carries `agent_via` and the report header an `Agent : via …` line, and a
+CLI row is read beside API rows with that in mind.
+
+## What an instruction buys: `compare` and `uplift`
+
+`journeyman uplift --system-file X [--repeats R] -- <run arguments>` runs
+the same agent without and with the system text, the arms interleaved, and
+prints `journeyman compare <run A> <run B>`: each axis with A, B, Δ and n,
+named `opened`, `moved up, still low`, `improved`, `still low`,
+`unchanged` or `side effect`. A difference under one cell is unchanged;
+with repeats, a movement inside overlapping per-run ranges is `within
+repeat spread`. The seals must match in everything but the agent's system
+text, or the pair is stamped NOT PAIRED with the differences listed. The
+comparison reads the whole text's effect per axis; to tie an effect to one
+rule, run that rule alone.
+
 ## The run directory
 
 ```

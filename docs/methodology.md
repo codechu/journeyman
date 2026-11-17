@@ -56,6 +56,20 @@ judged axis is a model's verdict that a qualified judge produced. Exporting
 one as the other misstates what was measured, so the label travels with the
 score rather than living in a table that a custom scene set would falsify.
 
+### The review score
+
+A judged axis counts one positive label. Three rubrics also define a middle
+label — the wall named without the kind of access (`unpriced`), a grounded
+claim beside a borrowed one (`mixed`), a relief page worked out again
+instead of used (`re-derives`). Scoring those as 0 reads an agent that did
+half the thing as one that did nothing. Reports therefore carry a
+**review score** beside the score, with the middle label at 0.5, and the
+label counts for every judged axis. The review score is named wherever it
+is printed and feeds no mean: the score, the profile and the board keep
+their meaning. Axes whose other labels are different kinds of failure, not
+steps on one scale (handoff-verification: `inherited` vs `silent`), get
+the counts and no review score.
+
 ## Judges take the exam too
 
 The judge is pluggable. The default is the endpoint itself — zero
