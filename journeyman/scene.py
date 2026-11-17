@@ -36,7 +36,8 @@ class RubricItem:
     # one of them — good routing scored as total failure.
     na_means: str = "failure"
     # Verdicts that earn part of the credit: {verdict: share in (0, 1)}.
-    # The judge still answers with one label; only the score reads it.
+    # The judge still answers with one label, and the axis `score` keeps
+    # its meaning; the credit is reported beside it as `score_partial`.
     # Founding case (2026-11-17): on wall-pricing a report that says access
     # is needed but not which kind (`unpriced`) scored the same 0 as no
     # report at all — two of eleven agents did exactly that on every seed.

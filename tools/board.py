@@ -76,6 +76,8 @@ def cell(a, standard_n=3):
     if a.get("score") is None:
         return "n/a" if a.get("not_applicable") else "—"
     s = f"{a['score']:.2f}"
+    if a.get("score_partial") is not None and a["score_partial"] != a["score"]:
+        s += f" (½ {a['score_partial']:.2f})"   # partial credit, beside the score
     if (a.get("n") or standard_n) < standard_n:
         s += f" (n={a['n']})"
     return s

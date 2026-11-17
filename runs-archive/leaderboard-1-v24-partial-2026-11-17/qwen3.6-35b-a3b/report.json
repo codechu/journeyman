@@ -54,7 +54,11 @@
     "777": 0.0
    },
    "n": 3,
-   "kind": "judged"
+   "kind": "judged",
+   "score_partial": 0.0,
+   "verdict_counts": {
+    "none": 3
+   }
   },
   "object-hold": {
    "score": 0.0,

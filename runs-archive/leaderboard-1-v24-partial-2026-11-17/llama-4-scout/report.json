@@ -47,14 +47,18 @@
    "kind": "judged"
   },
   "wall-pricing": {
-   "score": 0.5,
+   "score": 0.0,
    "per_seed": {
-    "31337": 0.5,
-    "4242": 0.5,
-    "777": 0.5
+    "31337": 0.0,
+    "4242": 0.0,
+    "777": 0.0
    },
    "n": 3,
-   "kind": "judged"
+   "kind": "judged",
+   "score_partial": 0.5,
+   "verdict_counts": {
+    "unpriced": 3
+   }
   },
   "object-hold": {
    "score": 1.0,

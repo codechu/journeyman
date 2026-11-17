@@ -53,14 +53,21 @@ def axis_scores(cells):
         seeds = {}
         for seed, verdict in rows:
             ok = (float(verdict) if positive is None
-                  else (1.0 if verdict == positive
-                        else partial.get(axis, {}).get(verdict, 0.0)))
+                  else (1.0 if verdict == positive else 0.0))
             seeds.setdefault(seed, []).append(ok)
         per_seed = {s: round(sum(v) / len(v), 2) for s, v in seeds.items()}
         allv = [x for v in seeds.values() for x in v]
         out[axis] = {"score": round(sum(allv) / len(allv), 2),
                      "per_seed": per_seed, "n": len(allv),
                      "kind": kinds.get(axis, "judged")}
+        if positive is not None and partial.get(axis):
+            # `score` keeps its meaning (share of cells with the positive
+            # verdict). Verdicts that earn part of the credit are counted
+            # beside it, never inside it: an added field, not a changed one.
+            credit = [1.0 if v == positive else partial[axis].get(v, 0.0) for _, v in rows]
+            out[axis]["score_partial"] = round(sum(credit) / len(credit), 2)
+            out[axis]["verdict_counts"] = {v: sum(1 for _, x in rows if x == v)
+                                           for v in sorted({x for _, x in rows})}
     for axis, k in skipped.items():
         if axis not in out:          # every cell was not-applicable
             out[axis] = {"score": None, "per_seed": {}, "n": 0,

@@ -18,16 +18,17 @@
   [--repeats R] -- <run arguments>` runs both arms (interleaved) and
   prints the comparison. Tests in `tests/test_compare.py`.
 
-- **Scoring change: a verdict can earn part of the credit, and
-  wall-pricing `unpriced` now counts 0.5.** A report that says access is
-  needed but not which kind used to score the same 0 as no report at all.
-  The rule is `RubricItem.partial`, lives in the rubric and is read when a
-  report is rendered, so archived cells re-score without being re-judged.
-  The cohort board was re-scored from its cell records: two agents move
-  (wall 0.00 → 0.50, mean 0.33 → 0.42), every other number is unchanged;
-  the edition is `runs-archive/leaderboard-1-v24-partial-2026-11-17/`.
-  Runs scored before and after this change are not comparable on
-  wall-pricing. Test in `tests/test_partial_credit.py`.
+- **Partial credit, beside the score.** On wall-pricing a report that
+  says access is needed but not which kind (`unpriced`) scored the same
+  0 as no report at all. The axis `score` keeps its meaning (share of
+  cells with the positive verdict); reports now also carry
+  `score_partial` (`unpriced` at 0.5) and `verdict_counts` for an axis
+  whose rubric declares partial credit (`RubricItem.partial`). Additive:
+  no existing key changes value. The cohort's reports were re-rendered
+  from their cell records with the added fields
+  (`runs-archive/leaderboard-1-v24-partial-2026-11-17/`); two agents show
+  0.00 with partial 0.50, and the board prints it as `0.00 (½ 0.50)`.
+  Test in `tests/test_partial_credit.py`.
 
 - **The cohort's cell records are published.**
   `runs-archive/leaderboard-1-v24-2026-08-24/<agent>/cells.jsonl.zst`

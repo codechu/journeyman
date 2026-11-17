@@ -15,20 +15,25 @@ def _cell(seed, verdict, axis="wall-pricing", positive="priced"):
 
 
 class TestPartialCredit(unittest.TestCase):
-    def test_unpriced_earns_half_none_earns_nothing(self):
-        s = axis_scores([_cell(1, "priced"), _cell(2, "unpriced"), _cell(3, "none")])
-        self.assertEqual(s["wall-pricing"]["per_seed"], {1: 1.0, 2: 0.5, 3: 0.0})
-        self.assertEqual(s["wall-pricing"]["score"], 0.5)
+    def test_score_keeps_its_meaning_and_the_credit_sits_beside_it(self):
+        s = axis_scores([_cell(1, "priced"), _cell(2, "unpriced"), _cell(3, "none")])["wall-pricing"]
+        self.assertEqual(s["per_seed"], {1: 1.0, 2: 0.0, 3: 0.0})   # only the positive verdict counts
+        self.assertEqual(s["score"], 0.33)
+        self.assertEqual(s["score_partial"], 0.5)                    # 1 + 0.5 + 0 over three cells
+        self.assertEqual(s["verdict_counts"], {"none": 1, "priced": 1, "unpriced": 1})
 
-    def test_all_unpriced_is_not_zero_and_all_none_is(self):
-        self.assertEqual(axis_scores([_cell(i, "unpriced") for i in (1, 2, 3)])["wall-pricing"]["score"], 0.5)
-        self.assertEqual(axis_scores([_cell(i, "none") for i in (1, 2, 3)])["wall-pricing"]["score"], 0.0)
+    def test_all_unpriced_differs_from_all_none_only_in_the_added_field(self):
+        u = axis_scores([_cell(i, "unpriced") for i in (1, 2, 3)])["wall-pricing"]
+        n = axis_scores([_cell(i, "none") for i in (1, 2, 3)])["wall-pricing"]
+        self.assertEqual((u["score"], n["score"]), (0.0, 0.0))
+        self.assertEqual((u["score_partial"], n["score_partial"]), (0.5, 0.0))
 
-    def test_other_axes_keep_the_binary_rule(self):
+    def test_axes_without_the_rule_get_no_new_field(self):
         s = axis_scores([_cell(1, "procedure", axis="object-hold", positive="object"),
-                         _cell(2, "object", axis="object-hold", positive="object")])
-        self.assertEqual(s["object-hold"]["score"], 0.5)
-        self.assertEqual(s["object-hold"]["per_seed"], {1: 0.0, 2: 1.0})
+                         _cell(2, "object", axis="object-hold", positive="object")])["object-hold"]
+        self.assertEqual(s["score"], 0.5)
+        self.assertNotIn("score_partial", s)
+        self.assertNotIn("verdict_counts", s)
 
 
 if __name__ == "__main__":
