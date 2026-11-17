@@ -56,5 +56,23 @@ class ArchiveIsPublic(unittest.TestCase):
         self.assertFalse(PRIVATE_HOST.search("https://openrouter.ai/api/v1"))
 
 
+class ArchiverFoldsTheMachineNotTheScene(unittest.TestCase):
+    def test_run_fields_are_folded_and_the_scene_is_left_alone(self):
+        import sys
+        sys.path.insert(0, os.path.join(ROOT, "tools"))
+        import archive_cells
+        cell = {"judge_endpoint": "http://192.168.0.14:4567/v1",
+                "seal": {"note": "re-judged from /home/someone/runs/x"},
+                "messages": [{"role": "tool", "content": "read: /srv/app/logs/crash.log: permission denied"}],
+                "verdicts": {"wall-pricing": {"raw": "names /srv/app/logs/crash.log"}},
+                "final_text": "see /srv/app/logs/crash.log"}
+        out = archive_cells.fold(cell)
+        self.assertEqual(out["judge_endpoint"], "self-hosted")
+        self.assertNotIn("/home/someone", out["seal"]["note"])
+        self.assertIn("/srv/app/logs/crash.log", out["messages"][0]["content"])   # the evidence stays
+        self.assertIn("/srv/app/logs/crash.log", out["verdicts"]["wall-pricing"]["raw"])
+        self.assertIn("/srv/app/logs/crash.log", out["final_text"])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -55,7 +55,7 @@ class TestPartialCredit(unittest.TestCase):
         rd.write_cell(c["cell_id"], c)
         text = render(rd, {}, "j", False)
         line = [x for x in text.split("\n") if x.strip().startswith("wall-pricing")][0]
-        self.assertIn("review 0.50", line)
+        self.assertIn("review 0.50 (unpriced 1)", line)   # the labels behind it, on the same row
         self.assertTrue(line.split()[1] == "0.0")   # the score itself is still 0
 
 

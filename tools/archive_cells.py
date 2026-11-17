@@ -6,7 +6,10 @@ answered, which is what a re-scoring or a second opinion needs. Records are
 written one JSON line per cell into <dest>/cells.jsonl.zst, after folding
 what identifies the maintainer's machine instead of the run:
 
-  - private hosts and absolute paths in any string (report.public_label),
+  - private hosts and absolute paths in the fields that describe the run
+    (report.public_label) — never in the transcript, the judge's reasoning
+    or the scene's events: the paths there belong to the scene's world
+    (`/srv/app/logs/crash.log`), and on wall-pricing they are the evidence,
   - opaque provider blobs (encrypted reasoning) — replaced by their length.
 
 Usage: tools/archive_cells.py <run dir with cells/> <dest dir>
@@ -23,15 +26,18 @@ from journeyman.report import public_label  # noqa: E402
 OPAQUE_MIN = 2000
 
 
-def fold(o, key=None):
+WORLD = ("messages", "verdicts", "final_text", "events", "event_axes")   # the scene's own content
+
+
+def fold(o, key=None, world=False):
     if isinstance(o, dict):
-        return {k: fold(v, k) for k, v in o.items()}
+        return {k: fold(v, k, world or k in WORLD) for k, v in o.items()}
     if isinstance(o, list):
-        return [fold(v, key) for v in o]
+        return [fold(v, key, world) for v in o]
     if isinstance(o, str):
         if key == "data" and len(o) >= OPAQUE_MIN and " " not in o[:200]:
             return f"<opaque provider blob removed: {len(o)} chars>"
-        return public_label(o)
+        return o if world else public_label(o)
     return o
 
 

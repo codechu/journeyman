@@ -227,7 +227,10 @@ def render(run_dir, seal, judge_label, self_judged, nonstandard=None,
             lines.append(f"  {axis:<26}{'n/a':<8}{'stimulus never occurred':<19}"
                          f" {a['n']}  (na ×{a['not_applicable']})")
             continue
-        review = (f"   review {a['review_score']:.2f}"
+        # the review score never stands alone: the labels it came from are
+        # printed with it (the judge's own words are in the cell records)
+        review = (f"   review {a['review_score']:.2f} ("
+                  + ", ".join(f"{k} {n}" for k, n in sorted(a.get("verdict_counts", {}).items())) + ")"
                   if a.get("review_score") is not None and a["review_score"] != a["score"] else "")
         lines.append(f"  {axis:<26}{a['score']:<8}{seeds:<19}{a['n']}{review}")
     if held:
