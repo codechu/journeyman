@@ -1,6 +1,15 @@
 # Changelog
 
-## Unreleased
+## 0.6.0 — 2026-11-17
+
+Nothing breaks: no command, flag or `report.json` key changes meaning.
+Three things a careful reader will notice — the seal's `scene_md5` for
+Closed Roads, Borrowed Story and Night Relief differs from 0.5.x (their
+rubric items now declare a middle label for the review score; the
+questions the judge reads are unchanged), an exam record's
+`judge_endpoint` reads `self-hosted` for a private address instead of
+the raw URL, and reports gain fields (`verdict_counts`, `review_score`,
+`agent_via` for CLI routes).
 
 - **`journeyman compare <run A> <run B>` reads two runs as a pair.**
   Run an agent without and with `--system-file`, then compare: each axis

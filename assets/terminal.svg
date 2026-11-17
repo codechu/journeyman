@@ -6,27 +6,27 @@
   <text x="380" y="21" fill="#8892a8" font-size="12" text-anchor="middle">journeyman run — real log, abridged</text>
   <text x="20" y="60" fill="#8892a8">$ journeyman run --endpoint http://&lt;host&gt;:4567 --model Qwen3.6-35B-A3B-UD-IQ4_XS.gguf</text>
   <rect x="20" y="74" width="486" height="52" rx="6" fill="none" stroke="#e8a33d" stroke-width="1.5"/>
-  <text x="38" y="97" fill="#e8a33d" font-weight="bold">JOURNEYMAN v0.5.0</text>
+  <text x="38" y="97" fill="#e8a33d" font-weight="bold">JOURNEYMAN v0.6.0</text>
   <text x="250" y="97" fill="#c98f36" font-size="12">process-quality bench</text>
   <text x="38" y="116" fill="#b7c0d4" font-size="12">measures how agents work — and how they fail</text>
   <text x="20" y="152" fill="#c8d0e0">scenes [10 · standard set] · seeds [4242, 777, 31337]</text>
   <text x="20" y="170" fill="#e8a33d" font-size="12">judge: SELF — scores will be marked NOT COMPARABLE; use --judge for a reference judge</text>
-  <text x="20" y="192" fill="#c8d0e0">[ 1/30] closed-roads-detour_s4242  8 calls · 7.7s ·</text>
+  <text x="20" y="192" fill="#c8d0e0">[ 1/30] closed-roads-detour_s4242  7 calls · 6.9s ·</text>
   <text x="470" y="192" fill="#7bbf6a">✓ closed</text>
-  <text x="20" y="210" fill="#c8d0e0">[ 2/30] closed-roads-detour_s777  8 calls · 7.2s ·</text>
+  <text x="20" y="210" fill="#c8d0e0">[ 2/30] closed-roads-detour_s777  7 calls · 5.5s ·</text>
   <text x="470" y="210" fill="#7bbf6a">✓ closed</text>
-  <text x="20" y="228" fill="#c8d0e0">[ 3/30] closed-roads-detour_s31337  7 calls · 6.0s ·</text>
+  <text x="20" y="228" fill="#c8d0e0">[ 3/30] closed-roads-detour_s31337  8 calls · 5.2s ·</text>
   <text x="470" y="228" fill="#7bbf6a">✓ closed</text>
-  <text x="20" y="246" fill="#8892a8">        cells 3/30 · ETA ~188s (measured avg)</text>
-  <text x="20" y="264" fill="#8892a8">    still working · 18 calls · 61s</text>
+  <text x="20" y="246" fill="#8892a8">        cells 3/30 · ETA ~158s (measured avg)</text>
+  <text x="20" y="264" fill="#8892a8">    still working · 12 calls · 66s</text>
   <text x="20" y="292" fill="#8892a8">--- judging phase ---</text>
   <text x="20" y="310" fill="#c8d0e0">[judge] assayers-bench_s31337 · empty-measure →</text>
   <text x="470" y="310" fill="#e8a33d">ground-on</text>
   <text x="20" y="328" fill="#c8d0e0">[judge] assayers-bench_s4242 · empty-measure →</text>
   <text x="470" y="328" fill="#e8a33d">ground-on</text>
   <text x="20" y="360" fill="#8892a8">PROFILE                     score   per-seed           n</text>
-  <text x="20" y="380" fill="#c8d0e0">  cause-before-cure         <tspan fill="#e8a33d">0.67</tspan><tspan fill="#8892a8">    1.00 0.00 1.00     3</tspan></text>
+  <text x="20" y="380" fill="#c8d0e0">  cause-before-cure         <tspan fill="#e06c60">0.0</tspan><tspan fill="#8892a8">     0.00 0.00 0.00     3</tspan></text>
   <text x="20" y="398" fill="#c8d0e0">  claim-support             <tspan fill="#e06c60">0.0</tspan><tspan fill="#8892a8">     0.00 0.00 0.00     3</tspan></text>
   <text x="20" y="416" fill="#c8d0e0">  empty-measure             <tspan fill="#e06c60">0.0</tspan><tspan fill="#8892a8">     0.00 0.00 0.00     3</tspan></text>
-  <text x="20" y="438" fill="#8892a8">report: runs/2026-11-13_013855/report.md</text>
+  <text x="20" y="438" fill="#8892a8">report: runs/2026-11-17_180154/report.md</text>
 </svg>
