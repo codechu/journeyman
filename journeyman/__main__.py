@@ -170,6 +170,12 @@ def main(argv=None):
     r.add_argument("--runs-dir", default="runs",
                    help="directory the run is written under "
                         "(default: ./runs)")
+    r.add_argument("--concurrency", type=int, default=1, metavar="N",
+                   help="run up to N cells at once (default 1, the standard "
+                        "sequential run). Cells are independent worlds; a "
+                        "parallel run is stamped non-standard. Keep 1 on a "
+                        "local server, where concurrent requests perturb the "
+                        "numbers")
     r.add_argument("--stop-after-invalid", type=int, default=None,
                    metavar="N",
                    help="stop the grid once N cells have come back invalid. "
@@ -377,7 +383,8 @@ def main(argv=None):
     try:
         seal = run_grid(endpoint, scenes, seeds, run_dir,
                         log=say, agent_system=agent_system,
-                        stop_after_invalid=args.stop_after_invalid)
+                        stop_after_invalid=args.stop_after_invalid,
+                        concurrency=args.concurrency)
     except StoppedOnInvalid as e:
         # The cells already written stay, and they are still judged and
         # reported: a partial run that says so beats a full run nobody reads.
@@ -409,6 +416,8 @@ def main(argv=None):
 
     devs = [f"{key}={getattr(args, key)}" for key, std in STANDARD.items()
             if getattr(args, key) != std]
+    if args.concurrency > 1:
+        devs.append(f"concurrency={args.concurrency}")
     print(render(run_dir, seal, judge_label, self_judged,
                  nonstandard=", ".join(devs) if devs else None,
                  judge_meter=judge_meter))

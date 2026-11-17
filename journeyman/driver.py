@@ -13,6 +13,7 @@ Progress rules (release requirements, not polish):
 """
 import copy
 import json
+import threading
 import time
 import urllib.error
 import urllib.request
@@ -328,7 +329,11 @@ class StoppedOnInvalid(RuntimeError):
 
 def run_grid(endpoint, scene_names, seeds, run_dir: RunDir, log=print,
              scene_set="dev", bench_version=__version__,
-             agent_system=None, stop_after_invalid=None):
+             agent_system=None, stop_after_invalid=None, concurrency=1):
+    """Run every scene × seed cell. concurrency=1 is the standard, sequential
+    run. Above 1, cells are independent worlds and run in parallel threads;
+    records and progress are written under a lock in completion order, and the
+    run is stamped non-standard by the caller."""
     scenes = {n: REGISTRY[n] for n in scene_names}
     seal = make_seal(bench_version, scene_set, scenes, seeds, endpoint.model,
                      agent_system=agent_system,
@@ -336,24 +341,23 @@ def run_grid(endpoint, scene_names, seeds, run_dir: RunDir, log=print,
                      agent_via=getattr(endpoint, "settings", None) if getattr(endpoint, "via", None) else None)
     run_dir.event("run_start", seal=seal)
     cells = [(n, s) for n in scene_names for s in seeds]
-    done_s = []
-    invalid_n = 0
-    for i, (name, seed) in enumerate(cells, 1):
-        cell_id = f"{name}_s{seed}"
-        if run_dir.cell_done(cell_id):
-            log(f"[{i:>2}/{len(cells)}] {cell_id} — already done (resume), skipped")
-            continue
+    state = {"done_s": [], "invalid_n": 0, "finished": 0}
+    lock = threading.Lock()
+
+    def measure(name, seed):
         scene = scenes[name]()
-        run_dir.event("cell_start", cell=cell_id)
         try:
             own_loop = getattr(endpoint, "run_cell", None)   # a CLI agent runs its own loop
             rec = (own_loop(scene, seed, log, agent_system=agent_system) if own_loop
                    else run_cell(endpoint, scene, seed, log, agent_system=agent_system))
-            invalid, reason = False, None
+            return scene, rec, False, None
         except Exception as e:
             rec = {"messages": [], "final_text": None, "budget": 0, "calls": 0,
                    "tokens_in": 0, "tokens_out": 0, "seconds": 0.0}
-            invalid, reason = True, repr(e)
+            return scene, rec, True, repr(e)
+
+    def finish(i, name, seed, scene, rec, invalid, reason):
+        cell_id = f"{name}_s{seed}"
         # the record is assembled FIRST; events are computed FROM it —
         # replay-based scenes need the seed, which lives on the record
         record = {"cell_id": cell_id, "scene": name, "seed": seed, "seal": seal,
@@ -369,17 +373,18 @@ def run_grid(endpoint, scene_names, seeds, run_dir: RunDir, log=print,
             log(f"[{i:>2}/{len(cells)}] {cell_id} → "
                 f"{paint(f'INVALID ({reason})', 'red')}; "
                 f"see cells/{cell_id}.json")
-            invalid_n += 1
-            if stop_after_invalid and invalid_n >= stop_after_invalid:
-                run_dir.event("run_stopped", invalid=invalid_n,
+            state["invalid_n"] += 1
+            if stop_after_invalid and state["invalid_n"] >= stop_after_invalid:
+                run_dir.event("run_stopped", invalid=state["invalid_n"],
                               limit=stop_after_invalid, done=i,
                               of=len(cells))
                 raise StoppedOnInvalid(
-                    f"{invalid_n} invalid cells (limit {stop_after_invalid}) "
+                    f"{state['invalid_n']} invalid cells (limit {stop_after_invalid}) "
                     f"after {i}/{len(cells)} — stopping rather than spending "
                     f"the rest of the grid on cells that will read the same. "
                     f"Last reason: {reason}", seal=seal)
         else:
+            done_s = state["done_s"]
             done_s.append(rec["seconds"])
             # The scene says which event means "closed"; prose is the fallback
             # only for scenes that declare none (the selftest well). Reading
@@ -393,7 +398,45 @@ def run_grid(endpoint, scene_names, seeds, run_dir: RunDir, log=print,
             log(f"[{i:>2}/{len(cells)}] {cell_id}  {rec['calls']} calls · "
                 f"{rec['seconds']}s · {mark}")
             if done_s:
-                eta = int(sum(done_s) / len(done_s) * (len(cells) - i))
+                eta = int(sum(done_s) / len(done_s) * (len(cells) - i) / max(1, concurrency))
                 log(f"        cells {i}/{len(cells)} · ETA ~{eta}s (measured avg)")
+
+    if concurrency <= 1:
+        for i, (name, seed) in enumerate(cells, 1):
+            cell_id = f"{name}_s{seed}"
+            if run_dir.cell_done(cell_id):
+                log(f"[{i:>2}/{len(cells)}] {cell_id} — already done (resume), skipped")
+                continue
+            run_dir.event("cell_start", cell=cell_id)
+            finish(i, name, seed, *measure(name, seed))
+        run_dir.event("run_end")
+        return seal
+
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    pending = []
+    for i, (name, seed) in enumerate(cells, 1):
+        if run_dir.cell_done(f"{name}_s{seed}"):
+            log(f"[{i:>2}/{len(cells)}] {name}_s{seed} — already done (resume), skipped")
+            state["finished"] += 1
+        else:
+            pending.append((name, seed))
+
+    def started(name, seed):
+        with lock:
+            run_dir.event("cell_start", cell=f"{name}_s{seed}")
+        return measure(name, seed)
+
+    pool = ThreadPoolExecutor(max_workers=concurrency)
+    futures = {pool.submit(started, n, s): (n, s) for n, s in pending}
+    try:
+        for fut in as_completed(futures):
+            name, seed = futures[fut]
+            with lock:
+                state["finished"] += 1
+                finish(state["finished"], name, seed, *fut.result())
+    finally:
+        # a stop cancels cells not yet started; cells already running finish
+        # on their own (their records are not written, so a resume reruns them)
+        pool.shutdown(wait=False, cancel_futures=True)
     run_dir.event("run_end")
     return seal
