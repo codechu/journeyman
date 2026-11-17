@@ -16,7 +16,6 @@ with the prompt on stdin.  It prints one JSON object on stdout (a
 warning line may appear on stderr).
 """
 import json
-import os
 import subprocess
 import tempfile
 
@@ -71,46 +70,55 @@ class CliEndpoint:
                 version = (out.stdout.strip().splitlines() or ["unknown"])[0]
             except (OSError, subprocess.SubprocessError):
                 version = "unknown"
+            import hashlib
             self._settings = {"cli": version, "flags": " ".join(self._flags()),
-                              "effort": "cli default (not set)"}
+                              "effort": "cli default (not set)", "seed": "not sent",
+                              "tool_protocol_md5": hashlib.md5(TOOL_PROTOCOL.encode()).hexdigest()[:12]}
         return self._settings
 
-    def _flags(self):
+    def _flags(self, system=""):
         return ["-p", "--safe-mode", "--exclude-dynamic-system-prompt-sections",
-                "--model", self.model, "--system-prompt", "", "--tools", "",
+                "--model", self.model, "--system-prompt", system, "--tools", "",
                 "--no-session-persistence", "--strict-mcp-config",
                 "--output-format", "json"]
 
     def chat(self, messages, tools, seed=None):
-        """Ask the judge one question.
+        """One model turn through the CLI.
 
-        Parameters
-        ----------
-        messages : list[dict]
-            Only ``{"role": "user", "content": ...}`` entries allowed.
-        tools : list
-            Must be empty (CLI backend is judge-only).
-        seed : ignored
-
-        Returns
-        -------
-        tuple[dict, dict]
-            (message_dict, meta_dict) mirroring the HTTP endpoint shape.
+        A judge question (user messages only, no tools) goes in verbatim, as
+        it always did. An agent turn (a system message, earlier turns, or
+        tools) is rendered as text: the CLI is given no tools of its own, so
+        each call is exactly one model turn, and journeyman's own driver runs
+        the loop — the model is scored like any API model, through the same
+        budget rules. Tool calls come back as trailing `CALL <name> <json>`
+        lines (TOOL_PROTOCOL), parsed into the HTTP path's tool_calls shape.
+        `seed` is not sent: the CLI takes no sampling seed.
         """
-        if tools:
-            raise ValueError(
-                "CLI backend is judge-only: tools are not supported"
+        agent_turn = bool(tools) or any(m.get("role") != "user" for m in messages)
+        if not agent_turn:
+            system, prompt = "", "\n\n".join(m["content"] for m in messages)
+        else:
+            system = "\n\n".join(m["content"] for m in messages
+                                  if m.get("role") == "system" and m.get("content"))
+            prompt = render_turn(messages, tools)
+        d, used = self._run(system, prompt)
+        if not agent_turn:
+            return (
+                {"role": "assistant", "content": d.get("result") or ""},
+                {"cost_usd": d.get("total_cost_usd"), "models": used},
             )
-        for msg in messages:
-            if msg.get("role") != "user":
-                raise ValueError(
-                    f"CLI backend accepts only 'user' messages, "
-                    f"got {msg.get('role')!r}"
-                )
+        msg = parse_reply(d.get("result") or "", f"cli_{len(messages)}")
+        if d.get("stop_reason") == "max_tokens":
+            msg["finish_reason"] = "length"
+        u = d.get("usage") or {}
+        return msg, {"prompt_tokens": (u.get("input_tokens") or 0)
+                     + (u.get("cache_read_input_tokens") or 0)
+                     + (u.get("cache_creation_input_tokens") or 0),
+                     "completion_tokens": u.get("output_tokens") or 0,
+                     "cost_usd": d.get("total_cost_usd"), "models": used}
 
-        prompt = "\n\n".join(m["content"] for m in messages)
-
-        cmd = [self.exe, *self._flags()]
+    def _run(self, system, prompt):
+        cmd = [self.exe, *self._flags(system)]
 
         tmpdir = tempfile.mkdtemp()
         try:
@@ -161,7 +169,64 @@ class CliEndpoint:
                 f"never appears among the modelUsage keys)"
             )
 
-        return (
-            {"role": "assistant", "content": d.get("result") or ""},
-            {"cost_usd": d.get("total_cost_usd"), "models": used},
-        )
+        return d, used
+
+
+TOOL_PROTOCOL = """You act through tools. To call tools, end your reply with one or more lines, each exactly:
+CALL <tool name> <arguments as a one-line JSON object>
+Nothing may follow those lines. Each CALL line is one tool call; the results come back in the next message. To stop calling tools, reply without any CALL line.
+
+Available tools:
+"""
+
+
+def render_turn(messages, tools):
+    """The conversation so far + the tool protocol, as one prompt (stamped in the seal)."""
+    lines = [TOOL_PROTOCOL.rstrip("\n")]
+    for t in tools:
+        fn = t["function"]
+        lines.append(f"- {fn['name']}: {fn.get('description', '')}")
+        lines.append(f"  arguments schema: {json.dumps(fn.get('parameters') or {}, sort_keys=True)}")
+    lines.append("")
+    lines.append("CONVERSATION SO FAR (oldest first):")
+    names = {}
+    for m in messages:
+        role = m.get("role")
+        if role == "system":
+            continue
+        if role == "user":
+            lines.append(f"[user] {m.get('content') or ''}")
+        elif role == "assistant":
+            if m.get("content"):
+                lines.append(f"[assistant] {m['content']}")
+            for tc in m.get("tool_calls") or []:
+                fn = tc["function"]
+                names[tc["id"]] = fn["name"]
+                lines.append(f"[assistant called] {fn['name']} {fn.get('arguments') or '{}'}")
+        elif role == "tool":
+            lines.append(f"[result of {names.get(m.get('tool_call_id'), 'tool')}] {m.get('content') or ''}")
+    lines.append("")
+    lines.append("Write your next reply.")
+    return "\n".join(lines)
+
+
+def parse_reply(text, id_prefix):
+    """Trailing `CALL <name> <json>` lines → tool_calls; the rest is the content.
+
+    Arguments are passed on as the raw text the model wrote: malformed JSON
+    reaches the scene the way it does on the HTTP path (driver.Ledger turns
+    it into {"_unparsed": ...})."""
+    lines = text.rstrip().split("\n")
+    calls = []
+    while lines and lines[-1].strip().startswith("CALL "):
+        calls.insert(0, lines.pop().strip()[5:].strip())
+    msg = {"role": "assistant"}
+    content = "\n".join(lines).strip()
+    msg["content"] = content or None
+    if calls:
+        msg["tool_calls"] = []
+        for k, c in enumerate(calls):
+            name, _, raw = c.partition(" ")
+            msg["tool_calls"].append({"id": f"{id_prefix}_{k}", "type": "function",
+                                      "function": {"name": name, "arguments": raw.strip() or "{}"}})
+    return msg

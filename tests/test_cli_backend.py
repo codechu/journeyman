@@ -52,6 +52,14 @@ elif fake_mode == "drift":
         "modelUsage": {{"claude-fable-5-1": {{"input_tokens": 100, "output_tokens": 50}}}},
         "total_cost_usd": 0.001
     }}))
+elif fake_mode == "agent":
+    prompt = sys.stdin.read()
+    reply = "done" if "[assistant called]" in prompt else 'Looking first.\\nCALL list {{"dir": "/"}}'
+    print(json.dumps({{
+        "is_error": False, "terminal_reason": "completed", "result": reply, "stop_reason": "end_turn",
+        "usage": {{"input_tokens": 7, "cache_read_input_tokens": 3, "cache_creation_input_tokens": 0, "output_tokens": 5}},
+        "modelUsage": {{"claude-haiku-5-5": {{}}}}, "total_cost_usd": 0.001
+    }}))
 elif fake_mode == "garbage":
     print("no json here")
 elif fake_mode == "max_turns":
@@ -142,28 +150,36 @@ class TestCliEndpoint(unittest.TestCase):
             ep.chat([{"role": "user", "content": "hello"}], tools=[])
         self.assertIn("asked for claude-fable-5-2", str(ctx.exception))
 
-    def test_tools_raises_value_error(self):
-        """(v) tools=[{"x": 1}] => ValueError."""
+    def test_agent_turn_with_tools_is_rendered_not_refused(self):
+        """An agent turn (tools given) goes through the text protocol: the
+        prompt carries the protocol and the tool list; the reply is parsed."""
         tmpdir = tempfile.mkdtemp()
         exe = _make_fake_exe(tmpdir)
+        os.environ["FAKE_MODE"] = "agent"
         ep = CliEndpoint("claude", "claude-haiku-5-5", exe=exe)
-        with self.assertRaises(ValueError) as ctx:
-            ep.chat([{"role": "user", "content": "hello"}], tools=[{"x": 1}])
-        self.assertIn("tools are not supported", str(ctx.exception))
+        tools = [{"type": "function", "function": {"name": "list", "description": "list a dir",
+                                                   "parameters": {"type": "object"}}}]
+        msg, usage = ep.chat([{"role": "user", "content": "task"}], tools)
+        self.assertEqual(msg["content"], "Looking first.")
+        self.assertEqual(msg["tool_calls"][0]["function"], {"name": "list", "arguments": '{"dir": "/"}'})
+        self.assertEqual((usage["prompt_tokens"], usage["completion_tokens"]), (10, 5))
 
     def test_bad_kind_raises_value_error(self):
         """(vi) kind "codex" => ValueError."""
         with self.assertRaises(ValueError):
             CliEndpoint("codex", "some-model")
 
-    def test_system_message_raises_value_error(self):
-        """(vi-b) a message with role "system" => ValueError."""
+    def test_system_message_goes_to_system_prompt(self):
+        """A system message becomes the CLI's --system-prompt (not prompt text)."""
         tmpdir = tempfile.mkdtemp()
         exe = _make_fake_exe(tmpdir)
+        log_path = os.path.join(tmpdir, "log.json")
+        os.environ["FAKE_MODE"] = "agent"
+        os.environ["FAKE_LOG"] = log_path
         ep = CliEndpoint("claude", "claude-haiku-5-5", exe=exe)
-        with self.assertRaises(ValueError) as ctx:
-            ep.chat([{"role": "system", "content": "hello"}], tools=[])
-        self.assertIn("only 'user' messages", str(ctx.exception))
+        ep.chat([{"role": "system", "content": "WORLD RULES"}, {"role": "user", "content": "task"}], [])
+        argv = json.load(open(log_path))["argv"]
+        self.assertEqual(argv[argv.index("--system-prompt") + 1], "WORLD RULES")
 
     def test_garbage_output_raises_runtime_error(self):
         """(vi-c) garbage => RuntimeError (not ValueError)."""
@@ -297,4 +313,54 @@ class TestCliSettings(unittest.TestCase):
         self.assertEqual(st["cli"], "9.9.9 (Fake Code)")
         self.assertIn("--safe-mode", st["flags"])
         self.assertEqual(st["effort"], "cli default (not set)")
+
+
+class TestTextProtocol(unittest.TestCase):
+    def test_trailing_calls_parse(self):
+        from journeyman.cli_backend import parse_reply
+        m = parse_reply('I will look.\nCALL read {"path": "a"}\nCALL list {}', "c")
+        self.assertEqual(m["content"], "I will look.")
+        self.assertEqual([tc["function"]["name"] for tc in m["tool_calls"]], ["read", "list"])
+        self.assertEqual(m["tool_calls"][0]["function"]["arguments"], '{"path": "a"}')
+        self.assertEqual([tc["id"] for tc in m["tool_calls"]], ["c_0", "c_1"])
+
+    def test_no_call_is_final_text_and_inner_call_is_not_a_call(self):
+        from journeyman.cli_backend import parse_reply
+        self.assertNotIn("tool_calls", parse_reply("All done.", "c"))
+        m = parse_reply("CALL read {}\nthen I stopped", "c")
+        self.assertNotIn("tool_calls", m)
+        self.assertEqual(parse_reply("CALL report", "c")["tool_calls"][0]["function"]["arguments"], "{}")
+
+    def test_render_carries_tools_and_history_in_order(self):
+        from journeyman.cli_backend import render_turn, TOOL_PROTOCOL
+        tools = [{"type": "function", "function": {"name": "read", "description": "read a file",
+                                                   "parameters": {"type": "object"}}}]
+        msgs = [{"role": "system", "content": "S"}, {"role": "user", "content": "find it"},
+                {"role": "assistant", "content": "ok", "tool_calls": [
+                    {"id": "x1", "function": {"name": "read", "arguments": '{"path": "a"}'}}]},
+                {"role": "tool", "tool_call_id": "x1", "content": "file text"}]
+        p = render_turn(msgs, tools)
+        self.assertTrue(p.startswith(TOOL_PROTOCOL.rstrip("\n")))
+        self.assertIn("- read: read a file", p)
+        order = [p.index("[user] find it"), p.index("[assistant] ok"),
+                 p.index('[assistant called] read {"path": "a"}'), p.index("[result of read] file text")]
+        self.assertEqual(order, sorted(order))
+        self.assertNotIn("S\n", p.split("CONVERSATION SO FAR")[1])   # the system text is not in the prompt
+
+
+class TestCliModelCell(unittest.TestCase):
+    def test_run_cell_drives_the_cli_like_an_api_model(self):
+        """journeyman's own driver runs the loop: the fake model calls a tool on
+        turn one and answers text on turn two; the scene counts the call."""
+        from journeyman.driver import run_cell
+        from journeyman.scene import REGISTRY
+        tmpdir = tempfile.mkdtemp()
+        exe = _make_fake_exe(tmpdir)
+        os.environ["FAKE_MODE"] = "agent"
+        ep = CliEndpoint("claude", "claude-haiku-5-5", exe=exe)
+        rec = run_cell(ep, REGISTRY["finished-cart"](), 4242, lambda *a, **k: None)
+        self.assertEqual(rec["calls"], 1)
+        self.assertEqual(rec["final_text"], "done")
+        self.assertEqual(rec["tokens_in"], 20)
+        self.assertEqual([m["role"] for m in rec["messages"]][-3:], ["assistant", "tool", "assistant"])
 

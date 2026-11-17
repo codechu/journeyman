@@ -316,9 +316,10 @@ def main(argv=None):
               file=sys.stderr)
         sys.exit(2)
     import json as _json
-    cli_agent = args.endpoint.startswith("cli:")
+    cli_agent = args.endpoint.startswith(("cli:", "cli-agent:"))
     if cli_agent:
-        # a CLI agent brings its own loop; journeyman serves the scene over MCP
+        # cli:<kind>       the MODEL through a CLI: journeyman's own driver runs the turns
+        # cli-agent:<kind> the CLI as an AGENT with its own loop, scene tools over MCP
         if args.model is None:
             print("--endpoint cli:… needs --model with a full model id "
                   "(an alias can resolve to another version)", file=sys.stderr)
@@ -327,9 +328,14 @@ def main(argv=None):
             print("--params-file has no effect on a CLI agent (it sends no "
                   "sampling parameters); drop it", file=sys.stderr)
             sys.exit(2)
-        from .cli_agent import CliAgent
         params = None
-        endpoint = CliAgent(args.endpoint[4:], args.model)
+        kind = args.endpoint.split(":", 1)[1]
+        if args.endpoint.startswith("cli-agent:"):
+            from .cli_agent import CliAgent
+            endpoint = CliAgent(kind, args.model)
+        else:
+            from .cli_backend import CliEndpoint
+            endpoint = CliEndpoint(kind, args.model)
     else:
         if args.model is None:
             args.model = resolve_model(args.endpoint, args.api_key)
@@ -348,7 +354,7 @@ def main(argv=None):
         return Endpoint(url, model, args.judge_api_key, params=jparams)
 
     if self_judged:
-        judge_ep = (_judge(args.endpoint, args.model) if cli_agent else endpoint)
+        judge_ep = (_judge("cli:" + args.endpoint.split(":", 1)[1], args.model) if cli_agent else endpoint)
     else:
         judge_ep = _judge(args.judge, args.judge_model or args.model)
     judge_label = "SELF (default)" if self_judged else args.judge
